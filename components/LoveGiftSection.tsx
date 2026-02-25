@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function LoveGiftSection() {
   const [openSection, setOpenSection] = useState<string | null>(null);
@@ -83,9 +84,11 @@ export default function LoveGiftSection() {
             {openSection === 'qris' && (
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-center">
-                  <img
+                  <Image
                     src="/assets/images/donate.png"
                     alt="QRIS"
+                    width={300}
+                    height={300}
                     className="max-w-xs rounded-lg bg-white dark:bg-gray-100 p-2"
                   />
                 </div>

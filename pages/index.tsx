@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import WelcomePage from '@/components/WelcomePage';
 import HomePage from '@/components/HomePage';
 import BrideSection from '@/components/BrideSection';
@@ -78,10 +79,13 @@ export default function Home() {
           <div className="hidden lg:block lg:w-1/2 xl:w-2/3 sticky top-0 h-screen">
             <div className="relative w-full h-full bg-gray-900 flex items-center justify-center">
               <div className="absolute inset-0 opacity-30">
-                <img
+                <Image
                   src="/assets/images/a1.jpeg"
                   alt="background"
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="50vw"
                 />
               </div>
               <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-3xl">

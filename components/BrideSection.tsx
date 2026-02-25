@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 export default function BrideSection() {
   return (
     <>
@@ -31,11 +33,12 @@ export default function BrideSection() {
             </div>
 
             <div data-aos="fade-right" data-aos-duration="2000" className="pb-1">
-              <img
+              <Image
                 src="/assets/images/a8.jpeg"
                 alt="cowo"
+                width={208}
+                height={208}
                 className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
-
               />
               <h2 className="font-esthetic m-0 text-gray-900 dark:text-white" style={{ fontSize: '2.125rem' }}>Nama Wahyu Siapa</h2>
               <p className="mt-3 mb-1 text-gray-800 dark:text-gray-200" style={{ fontSize: '1.25rem' }}>Putra ke-1</p>
@@ -63,9 +66,11 @@ export default function BrideSection() {
             </div>
 
             <div data-aos="fade-left" data-aos-duration="2000" className="pb-1">
-              <img
+              <Image
                 src="/assets/images/a9.jpeg"
                 alt="cewe"
+                width={208}
+                height={208}
                 className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
               />
               <h2 className="font-esthetic m-0 text-gray-900 dark:text-white" style={{ fontSize: '2.125rem' }}>Nama Riski Siapa</h2>

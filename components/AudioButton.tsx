@@ -10,7 +10,7 @@ export default function AudioButton() {
 
   useEffect(() => {
     setMounted(true);
-    audioRef.current = new Audio('/assets/music/pure-love-304010.mp3');
+    audioRef.current = new Audio('/assets/music/music.mp3');
     audioRef.current.loop = true;
 
     // Auto-play music when page loads

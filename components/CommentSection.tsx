@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Comment {
   id: string;
@@ -194,7 +195,14 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
                       {c.comment}
                     </p>
                     {c.gif && (
-                      <img src={c.gif} alt="gif" className="mt-2 rounded-lg max-w-xs" />
+                      <Image 
+                        src={c.gif} 
+                        alt="gif" 
+                        width={300}
+                        height={200}
+                        className="mt-2 rounded-lg max-w-xs"
+                        unoptimized
+                      />
                     )}
                     <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
                       <button

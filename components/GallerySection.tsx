@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -24,12 +25,14 @@ export default function GallerySection() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
             {images.map((img, idx) => (
-              <div key={idx} className="relative overflow-hidden rounded-2xl shadow-lg cursor-pointer hover:scale-105 transition-transform">
-                <img
+              <div key={idx} className="relative overflow-hidden rounded-2xl shadow-lg cursor-pointer hover:scale-105 transition-transform h-64">
+                <Image
                   src={img}
                   alt={`Gallery ${idx + 1}`}
-                  className="w-full h-64 object-cover"
+                  fill
+                  className="object-cover"
                   onClick={() => setSelectedImage(img)}
+                  sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>
             ))}
@@ -43,17 +46,19 @@ export default function GallerySection() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-4xl w-full">
+          <div className="relative max-w-4xl w-full h-[80vh]">
             <button
-              className="absolute top-4 right-4 text-white bg-black/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-black/70"
+              className="absolute top-4 right-4 text-white bg-black/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-black/70 z-10"
               onClick={() => setSelectedImage(null)}
             >
               <i className="fas fa-times"></i>
             </button>
-            <img
+            <Image
               src={selectedImage}
               alt="Selected"
-              className="w-full rounded-2xl"
+              fill
+              className="object-contain rounded-2xl"
+              sizes="100vw"
             />
           </div>
         </div>
