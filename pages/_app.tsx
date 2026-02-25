@@ -1,10 +1,11 @@
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
 import '@/styles/globals.css';
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <>
+    <SessionProvider session={session}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/icon-192x192.png" />
@@ -46,6 +47,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <script src="https://unpkg.com/aos@2.3.4/dist/aos.js" async></script>
       </Head>
       <Component {...pageProps} />
-    </>
+    </SessionProvider>
   );
 }
