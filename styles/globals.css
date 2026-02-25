@@ -4,6 +4,7 @@
 
 /* Import CSS asli */
 @import url("animation.css");
+@import url("/css/common.css");
 
 html {
     scroll-behavior: smooth !important;
@@ -15,6 +16,18 @@ body {
     font-family: 'Josefin Sans', sans-serif !important;
     padding: 0 !important;
     overflow-x: hidden !important;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tailwind dark mode support */
+html.dark body {
+    background-color: rgb(33, 37, 41) !important;
+    color: rgb(248, 249, 250) !important;
+}
+
+html:not(.dark) body {
+    background-color: rgb(248, 249, 250) !important;
+    color: rgb(33, 37, 41) !important;
 }
 
 .font-esthetic {
@@ -126,6 +139,15 @@ html[data-bs-theme="dark"] .color-theme-svg {
 html[data-bs-theme="light"] .color-theme-svg {
     color: rgb(255, 255, 255);
     background-color: rgb(248, 249, 250);
+}
+
+/* Smooth transitions for dark mode */
+.bg-light-dark,
+.bg-white-black,
+.bg-theme-auto,
+.bg-overlay-auto,
+.color-theme-svg {
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 svg {

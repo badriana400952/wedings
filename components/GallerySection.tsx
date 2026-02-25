@@ -15,9 +15,9 @@ export default function GallerySection() {
   ];
 
   return (
-    <section id="gallery" className="bg-gray-50 dark:bg-gray-900 py-16 px-4">
+    <section id="gallery" className="!bg-gray-50 dark:!bg-gray-900 py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-3xl shadow-xl p-6">
+        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-3xl shadow-xl p-6 !bg-gray-50 dark:!bg-gray-800">
           <h2 className="font-esthetic text-5xl text-center py-4 text-gray-900 dark:text-white">
             Galeri
           </h2>

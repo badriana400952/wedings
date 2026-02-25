@@ -22,9 +22,31 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     fetchComments();
+    
+    // Check initial theme
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    setTheme(initialTheme);
+
+    // Listen for theme changes
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setTheme(isDark ? 'dark' : 'light');
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
   const fetchComments = async () => {
@@ -84,9 +106,9 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
   };
 
   return (
-    <section id="comment" className="bg-white dark:bg-gray-800 py-16 px-4">
+    <section id="comment" className="!bg-white dark:!bg-gray-800 py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-3xl shadow-xl p-6">
+        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-3xl shadow-xl p-6 !bg-gray-50 dark:!bg-gray-900">
           <h2 className="font-esthetic text-5xl text-center mt-4 mb-8 text-gray-900 dark:text-white">
             Ucapan & Doa
           </h2>
@@ -100,7 +122,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-gray-500"
+                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
                 placeholder="Isikan Nama Anda"
                 minLength={2}
                 maxLength={50}
@@ -114,7 +136,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
               <select
                 value={presence}
                 onChange={(e) => setPresence(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-gray-500"
+                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
               >
                 <option value="0">Konfirmasi Presensi</option>
                 <option value="1">✅ Datang</option>
@@ -129,7 +151,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-gray-500"
+                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
                 rows={4}
                 placeholder="Tulis Ucapan dan Doa"
                 minLength={1}
@@ -140,7 +162,11 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors disabled:opacity-50"
+              className={`w-full py-3 rounded-2xl transition-colors disabled:opacity-50 ${
+                theme === 'dark'
+                  ? '!bg-white !text-gray-900 hover:!bg-gray-100'
+                  : '!bg-gray-900 !text-white hover:!bg-gray-800'
+              }`}
             >
               <i className="fas fa-paper-plane mr-2"></i>
               {loading ? 'Mengirim...' : 'Send'}
@@ -152,7 +178,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
             {comments.map((c) => (
               <div
                 key={c.id}
-                className="bg-gray-50 dark:bg-gray-700 rounded-2xl p-4 shadow"
+                className="!bg-gray-50 dark:!bg-gray-700 rounded-2xl p-4 shadow"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">

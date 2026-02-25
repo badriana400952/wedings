@@ -10,25 +10,25 @@ export default function HomePage() {
       />
       
       <div className="position-relative text-center bg-overlay-auto" style={{ backgroundColor: 'unset' }}>
-        <h1 className="font-esthetic pt-5 pb-4 fw-medium" style={{ fontSize: '2.25rem' }}>
+        <h1 className="font-esthetic pt-5 pb-4 fw-medium text-gray-900 dark:text-white" style={{ fontSize: '2.25rem' }}>
           Undangan Pernikahan
         </h1>
         
         <img
           src="/assets/images/bg.webp"
           alt="bg"
-          className="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
+          className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
         />
         
-        <h2 className="font-esthetic my-4" style={{ fontSize: '2.25rem' }}>
+        <h2 className="font-esthetic my-4 text-gray-900 dark:text-white" style={{ fontSize: '2.25rem' }}>
           Wahyu & Riski
         </h2>
         
-        <p className="my-2" style={{ fontSize: '1.25rem' }}>
+        <p className="my-2 text-gray-800 dark:text-gray-200" style={{ fontSize: '1.25rem' }}>
           Rabu, 15 Maret 2023
         </p>
         
-        <button className="btn btn-outline-auto btn-sm shadow rounded-pill px-3 py-1" style={{ fontSize: '0.825rem' }}>
+        <button className="btn btn-outline-auto btn-sm shadow rounded-pill px-3 py-1 text-gray-900 dark:text-white border-gray-900 dark:border-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900" style={{ fontSize: '0.825rem' }}>
           <i className="fa-solid fa-calendar-check me-2"></i>Save Google Calendar
         </button>
         

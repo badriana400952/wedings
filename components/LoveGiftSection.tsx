@@ -11,7 +11,7 @@ export default function LoveGiftSection() {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 py-16 px-4">
+    <section className="!bg-gray-50 dark:!bg-gray-900 py-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="font-esthetic text-5xl pt-6 mb-8 text-gray-900 dark:text-white">
           Love Gift
@@ -23,7 +23,7 @@ export default function LoveGiftSection() {
         
         <div className="space-y-4 max-w-2xl mx-auto">
           {/* Transfer */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
+          <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
             <div className="flex items-center justify-between">
               <div>
                 <i className="fas fa-money-bill-transfer mr-2 text-gray-900 dark:text-white"></i>
@@ -31,7 +31,7 @@ export default function LoveGiftSection() {
               </div>
               <button
                 onClick={() => setOpenSection(openSection === 'transfer' ? null : 'transfer')}
-                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <i className="fas fa-circle-info mr-1"></i>Info
               </button>
@@ -52,7 +52,7 @@ export default function LoveGiftSection() {
                   </p>
                   <button
                     onClick={() => copyToClipboard('1234567891234')}
-                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i className="fas fa-copy"></i>
                   </button>
@@ -62,7 +62,7 @@ export default function LoveGiftSection() {
           </div>
           
           {/* QRIS */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
+          <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
             <div className="flex items-center justify-between">
               <div>
                 <i className="fas fa-qrcode mr-2 text-gray-900 dark:text-white"></i>
@@ -70,7 +70,7 @@ export default function LoveGiftSection() {
               </div>
               <button
                 onClick={() => setOpenSection(openSection === 'qris' ? null : 'qris')}
-                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <i className="fas fa-circle-info mr-1"></i>Info
               </button>
@@ -86,7 +86,7 @@ export default function LoveGiftSection() {
                   <img
                     src="/assets/images/donate.png"
                     alt="QRIS"
-                    className="max-w-xs rounded-lg bg-white p-2"
+                    className="max-w-xs rounded-lg bg-white dark:bg-gray-100 p-2"
                   />
                 </div>
               </div>
@@ -94,7 +94,7 @@ export default function LoveGiftSection() {
           </div>
           
           {/* Gift */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
+          <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
             <div className="flex items-center justify-between">
               <div>
                 <i className="fas fa-gift mr-2 text-gray-900 dark:text-white"></i>
@@ -102,7 +102,7 @@ export default function LoveGiftSection() {
               </div>
               <button
                 onClick={() => setOpenSection(openSection === 'gift' ? null : 'gift')}
-                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                className="px-4 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <i className="fas fa-circle-info mr-1"></i>Info
               </button>
@@ -120,7 +120,7 @@ export default function LoveGiftSection() {
                   </p>
                   <button
                     onClick={() => copyToClipboard('0812345678')}
-                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i className="fas fa-copy"></i>
                   </button>
@@ -132,7 +132,7 @@ export default function LoveGiftSection() {
                   </p>
                   <button
                     onClick={() => copyToClipboard('RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.')}
-                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
+                    className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
                   >
                     <i className="fas fa-copy"></i>
                   </button>

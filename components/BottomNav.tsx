@@ -7,7 +7,7 @@ export default function BottomNav() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 lg:left-1/2 lg:right-0 xl:left-2/3 bg-white dark:bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700 rounded-t-3xl z-40">
+    <nav className="fixed bottom-0 left-0 right-0 lg:left-1/2 lg:right-0 xl:left-2/3 !bg-white dark:!bg-gray-800 border-t-2 border-gray-200 dark:border-gray-700 rounded-t-3xl z-40">
       <ul className="flex justify-around items-center py-2">
         <li>
           <button

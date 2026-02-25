@@ -10,14 +10,14 @@ export default function BrideSection() {
         </svg>
       </div>
 
-      <section className="bg-white-black text-center" id="bride">
-        <h2 className="font-arabic py-4 m-0" style={{ fontSize: '2rem' }}>
+      <section className="bg-white-black text-center text-gray-900 dark:text-white" id="bride">
+        <h2 className="font-arabic py-4 m-0 text-gray-900 dark:text-white" style={{ fontSize: '2rem' }}>
           بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
         </h2>
-        <h2 className="font-esthetic py-4 m-0" style={{ fontSize: '2rem' }}>
+        <h2 className="font-esthetic py-4 m-0 text-gray-900 dark:text-white" style={{ fontSize: '2rem' }}>
           Assalamualaikum Warahmatullahi Wabarakatuh
         </h2>
-        <p className="pb-4 px-2 m-0" style={{ fontSize: '0.95rem' }}>
+        <p className="pb-4 px-2 m-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>
           Tanpa mengurangi rasa hormat, kami mengundang Anda untuk berkenan menghadiri acara pernikahan kami:
         </p>
 
@@ -34,13 +34,13 @@ export default function BrideSection() {
               <img
                 src="/assets/images/cowo.webp"
                 alt="cowo"
-                className="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
+                className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
               />
-              <h2 className="font-esthetic m-0" style={{ fontSize: '2.125rem' }}>Nama Wahyu Siapa</h2>
-              <p className="mt-3 mb-1" style={{ fontSize: '1.25rem' }}>Putra ke-1</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>Bapak lorem ipsum</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>dan</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>Ibu lorem ipsum</p>
+              <h2 className="font-esthetic m-0 text-gray-900 dark:text-white" style={{ fontSize: '2.125rem' }}>Nama Wahyu Siapa</h2>
+              <p className="mt-3 mb-1 text-gray-800 dark:text-gray-200" style={{ fontSize: '1.25rem' }}>Putra ke-1</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>Bapak lorem ipsum</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>dan</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>Ibu lorem ipsum</p>
             </div>
 
             {/* Love animation */}
@@ -51,7 +51,7 @@ export default function BrideSection() {
             </div>
           </div>
 
-          <h2 className="font-esthetic mt-4" style={{ fontSize: '4.5rem' }}>&amp;</h2>
+          <h2 className="font-esthetic mt-4 text-gray-900 dark:text-white" style={{ fontSize: '4.5rem' }}>&amp;</h2>
 
           <div className="position-relative">
             {/* Love animation */}
@@ -65,13 +65,13 @@ export default function BrideSection() {
               <img
                 src="/assets/images/cewe.webp"
                 alt="cewe"
-                className="img-center-crop rounded-circle border border-3 border-light shadow my-4 mx-auto cursor-pointer"
+                className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
               />
-              <h2 className="font-esthetic m-0" style={{ fontSize: '2.125rem' }}>Nama Riski Siapa</h2>
-              <p className="mt-3 mb-1" style={{ fontSize: '1.25rem' }}>Putri ke-2</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>Bapak lorem ipsum</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>dan</p>
-              <p className="mb-0" style={{ fontSize: '0.95rem' }}>Ibu lorem ipsum</p>
+              <h2 className="font-esthetic m-0 text-gray-900 dark:text-white" style={{ fontSize: '2.125rem' }}>Nama Riski Siapa</h2>
+              <p className="mt-3 mb-1 text-gray-800 dark:text-gray-200" style={{ fontSize: '1.25rem' }}>Putri ke-2</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>Bapak lorem ipsum</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>dan</p>
+              <p className="mb-0 text-gray-700 dark:text-gray-300" style={{ fontSize: '0.95rem' }}>Ibu lorem ipsum</p>
             </div>
 
             {/* Love animation */}

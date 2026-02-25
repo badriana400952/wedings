@@ -7,6 +7,7 @@ import WeddingDateSection from '@/components/WeddingDateSection';
 import GallerySection from '@/components/GallerySection';
 import LoveGiftSection from '@/components/LoveGiftSection';
 import CommentSection from '@/components/CommentSection';
+import Footer from '@/components/Footer';
 import BottomNav from '@/components/BottomNav';
 import AudioButton from '@/components/AudioButton';
 import ThemeButton from '@/components/ThemeButton';
@@ -71,7 +72,7 @@ export default function Home() {
         <meta property="og:locale" content="id_ID" />
       </Head>
       <AOSInit />
-      <div className="min-h-screen">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col lg:flex-row">
           {/* Desktop Sidebar */}
           <div className="hidden lg:block lg:w-1/2 xl:w-2/3 sticky top-0 h-screen">
@@ -99,6 +100,7 @@ export default function Home() {
               <GallerySection />
               <LoveGiftSection />
               <CommentSection guestName={guestName} />
+              <Footer />
             </main>
 
             <BottomNav />

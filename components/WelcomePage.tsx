@@ -14,7 +14,7 @@ export default function WelcomePage({ onOpen, guestName }: WelcomePageProps) {
         <img
           src="/assets/images/bg.webp"
           alt="background"
-          className="img-center-crop rounded-circle border border-3 border-light shadow mb-4 mx-auto"
+          className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto"
         />
         
         <h2 className="font-esthetic mb-4" style={{ fontSize: '2.25rem' }}>Wahyu & Riski</h2>

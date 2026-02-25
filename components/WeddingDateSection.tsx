@@ -27,13 +27,13 @@ export default function WeddingDateSection() {
   }, []);
 
   return (
-    <section id="wedding-date" className="bg-white dark:bg-gray-800 py-16 px-4">
+    <section id="wedding-date" className="!bg-white dark:!bg-gray-800 py-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="font-esthetic text-5xl py-6 text-gray-900 dark:text-white">
           Moment Bahagia
         </h2>
         
-        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-full shadow-lg py-4 px-8 mt-4 mb-8 inline-block">
+        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-full shadow-lg py-4 px-8 mt-4 mb-8 inline-block !bg-white dark:!bg-gray-800">
           <div className="grid grid-cols-4 gap-4">
             <div>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{timeLeft.days}</p>
@@ -76,9 +76,9 @@ export default function WeddingDateSection() {
           </p>
           
           <div className="flex justify-center items-center mb-4">
-            <div className="w-12 h-12 rounded-full border-2 border-gray-300 bg-white shadow-lg"></div>
-            <div className="w-12 h-12 rounded-full border-2 border-gray-300 bg-cyan-300 shadow-lg -ml-4"></div>
-            <div className="w-12 h-12 rounded-full border-2 border-gray-300 bg-green-500 shadow-lg -ml-4"></div>
+            <div className="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 shadow-lg"></div>
+            <div className="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 !bg-cyan-300 dark:!bg-cyan-600 shadow-lg -ml-4"></div>
+            <div className="w-12 h-12 rounded-full border-2 border-gray-300 dark:border-gray-600 !bg-green-500 dark:!bg-green-600 shadow-lg -ml-4"></div>
           </div>
           
           <p className="text-gray-700 dark:text-gray-300">Busana batik dan bersepatu.</p>
