@@ -1,0 +1,81 @@
+/* Mouse scroll animation */
+.mouse-animation {
+    width: 1.5rem;
+    height: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 0.5rem;
+}
+
+.scroll-animation {
+    width: 0.25rem;
+    height: 0.5rem;
+    animation: scroll 2s infinite;
+}
+
+@keyframes scroll {
+    0% {
+        opacity: 0;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(1rem);
+    }
+}
+
+/* Love animation */
+@keyframes love {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+}
+
+.animate-love {
+    animation: love 2s infinite;
+}
+
+/* Spin animation */
+.spin-button {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Slide animation for desktop */
+@keyframes slideDesktop {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.slide-desktop {
+    animation: slideDesktop 1s ease-in-out;
+}
+
+.slide-desktop-active {
+    opacity: 1 !important;
+}
