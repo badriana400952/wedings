@@ -1,17 +1,14 @@
-# 💌 Website Undangan Pernikahan - Next.js Version
+# 💌 Website Undangan Pernikahan - Next.js
 
-![Thumbnail](/assets/images/banner.webp)
+![Banner](/public/assets/images/banner.webp)
 
-[![GitHub repo size](https://img.shields.io/github/repo-size/dewanakl/undangan?color=brightgreen)](https://shields.io)
-[![GitHub License](https://img.shields.io/github/license/dewanakl/undangan?color=brightgreen)](https://shields.io)
+## 🎉 Next.js Version dengan Pages Router
 
-## 🎉 Versi 4.0 - Full Stack Next.js
+Website undangan pernikahan modern menggunakan **Next.js 15**, **TypeScript**, **Tailwind CSS**, **Bootstrap 5**, dan **Prisma ORM**.
 
-Project undangan pernikahan yang telah **dimigrasi 100%** dari vanilla HTML/CSS/JS ke **Next.js 15** dengan **Pages Router**, **TypeScript**, **Tailwind CSS**, dan **Prisma ORM**.
+## ✨ Fitur
 
-## ✨ Fitur Utama
-
-### 🎨 Frontend
+### Frontend
 - ✅ Responsive design (mobile & desktop)
 - ✅ Dark/Light theme toggle
 - ✅ Smooth animations dengan AOS
@@ -23,15 +20,14 @@ Project undangan pernikahan yang telah **dimigrasi 100%** dari vanilla HTML/CSS/
 - ✅ Comment system dengan like feature
 - ✅ Bottom navigation
 
-### 🔧 Backend
-- ✅ Next.js App Router dengan API Routes
-- ✅ Prisma ORM untuk database management
-- ✅ PostgreSQL/MySQL/SQLite support
+### Backend
+- ✅ Next.js Pages Router dengan API Routes
+- ✅ Prisma ORM untuk database
+- ✅ PostgreSQL database (Prisma Cloud)
 - ✅ RESTful API endpoints
-- ✅ Session management
-- ✅ Like system dengan session tracking
+- ✅ Session management untuk likes
 
-### 📊 Dashboard Admin
+### Dashboard Admin
 - ✅ Statistics (comments, likes, present, absent)
 - ✅ Comments management
 - ✅ Download comments as CSV
@@ -41,92 +37,72 @@ Project undangan pernikahan yang telah **dimigrasi 100%** dari vanilla HTML/CSS/
 
 ### Prerequisites
 - Node.js 18+
-- PostgreSQL (atau database lain)
-- npm atau yarn
+- Database PostgreSQL (atau gunakan Prisma Cloud)
 
 ### Installation
 
 ```bash
-# 1. Clone repository
-git clone <repository-url>
-cd undangan
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Setup environment variables
+# 2. Setup environment variables
 cp .env.example .env
-# Edit .env dengan database credentials Anda
+# Edit .env dengan database credentials
 
-# 4. Generate Prisma Client
-npm run prisma:generate
+# 3. Push database schema
+npx prisma db push
 
-# 5. Run database migrations
-npm run prisma:migrate
-
-# 6. (Optional) Seed database dengan sample data
+# 4. Seed database (optional)
 npx tsx prisma/seed.ts
 
-# 7. Run development server
+# 5. Run development server
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000) di browser.
+Buka [http://localhost:3000](http://localhost:3000)
 
 ## 📁 Struktur Project
 
 ```
-├── app/
-│   ├── api/              # API Routes
-│   │   ├── comments/     # Comment endpoints
-│   │   └── stats/        # Statistics endpoint
-│   ├── dashboard/        # Dashboard admin
-│   ├── layout.tsx        # Root layout
-│   ├── page.tsx          # Homepage
-│   └── globals.css       # Global styles
-├── components/           # React components
-│   ├── WelcomePage.tsx
-│   ├── HomePage.tsx
-│   ├── BrideSection.tsx
-│   ├── WeddingDateSection.tsx
-│   ├── GallerySection.tsx
-│   ├── LoveGiftSection.tsx
-│   ├── CommentSection.tsx
-│   ├── BottomNav.tsx
-│   ├── AudioButton.tsx
-│   └── ThemeButton.tsx
-├── lib/
-│   └── prisma.ts         # Prisma client
-├── prisma/
-│   ├── schema.prisma     # Database schema
-│   └── seed.ts           # Database seeder
-└── public/
-    └── assets/           # Static assets
+├── pages/                # Next.js Pages Router
+│   ├── api/             # API Routes
+│   │   ├── comments/    # Comment endpoints
+│   │   └── stats.ts     # Statistics
+│   ├── _app.tsx         # Custom App
+│   ├── _document.tsx    # Custom Document
+│   ├── index.tsx        # Homepage
+│   └── dashboard.tsx    # Admin dashboard
+├── components/          # React components
+├── lib/                 # Utilities & Prisma client
+├── prisma/             # Database schema & seed
+├── public/             # Static assets
+├── styles/             # Global styles
+└── ...config files
 ```
 
 ## ⚙️ Tech Stack
 
 - **Framework**: Next.js 15 (Pages Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Database**: Prisma ORM (PostgreSQL/MySQL/SQLite)
-- **Icons**: Font Awesome 6
+- **Styling**: Tailwind CSS + Bootstrap 5.3.8
+- **Database**: Prisma ORM (PostgreSQL)
+- **Icons**: Font Awesome 7.1.0
 - **Animations**: AOS (Animate On Scroll)
-- **Fonts**: Google Fonts (Josefin Sans)
+- **Fonts**: Google Fonts (Sacramento, Josefin Sans, Noto Naskh Arabic)
 
 ## 🎨 Kustomisasi
 
 ### Mengubah Data Mempelai
-Edit file `components/BrideSection.tsx` dan `components/HomePage.tsx`
+Edit `components/BrideSection.tsx` dan `components/HomePage.tsx`
 
 ### Mengubah Tanggal Pernikahan
-Edit file `components/WeddingDateSection.tsx`:
+Edit `components/WeddingDateSection.tsx`:
 ```typescript
 const weddingDate = new Date('2024-01-01T09:30:00').getTime();
 ```
 
 ### Mengubah Gambar
-Ganti file di folder `public/assets/images/`:
+Ganti file di `public/assets/images/`:
 - `bg.webp` - Background
 - `cowo.webp` - Foto mempelai pria
 - `cewe.webp` - Foto mempelai wanita
@@ -135,16 +111,15 @@ Ganti file di folder `public/assets/images/`:
 ### Mengubah Musik
 Ganti file `public/assets/music/pure-love-304010.mp3`
 
-## 📚 Dokumentasi Lengkap
+## 🛠️ Available Scripts
 
-- [SETUP.md](./SETUP.md) - Panduan setup lengkap
-- [README-MIGRATION.md](./README-MIGRATION.md) - Detail migrasi dari versi lama
-
-## 🔐 Default Credentials (Setelah Seed)
-
-```
-Email: admin@undangan.com
-Password: admin123
+```bash
+npm run dev          # Run development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npx prisma db push   # Push schema to database
+npx prisma studio    # Open Prisma Studio
 ```
 
 ## 📦 Build & Deploy
@@ -157,34 +132,22 @@ npm start
 
 ### Deploy ke Vercel
 ```bash
-# Install Vercel CLI
 npm i -g vercel
-
-# Deploy
 vercel
 ```
 
-### Deploy ke Railway/Render
-1. Push code ke GitHub
-2. Connect repository di platform
-3. Set environment variables
-4. Deploy!
+## 🔐 Default Credentials (Setelah Seed)
 
-## 🛠️ Available Scripts
-
-```bash
-npm run dev          # Run development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-npm run prisma:generate  # Generate Prisma Client
-npm run prisma:migrate   # Run database migrations
-npm run prisma:studio    # Open Prisma Studio
+```
+Email: admin@undangan.com
+Password: admin123
 ```
 
-## 🐛 Troubleshooting
+## 📝 Environment Variables
 
-Lihat [SETUP.md](./SETUP.md) untuk troubleshooting lengkap.
+```env
+POSTGRES_URL="your-postgres-connection-string"
+```
 
 ## 🎨 Credit
 
@@ -192,30 +155,15 @@ Lihat [SETUP.md](./SETUP.md) untuk troubleshooting lengkap.
 - Visual assets from Pixabay
 - Music from Pixabay
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## 📜 License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT License - Open source
 
 ## 🙏 Acknowledgments
 
-- Original project: [dewanakl/undangan](https://github.com/dewanakl/undangan)
-- Migrated to Next.js with ❤️
+Migrated to Next.js with ❤️
 
 ---
 
-**Note**: Ini adalah versi 4.0 yang telah dimigrasi ke Next.js. Untuk versi vanilla JS, lihat branch `v3.x`.
-
-## 📞 Support
-
-Jika ada pertanyaan atau butuh bantuan:
-- Open an issue di GitHub
-- Email: [dewanakretarta29@gmail.com](mailto:dewanakretarta29@gmail.com)
-
----
-
-Made with 💕 by the community
-# wedings
+**Server**: http://localhost:3000
+**Dashboard**: http://localhost:3000/dashboard
