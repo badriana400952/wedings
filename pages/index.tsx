@@ -17,11 +17,21 @@ export default function Home() {
   const [guestName, setGuestName] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get guest name from URL
+    // Get guest name from URL - support both ?to= and direct slug
     const params = new URLSearchParams(window.location.search);
-    const to = params.get('to');
-    if (to) {
-      setGuestName(decodeURIComponent(to));
+    let guestNameFromUrl = params.get('to');
+    
+    // If no 'to' parameter, check for direct slug after ?
+    if (!guestNameFromUrl) {
+      const queryString = window.location.search.substring(1); // Remove '?'
+      if (queryString && !queryString.includes('=')) {
+        // It's a direct slug like ?badriana or ?alumni+pasirdurung
+        guestNameFromUrl = queryString.replace(/\+/g, ' ');
+      }
+    }
+    
+    if (guestNameFromUrl) {
+      setGuestName(decodeURIComponent(guestNameFromUrl));
     }
   }, []);
 

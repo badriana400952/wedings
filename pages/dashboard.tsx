@@ -22,8 +22,10 @@ export default function Dashboard() {
   const router = useRouter();
   const [stats, setStats] = useState<Stats>({ comments: 0, likes: 0, present: 0, absent: 0 });
   const [comments, setComments] = useState<Comment[]>([]);
-  const [activeTab, setActiveTab] = useState<'home' | 'settings'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'settings' | 'links'>('home');
   const [loading, setLoading] = useState(true);
+  const [guestName, setGuestName] = useState('');
+  const [generatedLink, setGeneratedLink] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -66,6 +68,26 @@ export default function Dashboard() {
     a.href = url;
     a.download = `comments-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
+  };
+
+  const generateLink = () => {
+    if (!guestName.trim()) {
+      alert('Mohon isi nama tamu');
+      return;
+    }
+    
+    const baseUrl = window.location.origin;
+    // Generate link dengan format: ?nama+tamu (spasi jadi +)
+    const encodedName = guestName.trim().replace(/\s+/g, '+');
+    const link = `${baseUrl}/?${encodedName}`;
+    setGeneratedLink(link);
+  };
+
+  const copyLink = () => {
+    if (generatedLink) {
+      navigator.clipboard.writeText(generatedLink);
+      alert('Link berhasil disalin!');
+    }
   };
 
   if (loading) {
@@ -119,6 +141,16 @@ export default function Dashboard() {
                   }`}
                 >
                   <i className="fas fa-house mr-3"></i>Home
+                </button>
+                <button
+                  onClick={() => setActiveTab('links')}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
+                    activeTab === 'links'
+                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
+                  }`}
+                >
+                  <i className="fas fa-link mr-3"></i>Generate Link
                 </button>
                 <button
                   onClick={() => setActiveTab('settings')}
@@ -225,6 +257,92 @@ export default function Dashboard() {
                           </div>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'links' && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                  <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
+                    <i className="fas fa-link mr-2"></i>Generate Link Undangan
+                  </h2>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+                        Nama Tamu
+                      </label>
+                      <input
+                        type="text"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        placeholder="Contoh: Badriana atau Alumni Pasir Durung"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-blue-500"
+                      />
+                      <small className="text-gray-500 dark:text-gray-400 mt-1 block">
+                        Spasi akan otomatis diubah menjadi tanda +
+                      </small>
+                    </div>
+
+                    <button
+                      onClick={generateLink}
+                      className="w-full px-6 py-3 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition-colors font-medium"
+                    >
+                      <i className="fas fa-magic mr-2"></i>Generate Link
+                    </button>
+
+                    {generatedLink && (
+                      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                        <label className="block mb-2 text-gray-700 dark:text-gray-300 font-medium">
+                          Link Undangan:
+                        </label>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={generatedLink}
+                            readOnly
+                            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                          />
+                          <button
+                            onClick={copyLink}
+                            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                          >
+                            <i className="fas fa-copy"></i>
+                          </button>
+                        </div>
+                        
+                        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                          <p className="text-sm text-blue-800 dark:text-blue-200">
+                            <i className="fas fa-info-circle mr-2"></i>
+                            Preview: Saat tamu membuka link ini, akan muncul "Kepada Yth: <strong>{guestName}</strong>"
+                          </p>
+                        </div>
+
+                        <div className="mt-4">
+                          <a
+                            href={generatedLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
+                          >
+                            <i className="fas fa-external-link-alt mr-2"></i>
+                            Test Link
+                          </a>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                      <h3 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
+                        <i className="fas fa-lightbulb mr-2"></i>Tips:
+                      </h3>
+                      <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                        <li>• Format 1: <code className="bg-yellow-100 dark:bg-yellow-900 px-1 rounded">?Badriana</code></li>
+                        <li>• Format 2: <code className="bg-yellow-100 dark:bg-yellow-900 px-1 rounded">?Alumni+Pasir+Durung</code></li>
+                        <li>• Format 3: <code className="bg-yellow-100 dark:bg-yellow-900 px-1 rounded">?to=Nama Tamu</code></li>
+                        <li>• Bisa untuk grup: <code className="bg-yellow-100 dark:bg-yellow-900 px-1 rounded">?Keluarga+Besar+Pak+Ahmad</code></li>
+                      </ul>
                     </div>
                   </div>
                 </div>
