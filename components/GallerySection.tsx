@@ -6,12 +6,12 @@ export default function GallerySection() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const images = [
-    'https://picsum.photos/1280/720?random=1',
-    'https://picsum.photos/1280/720?random=2',
-    'https://picsum.photos/1280/720?random=3',
-    'https://picsum.photos/1280/720?random=4',
-    'https://picsum.photos/1280/720?random=5',
-    'https://picsum.photos/1280/720?random=6',
+    '/assets/images/a1.jpeg',
+    '/assets/images/a2.jpeg',
+    '/assets/images/a3.jpeg',
+    '/assets/images/a4.jpeg',
+    '/assets/images/a5.jpeg',
+    '/assets/images/a7.jpeg',
   ];
 
   return (

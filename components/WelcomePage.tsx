@@ -11,11 +11,17 @@ export default function WelcomePage({ onOpen, guestName }: WelcomePageProps) {
       <div className="d-flex flex-column text-center overflow-y-auto vh-100 justify-content-center align-items-center">
         <h2 className="font-esthetic mb-4" style={{ fontSize: '2.25rem' }}>The Wedding Of</h2>
         
-        <img
-          src="/assets/images/bg.webp"
-          alt="background"
-          className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto"
-        />
+      <img
+  src="/assets/images/a7.jpeg"
+  alt="background"
+  className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto"
+  style={{
+    width: '220px',
+    height: '220px',
+    objectFit: 'cover',
+    objectPosition: '65% 35%'
+  }}
+/>
         
         <h2 className="font-esthetic mb-4" style={{ fontSize: '2.25rem' }}>Wahyu & Riski</h2>
         

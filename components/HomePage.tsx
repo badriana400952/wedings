@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <section id="home" className="bg-light-dark position-relative overflow-hidden p-0 m-0">
       <img
-        src="/assets/images/bg.webp"
+        src="/assets/images/a1.jpeg"
         alt="bg"
         className="position-absolute opacity-25 top-50 start-50 translate-middle bg-cover-home"
       />
@@ -15,7 +15,7 @@ export default function HomePage() {
         </h1>
         
         <img
-          src="/assets/images/bg.webp"
+          src="/assets/images/a2.jpeg"
           alt="bg"
           className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow my-4 mx-auto cursor-pointer"
         />
