@@ -1,70 +1,221 @@
-# 💌 Template website undangan pernikahan sederhana
+# 💌 Website Undangan Pernikahan - Next.js Version
 
 ![Thumbnail](/assets/images/banner.webp)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/cef32dbf-f26f-4865-84a9-b85a439c9994/deploy-status)](https://app.netlify.com/sites/ulems/deploys)
-[![Hits](https://dikit.my.id/0b3y8q)](https://cie.my.id)
 [![GitHub repo size](https://img.shields.io/github/repo-size/dewanakl/undangan?color=brightgreen)](https://shields.io)
 [![GitHub License](https://img.shields.io/github/license/dewanakl/undangan?color=brightgreen)](https://shields.io)
 
-## 🚀 Demo
-Untuk kamu yang ingin melihat demo terlebih dahulu:
+## 🎉 Versi 4.0 - Full Stack Next.js
 
-[https://ulems.my.id/?to=Teman teman semua](https://ulems.my.id/?to=Teman%20teman%20semua)
+Project undangan pernikahan yang telah **dimigrasi 100%** dari vanilla HTML/CSS/JS ke **Next.js 15** dengan **Pages Router**, **TypeScript**, **Tailwind CSS**, dan **Prisma ORM**.
 
-## 📦 Documentation
+## ✨ Fitur Utama
 
-* Jalankan perintah `npm install`, lalu `npm run dev`, dan buka `http://localhost:8080`.
-* Ubah isi file `index.html` sesuai keinginanmu.
-* Jika tidak ingin menggunakan **fitur komentar**, hapus atribut `data-url` dan `data-key` di elemen `<body>` pada index.html.
-* Sesuaikan `data-url` pada `<body>` di index dan dashboard sesuai dengan URL backend (jika kamu meng-hosting sendiri).
-* Sesuaikan juga `data-key` di index dengan access key yang bisa kamu ambil dari dashboard.
-* Jika ingin menggunakan GIF, dapatkan Tenor API key di [developers.google.com/tenor](https://developers.google.com/tenor/guides/quickstart).
-* Untuk deployment, jalankan `npm run build:public`. Folder `public` adalah yang akan kamu upload.
-* Untuk backend self-hosting, lihat penjelasan di bawah, atau gunakan **trial API** secara gratis.
+### 🎨 Frontend
+- ✅ Responsive design (mobile & desktop)
+- ✅ Dark/Light theme toggle
+- ✅ Smooth animations dengan AOS
+- ✅ Welcome page dengan nama tamu dari URL
+- ✅ Countdown timer ke hari pernikahan
+- ✅ Gallery dengan modal view
+- ✅ Audio player background music
+- ✅ Love gift section (Transfer, QRIS, Gift)
+- ✅ Comment system dengan like feature
+- ✅ Bottom navigation
 
-> Undangan ini hanya menggunakan HTML, CSS, dan JavaScript biasa. NPM digunakan agar file JavaScript bisa langsung dieksekusi (bukan bertipe module lagi).
+### 🔧 Backend
+- ✅ Next.js App Router dengan API Routes
+- ✅ Prisma ORM untuk database management
+- ✅ PostgreSQL/MySQL/SQLite support
+- ✅ RESTful API endpoints
+- ✅ Session management
+- ✅ Like system dengan session tracking
 
-> Jika tetap ingin tanpa NPM, ubah `src="./dist/guest.js"` menjadi `src="./js/guest.js" type="module"` pada tag `<head>` di index dan dashboard.html, dengan risiko glitch tema di awal loading.
+### 📊 Dashboard Admin
+- ✅ Statistics (comments, likes, present, absent)
+- ✅ Comments management
+- ✅ Download comments as CSV
+- ✅ Responsive admin panel
 
-> Jika kamu punya pertanyaan, gunakan fitur `discussions` agar bisa dibaca juga oleh teman-teman lainnya.
+## 🚀 Quick Start
 
-> [!WARNING]  
-> Gunakan versi 3.14.0, untuk versi 4 masih tahap pengembangan dan berpotensi teredapat bug 🐛
+### Prerequisites
+- Node.js 18+
+- PostgreSQL (atau database lain)
+- npm atau yarn
 
-## 🔥 Deployment API
+### Installation
 
-- Video\
-    otw
+```bash
+# 1. Clone repository
+git clone <repository-url>
+cd undangan
 
-- Presentation
-    [https://docs.google.com/presentation](https://docs.google.com/presentation/d/1EY2YmWdZUI7ASoo0f2wvU7ec_Yt0uZanYa8YLbfNysk/edit)
+# 2. Install dependencies
+npm install
 
-## ⏰ Trial API
-Untuk kamu yang ingin mencoba secara gratis:
+# 3. Setup environment variables
+cp .env.example .env
+# Edit .env dengan database credentials Anda
 
-[https://trial.ulems.my.id](https://trial.ulems.my.id)
+# 4. Generate Prisma Client
+npm run prisma:generate
 
-## ⚙️ Tech stack
+# 5. Run database migrations
+npm run prisma:migrate
 
-- Bootstrap 5.3.8
-- AOS 2.3.4
-- Fontawesome 7.1.0
-- Canvas Confetti 1.9.3
-- Google Fonts
-- Vanilla JS
+# 6. (Optional) Seed database dengan sample data
+npx tsx prisma/seed.ts
+
+# 7. Run development server
+npm run dev
+```
+
+Buka [http://localhost:3000](http://localhost:3000) di browser.
+
+## 📁 Struktur Project
+
+```
+├── app/
+│   ├── api/              # API Routes
+│   │   ├── comments/     # Comment endpoints
+│   │   └── stats/        # Statistics endpoint
+│   ├── dashboard/        # Dashboard admin
+│   ├── layout.tsx        # Root layout
+│   ├── page.tsx          # Homepage
+│   └── globals.css       # Global styles
+├── components/           # React components
+│   ├── WelcomePage.tsx
+│   ├── HomePage.tsx
+│   ├── BrideSection.tsx
+│   ├── WeddingDateSection.tsx
+│   ├── GallerySection.tsx
+│   ├── LoveGiftSection.tsx
+│   ├── CommentSection.tsx
+│   ├── BottomNav.tsx
+│   ├── AudioButton.tsx
+│   └── ThemeButton.tsx
+├── lib/
+│   └── prisma.ts         # Prisma client
+├── prisma/
+│   ├── schema.prisma     # Database schema
+│   └── seed.ts           # Database seeder
+└── public/
+    └── assets/           # Static assets
+```
+
+## ⚙️ Tech Stack
+
+- **Framework**: Next.js 15 (Pages Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Database**: Prisma ORM (PostgreSQL/MySQL/SQLite)
+- **Icons**: Font Awesome 6
+- **Animations**: AOS (Animate On Scroll)
+- **Fonts**: Google Fonts (Josefin Sans)
+
+## 🎨 Kustomisasi
+
+### Mengubah Data Mempelai
+Edit file `components/BrideSection.tsx` dan `components/HomePage.tsx`
+
+### Mengubah Tanggal Pernikahan
+Edit file `components/WeddingDateSection.tsx`:
+```typescript
+const weddingDate = new Date('2024-01-01T09:30:00').getTime();
+```
+
+### Mengubah Gambar
+Ganti file di folder `public/assets/images/`:
+- `bg.webp` - Background
+- `cowo.webp` - Foto mempelai pria
+- `cewe.webp` - Foto mempelai wanita
+- `donate.png` - QR Code donasi
+
+### Mengubah Musik
+Ganti file `public/assets/music/pure-love-304010.mp3`
+
+## 📚 Dokumentasi Lengkap
+
+- [SETUP.md](./SETUP.md) - Panduan setup lengkap
+- [README-MIGRATION.md](./README-MIGRATION.md) - Detail migrasi dari versi lama
+
+## 🔐 Default Credentials (Setelah Seed)
+
+```
+Email: admin@undangan.com
+Password: admin123
+```
+
+## 📦 Build & Deploy
+
+### Build untuk Production
+```bash
+npm run build
+npm start
+```
+
+### Deploy ke Vercel
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+### Deploy ke Railway/Render
+1. Push code ke GitHub
+2. Connect repository di platform
+3. Set environment variables
+4. Deploy!
+
+## 🛠️ Available Scripts
+
+```bash
+npm run dev          # Run development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run prisma:generate  # Generate Prisma Client
+npm run prisma:migrate   # Run database migrations
+npm run prisma:studio    # Open Prisma Studio
+```
+
+## 🐛 Troubleshooting
+
+Lihat [SETUP.md](./SETUP.md) untuk troubleshooting lengkap.
 
 ## 🎨 Credit
-All visual assets in this project are sourced from Pixabay.
+
+- Original design by [dewanakl](https://github.com/dewanakl)
+- Visual assets from Pixabay
+- Music from Pixabay
 
 ## 🤝 Contributing
 
-I'm very open to those of you who want to contribute to the undangan!
-
-## 🐞 Security Vulnerabilities
-
-If you find any security vulnerabilities in this undangan, please email DKL via [dewanakretarta29@gmail.com](mailto:dewanakretarta29@gmail.com).
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📜 License
 
-Undangan is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## 🙏 Acknowledgments
+
+- Original project: [dewanakl/undangan](https://github.com/dewanakl/undangan)
+- Migrated to Next.js with ❤️
+
+---
+
+**Note**: Ini adalah versi 4.0 yang telah dimigrasi ke Next.js. Untuk versi vanilla JS, lihat branch `v3.x`.
+
+## 📞 Support
+
+Jika ada pertanyaan atau butuh bantuan:
+- Open an issue di GitHub
+- Email: [dewanakretarta29@gmail.com](mailto:dewanakretarta29@gmail.com)
+
+---
+
+Made with 💕 by the community
+# wedings
