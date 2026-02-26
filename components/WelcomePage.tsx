@@ -28,7 +28,7 @@ export default function WelcomePage({ onOpen, guestName }: WelcomePageProps) {
   }}
 />
         
-        <h2 className="font-esthetic mb-4" style={{ fontSize: '2.25rem' }}>Wahyu & Riski</h2>
+        <h2 className="font-esthetic mb-4" style={{ fontSize: '2.25rem' }}>Abdul Mujadid & Lorem ipsum</h2>
         
         {guestName && (
           <div id="guest-name" className="mb-2">

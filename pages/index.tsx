@@ -89,8 +89,8 @@ export default function Home() {
                 />
               </div>
               <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-3xl">
-                <h2 className="font-esthetic text-4xl mb-4">Wahyu & Riski</h2>
-                <p className="text-lg">Rabu, 15 Maret 2023</p>
+                <h2 className="font-esthetic text-4xl mb-4">Abdul Mujadid & Lorem ipsum</h2>
+                <p className="text-lg">Minggu, 31 Mei 2026</p>
               </div>
             </div>
           </div>

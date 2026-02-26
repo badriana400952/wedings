@@ -39,7 +39,7 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Riski Siapa?
+              <i className="fas fa-user mr-2"></i>Abdul Mujadid
             </p>
             
             {openSection === 'transfer' && (
@@ -49,10 +49,10 @@ export default function LoveGiftSection() {
                 </p>
                 <div className="flex items-center justify-between mt-2">
                   <p className="text-gray-700 dark:text-gray-300">
-                    <i className="fas fa-credit-card mr-2"></i>1234567891234
+                    <i className="fas fa-credit-card mr-2"></i>7295170905
                   </p>
                   <button
-                    onClick={() => copyToClipboard('1234567891234')}
+                    onClick={() => copyToClipboard('7295170905')}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i className="fas fa-copy"></i>
@@ -78,7 +78,7 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Wahyu Siapa?
+              <i className="fas fa-user mr-2"></i>Abdul Mujadid
             </p>
             
             {openSection === 'qris' && (
@@ -112,17 +112,17 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Wahyu Siapa?
+              <i className="fas fa-user mr-2"></i>Abdul Mujadid
             </p>
             
             {openSection === 'gift' && (
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-gray-700 dark:text-gray-300">
-                    <i className="fas fa-phone-volume mr-2"></i>0812345678
+                    <i className="fas fa-phone-volume mr-2"></i>082112543197
                   </p>
                   <button
-                    onClick={() => copyToClipboard('0812345678')}
+                    onClick={() => copyToClipboard('082112543197')}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i className="fas fa-copy"></i>
@@ -131,10 +131,10 @@ export default function LoveGiftSection() {
                 <div className="flex items-center justify-between">
                   <p className="text-gray-700 dark:text-gray-300 truncate mr-2">
                     <i className="fas fa-location-dot mr-2"></i>
-                    RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.
+                    Gg. Rahwana, Gintung, Kec. Sukadiri, Kabupaten Tangerang, Banten 15330
                   </p>
                   <button
-                    onClick={() => copyToClipboard('RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.')}
+                    onClick={() => copyToClipboard('Gg. Rahwana, Gintung, Kec. Sukadiri, Kabupaten Tangerang, Banten 15330')}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
                   >
                     <i className="fas fa-copy"></i>
