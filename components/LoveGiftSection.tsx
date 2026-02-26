@@ -39,7 +39,7 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Abdul Mujadid
+              <i className="fas fa-user mr-2"></i>Abdulloh mujaddid
             </p>
             
             {openSection === 'transfer' && (
@@ -78,7 +78,7 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Abdul Mujadid
+              <i className="fas fa-user mr-2"></i>Abdulloh mujaddid
             </p>
             
             {openSection === 'qris' && (
@@ -112,7 +112,7 @@ export default function LoveGiftSection() {
             </div>
             
             <p className="mt-4 text-gray-700 dark:text-gray-300">
-              <i className="fas fa-user mr-2"></i>Abdul Mujadid
+              <i className="fas fa-user mr-2"></i>Abdulloh mujaddid
             </p>
             
             {openSection === 'gift' && (

@@ -41,7 +41,7 @@ export default function BrideSection() {
                 height={208}
                 className={clsx('img-center-crop', 'rounded-circle', 'border-4', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'my-4', 'mx-auto', 'cursor-pointer')}
               />
-              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>Abdul Mujadid</h2>
+              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>Abdulloh mujaddid</h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>Putra ke-1</p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak Evi mamdudi</p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>dan</p>
@@ -74,7 +74,7 @@ export default function BrideSection() {
                 height={208}
                 className={clsx('img-center-crop', 'rounded-circle', 'border-4', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'my-4', 'mx-auto', 'cursor-pointer')}
               />
-              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>Nama Abdul Mujadid</h2>
+              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>Ati sunarti</h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>Putri ke-2</p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak Suminta </p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>dan</p>
