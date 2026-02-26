@@ -10,7 +10,8 @@
         "prisma:generate": "prisma generate",
         "prisma:migrate": "prisma migrate dev",
         "prisma:studio": "prisma studio",
-        "create-admin": "ts-node scripts/create-admin.ts"
+        "create-admin": "ts-node scripts/create-admin.ts",
+        "change-password": "ts-node scripts/change-password.ts"
     },
     "dependencies": {
         "@prisma/client": "^6.2.0",

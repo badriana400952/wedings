@@ -1,0 +1,145 @@
+===========================================
+UNDANGAN PERNIKAHAN DIGITAL
+===========================================
+
+📱 URL UNDANGAN (untuk tamu)
+https://your-domain.vercel.app
+
+Bagikan link ini ke tamu undangan Anda via:
+- WhatsApp
+- Instagram
+- Facebook
+- Email
+- dll
+
+===========================================
+
+🔐 AKSES DASHBOARD ADMIN
+
+URL Login:
+https://your-domain.vercel.app/login
+
+Kredensial:
+Email    : admin@undangan.com
+Password : admin123
+
+⚠️ PENTING: 
+Segera ganti password setelah login pertama!
+
+===========================================
+
+📊 FITUR DASHBOARD
+
+Setelah login, Anda bisa:
+✅ Melihat semua ucapan & doa dari tamu
+✅ Menghapus ucapan yang tidak sesuai
+✅ Melihat statistik total ucapan
+✅ Logout dengan aman
+
+===========================================
+
+🎯 CARA MENGGUNAKAN
+
+1. UNTUK TAMU
+   - Buka link undangan
+   - Klik "Open Invitation"
+   - Nikmati animasi confetti 🎊
+   - Scroll untuk lihat detail acara
+   - Isi ucapan & doa di form
+   - Klik "Send" untuk kirim ucapan
+
+2. UNTUK ADMIN (Anda)
+   - Buka link login dashboard
+   - Masukkan email & password
+   - Lihat semua ucapan yang masuk
+   - Hapus ucapan jika perlu
+   - Logout setelah selesai
+
+===========================================
+
+✨ FITUR UNDANGAN
+
+✅ Animasi confetti saat buka undangan
+✅ Countdown timer ke hari H
+✅ Dark mode / Light mode
+✅ Audio player (musik background)
+✅ Galeri foto (klik untuk zoom)
+✅ Google Maps lokasi acara
+✅ Save to Google Calendar
+✅ Form ucapan & doa
+✅ Like button untuk ucapan
+✅ Info Love Gift (transfer)
+✅ Responsive (mobile & desktop)
+
+===========================================
+
+📱 CARA SHARE KE TAMU
+
+Via WhatsApp:
+"Assalamualaikum Wr. Wb.
+Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.
+
+Berikut link undangan digital kami:
+https://your-domain.vercel.app
+
+Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
+
+Terima kasih 🙏
+Wassalamualaikum Wr. Wb."
+
+===========================================
+
+📞 SUPPORT & BANTUAN
+
+Jika ada pertanyaan atau masalah:
+- WhatsApp: [nomor developer]
+- Email: [email developer]
+
+Jam kerja support:
+Senin - Jumat: 09.00 - 17.00 WIB
+Sabtu: 09.00 - 12.00 WIB
+
+===========================================
+
+📄 DOKUMENTASI LENGKAP
+
+Untuk panduan lengkap, silakan baca file:
+PANDUAN_CUSTOMER.md
+
+Berisi:
+- Cara mengelola dashboard
+- Cara update konten
+- Troubleshooting
+- FAQ
+- Dan informasi penting lainnya
+
+===========================================
+
+💡 TIPS
+
+1. Bagikan link undangan H-30 atau H-14
+2. Cek dashboard setiap hari untuk lihat ucapan baru
+3. Screenshot ucapan favorit sebagai kenangan
+4. Backup ucapan sebelum acara (export dari database)
+5. Jangan share password dashboard ke orang lain
+
+===========================================
+
+🎉 SELAMAT!
+
+Undangan digital Anda sudah siap digunakan!
+Semoga acara pernikahan berjalan lancar dan 
+penuh berkah.
+
+Barakallahu lakuma wa baraka alaikuma 
+wa jama'a bainakuma fi khair 💑
+
+===========================================
+
+Terima kasih telah menggunakan layanan kami!
+
+Developer: [Nama Anda]
+Website: [Website Anda]
+Portfolio: [Portfolio Anda]
+
+===========================================
