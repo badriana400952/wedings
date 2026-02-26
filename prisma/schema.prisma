@@ -7,67 +7,199 @@ datasource db {
   url      = env("POSTGRES_URL")
 }
 
+//////////////////////
+// ENUM
+//////////////////////
+
+enum Role {
+  ADMIN
+  DEV
+}
+
+enum DesignThemes {
+  CLASSIC
+  MODERN
+  ELEGANT
+  MINIMALIST
+}
+
+//////////////////////
+// USER
+//////////////////////
+
 model User {
-  id                    String    @id @default(uuid())
-  email                 String    @unique
-  name                  String
-  password              String
-  accessKey             String    @unique @map("access_key")
-  tz                    String    @default("Asia/Jakarta")
-  tenorKey              String?   @map("tenor_key")
-  isFilter              Boolean   @default(true) @map("is_filter")
-  isConfettiAnimation   Boolean   @default(true) @map("is_confetti_animation")
-  canReply              Boolean   @default(true) @map("can_reply")
-  canEdit               Boolean   @default(true) @map("can_edit")
-  canDelete             Boolean   @default(true) @map("can_delete")
-  createdAt             DateTime  @default(now()) @map("created_at")
-  updatedAt             DateTime  @updatedAt @map("updated_at")
-  
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  name                String
+  password            String
+  accessKey           String   @unique @map("access_key")
+  tz                  String   @default("Asia/Jakarta")
+  tenorKey            String?  @map("tenor_key")
+  isFilter            Boolean  @default(true) @map("is_filter")
+  isConfettiAnimation Boolean  @default(true) @map("is_confetti_animation")
+  canReply            Boolean  @default(true) @map("can_reply")
+  canEdit             Boolean  @default(true) @map("can_edit")
+  canDelete           Boolean  @default(true) @map("can_delete")
+  role                Role     @default(ADMIN)
+  isActive            Boolean  @default(true) @map("is_active")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  templateWeding      TemplateWeding?
+
+  sessions            Session[]
+
   @@map("users")
 }
 
+//////////////////////
+// TEMPLATE WEDDING
+//////////////////////
+
+model TemplateWeding {
+  id                String       @id @default(cuid())
+  userId            String       @unique @map("user_id")
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  designTheme       DesignThemes @default(CLASSIC)
+
+  fotoHeader        String       @map("foto_header")
+
+  // Groom
+  namaPutra         String       @map("nama_putra")
+  namaLengkapPutra  String       @map("nama_lengkap_putra")
+  namaAyahPutra     String       @map("nama_ayah_putra")
+  namaIbuPutra      String       @map("nama_ibu_putra")
+  instagramPutra    String       @map("instagram_putra")
+  photoPutra        String       @map("photo_putra")
+
+  // Bride
+  namaPutri         String       @map("nama_putri")
+  namaLengkapPutri  String       @map("nama_lengkap_putri")
+  namaAyahPutri     String       @map("nama_ayah_putri")
+  namaIbuPutri      String       @map("nama_ibu_putri")
+  instagramPutri    String       @map("instagram_putri")
+  photoPutri        String       @map("photo_putri")
+
+  // Wedding Info
+  tanggalPernikahan DateTime     @map("tanggal_pernikahan")
+  linkGoogleCalender String      @map("link_google_calendar")
+  alamatPernikahan  String       @map("alamat_pernikahan")
+  jamMulai          String       @map("jam_mulai")
+  jamSelesai        String       @map("jam_selesai")
+  linkMaps          String       @map("link_maps")
+
+  // Love Gift
+  noAtm             String?      @map("no_atm")
+  namaBank          String?      @map("nama_bank")
+  fotoQris          String?      @map("foto_qris")
+  noHp              String?      @map("no_hp")
+
+  // Relations
+  galeryId          String?      @map("galery_id")
+  galery            Galery?      @relation(fields: [galeryId], references: [id], onDelete: SetNull)
+
+  pertemuan         Pertemuan?
+  comments          Comment[]
+
+  createdAt         DateTime     @default(now()) @map("created_at")
+  updatedAt         DateTime     @updatedAt @map("updated_at")
+
+  @@map("template_wedings")
+}
+
+//////////////////////
+// PERTEMUAN STORY
+//////////////////////
+
+model Pertemuan {
+  id                String         @id @default(uuid())
+  templateWedingId  String         @unique @map("template_weding_id")
+  templateWeding    TemplateWeding @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
+
+  pertemuanPertama  String         @map("pertemuan_pertama")
+  pertemuanKedua    String         @map("pertemuan_kedua")
+  pertemuanKetiga   String         @map("pertemuan_ketiga")
+  pertemuanKeempat  String         @map("pertemuan_keempat")
+
+  @@map("pertemuan")
+}
+
+//////////////////////
+// GALERY
+//////////////////////
+
+model Galery {
+  id              String           @id @default(uuid())
+  fotos           String[]
+  templateWedings TemplateWeding[]
+
+  @@map("galeries")
+}
+
+//////////////////////
+// COMMENT
+//////////////////////
+
 model Comment {
-  id          String    @id @default(uuid())
-  name        String
-  presence    Boolean
-  comment     String    @db.Text
-  gif         String?
-  ip          String
-  userAgent   String    @map("user_agent")
-  likes       Int       @default(0)
-  parentId    String?   @map("parent_id")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  
-  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies     Comment[] @relation("CommentReplies")
-  likedBy     Like[]
-  
+  id               String   @id @default(uuid())
+  name             String
+  presence         Boolean
+  comment          String   @db.Text
+  gif              String?
+  ip               String
+  userAgent        String   @map("user_agent")
+  likesCount       Int      @default(0) @map("likes_count")
+  parentId         String?  @map("parent_id")
+  templateWedingId String?  @map("template_weding_id")
+
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  templateWeding   TemplateWeding? @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
+
+  parent           Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies          Comment[] @relation("CommentReplies")
+
+  likedBy          Like[]
+
   @@index([parentId])
   @@map("comments")
 }
 
+//////////////////////
+// LIKE
+//////////////////////
+
 model Like {
-  id          String    @id @default(uuid())
-  commentId   String    @map("comment_id")
-  sessionId   String    @map("session_id")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  
-  comment     Comment   @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  
+  id        String   @id @default(uuid())
+  commentId String   @map("comment_id")
+  sessionId String   @map("session_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
   @@unique([commentId, sessionId])
   @@index([commentId])
+
   @@map("likes")
 }
 
+//////////////////////
+// SESSION (AUTH ONLY)
+//////////////////////
+
 model Session {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  token       String    @unique
-  expiresAt   DateTime  @map("expires_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([token])
+
   @@map("sessions")
 }

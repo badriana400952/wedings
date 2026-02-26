@@ -8,7 +8,7 @@ interface Comment {
   name: string;
   comment: string;
   presence: boolean;
-  likes: number;
+  likesCount: number;
   createdAt: string;
   gif?: string;
 }
@@ -210,7 +210,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
                         className="flex items-center gap-1 hover:text-red-500"
                       >
                         <i className="fas fa-heart"></i>
-                        <span>{c.likes}</span>
+                        <span>{c.likesCount}</span>
                       </button>
                       <span>{new Date(c.createdAt).toLocaleDateString('id-ID')}</span>
                     </div>

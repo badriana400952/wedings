@@ -38,7 +38,7 @@ export default async function handler(
 
       await prisma.comment.update({
         where: { id: commentId },
-        data: { likes: { decrement: 1 } },
+        data: { likesCount: { decrement: 1 } },
       });
 
       return res.status(200).json({ liked: false });
@@ -53,7 +53,7 @@ export default async function handler(
 
       await prisma.comment.update({
         where: { id: commentId },
-        data: { likes: { increment: 1 } },
+        data: { likesCount: { increment: 1 } },
       });
 
       // Set cookie

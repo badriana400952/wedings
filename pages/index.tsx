@@ -13,6 +13,7 @@ import BottomNav from '@/components/BottomNav';
 import AudioButton from '@/components/AudioButton';
 import ThemeButton from '@/components/ThemeButton';
 import AOSInit from '@/components/AOSInit';
+import clsx from 'clsx';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,12 +74,12 @@ export default function Home() {
         <meta property="og:locale" content="id_ID" />
       </Head>
       <AOSInit />
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <div className="flex flex-col lg:flex-row">
+      <div className={clsx('min-h-screen', 'bg-gray-50', 'dark:bg-gray-900')}>
+        <div className={clsx('flex', 'flex-col', 'lg:flex-row')}>
           {/* Desktop Sidebar */}
-          <div className="hidden lg:block lg:w-1/2 xl:w-2/3 sticky top-0 h-screen">
-            <div className="relative w-full h-full bg-gray-900 flex items-center justify-center">
-              <div className="absolute inset-0 opacity-30">
+          <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')}>
+            <div className={clsx('relative', 'w-full', 'h-full', 'bg-gray-900', 'flex', 'items-center', 'justify-center')}>
+              <div className={clsx('absolute', 'inset-0', 'opacity-30')}>
                 <Image
                   src="/assets/images/a1.jpeg"
                   alt="background"
@@ -88,15 +89,15 @@ export default function Home() {
                   sizes="50vw"
                 />
               </div>
-              <div className="relative z-10 text-center text-white bg-black/50 p-8 rounded-3xl">
-                <h2 className="font-esthetic text-4xl mb-4">Abdulloh mujaddid <br /> & <br />Ati sunarti</h2>
+              <div className={clsx('relative', 'z-10', 'text-center', 'text-white', 'bg-black/50', 'p-8', 'rounded-3xl')}>
+                <h2 className={clsx('font-esthetic', 'text-4xl', 'mb-4')}>Abdulloh mujaddid <br /> & <br />Ati sunarti</h2>
                 <p className="text-lg">Minggu, 31 Mei 2026</p>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div className="w-full lg:w-1/2 xl:w-1/3">
+          <div className={clsx('w-full', 'lg:w-1/2', 'xl:w-1/3')}>
             <main>
               <HomePage />
               <BrideSection />
@@ -112,7 +113,7 @@ export default function Home() {
         </div>
 
         {/* Floating Buttons */}
-        <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-3">
+        <div className={clsx('fixed', 'bottom-24', 'right-4', 'z-50', 'flex', 'flex-col', 'gap-3')}>
           <ThemeButton />
           <AudioButton />
         </div>

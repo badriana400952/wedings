@@ -37,6 +37,40 @@ export default async function handler(
       const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
       const userAgent = req.headers['user-agent'] || 'unknown';
 
+      // Get first template_weding (or create one if doesn't exist)
+      let templateWeding = await prisma.templateWeding.findFirst();
+      
+      if (!templateWeding) {
+        // If no template exists, create a default one
+        const firstUser = await prisma.user.findFirst();
+        if (firstUser) {
+          templateWeding = await prisma.templateWeding.create({
+            data: {
+              userId: firstUser.id,
+              fotoHeader: '',
+              namaPutra: '',
+              namaLengkapPutra: '',
+              namaAyahPutra: '',
+              namaIbuPutra: '',
+              instagramPutra: '',
+              photoPutra: '',
+              namaPutri: '',
+              namaLengkapPutri: '',
+              namaAyahPutri: '',
+              namaIbuPutri: '',
+              instagramPutri: '',
+              photoPutri: '',
+              tanggalPernikahan: new Date(),
+              linkGoogleCalender: '',
+              alamatPernikahan: '',
+              jamMulai: '',
+              jamSelesai: '',
+              linkMaps: '',
+            },
+          });
+        }
+      }
+
       const newComment = await prisma.comment.create({
         data: {
           name,
@@ -46,6 +80,7 @@ export default async function handler(
           ip: Array.isArray(ip) ? ip[0] : ip,
           userAgent,
           parentId: parentId || null,
+          templateWedingId: templateWeding?.id || null,
         },
       });
 

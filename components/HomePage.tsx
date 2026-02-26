@@ -32,7 +32,7 @@ export default function HomePage() {
         />
         
         <h2 className={clsx('font-esthetic', 'my-4', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.25rem' }}>
-          Mujaddid & Ati
+          Mujaddid & Ati 
         </h2>
         
         <p className={clsx('my-2', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>
