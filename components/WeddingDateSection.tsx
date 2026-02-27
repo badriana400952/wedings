@@ -73,7 +73,7 @@ export default function WeddingDateSection() {
           
           <div data-aos="fade-left">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
-            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul 22.00 WIB - Selesai</p>
+            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul 10.00 WIB - Selesai</p>
           </div>
         </div>
         
