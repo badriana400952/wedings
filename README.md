@@ -1,47 +1,47 @@
-# 💌 Website Undangan Pernikahan - Next.js
+# Website Undangan Pernikahan - Next.js
 
 ![Banner](/public/assets/images/banner.webp)
 
-## 🎉 Next.js Version dengan Pages Router
+## Next.js Version dengan Pages Router
 
 Website undangan pernikahan modern menggunakan **Next.js 15**, **TypeScript**, **Tailwind CSS**, **Bootstrap 5**, **Prisma ORM**, dan **NextAuth.js**.
 
-## ✨ Fitur Lengkap
+## Fitur Lengkap
 
 ### Frontend (Guest View)
-- ✅ Welcome page dengan animasi confetti
-- ✅ Responsive design (mobile & desktop)
-- ✅ Dark/Light theme toggle
-- ✅ Smooth animations dengan AOS
-- ✅ Countdown timer ke hari pernikahan
-- ✅ Gallery interaktif dengan modal zoom
-- ✅ Audio player background music (lazy loading)
-- ✅ Google Maps integration
-- ✅ Save to Google Calendar
-- ✅ Love gift section (Transfer info)
-- ✅ Comment system dengan like feature
-- ✅ Bottom navigation
-- ✅ Image optimization dengan Next.js Image
+- Welcome page dengan animasi confetti
+- Responsive design (mobile & desktop)
+- Dark/Light theme toggle
+- Smooth animations dengan AOS
+- Countdown timer ke hari pernikahan
+- Gallery interaktif dengan modal zoom
+- Audio player background music (lazy loading)
+- Google Maps integration
+- Save to Google Calendar
+- Love gift section (Transfer info)
+- Comment system dengan like feature
+- Bottom navigation
+- Image optimization dengan Next.js Image
 
 ### Backend & Admin
-- ✅ Next.js Pages Router dengan API Routes
-- ✅ NextAuth.js authentication
-- ✅ Protected dashboard route
-- ✅ Prisma ORM untuk database
-- ✅ PostgreSQL database support
-- ✅ RESTful API endpoints
-- ✅ Session management
-- ✅ CRUD operations untuk comments
+- Next.js Pages Router dengan API Routes
+- NextAuth.js authentication
+- Protected dashboard route
+- Prisma ORM untuk database
+- PostgreSQL database support
+- RESTful API endpoints
+- Session management
+- CRUD operations untuk comments
 
 ### Dashboard Admin
-- ✅ Secure login dengan NextAuth
-- ✅ View all comments dari tamu
-- ✅ Delete inappropriate comments
-- ✅ Statistics (total comments)
-- ✅ Logout functionality
-- ✅ Responsive admin panel
+- Secure login dengan NextAuth
+- View all comments dari tamu
+- Delete inappropriate comments
+- Statistics (total comments)
+- Logout functionality
+- Responsive admin panel
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Node.js 18+
@@ -77,7 +77,7 @@ npm run dev
 
 Buka [http://localhost:3000](http://localhost:3000)
 
-## 📁 Struktur Project
+## Struktur Project
 
 ```
 ├── pages/                # Next.js Pages Router
@@ -124,7 +124,7 @@ Buka [http://localhost:3000](http://localhost:3000)
 └── ...config files
 ```
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **Framework**: Next.js 15 (Pages Router)
 - **Language**: TypeScript
@@ -136,7 +136,7 @@ Buka [http://localhost:3000](http://localhost:3000)
 - **Fonts**: Google Fonts (Sacramento, Josefin Sans, Noto Naskh Arabic)
 - **Image Optimization**: Next.js Image component
 
-## 🎨 Kustomisasi
+## Kustomisasi
 
 ### Mengubah Data Mempelai
 Edit file berikut:
@@ -175,7 +175,7 @@ Edit `components/LoveGiftSection.tsx`:
 - Nama bank
 - Nama pemilik rekening
 
-## 🛠️ Available Scripts
+## Available Scripts
 
 ```bash
 # Development
@@ -200,7 +200,7 @@ npm run change-password        # Change admin password
 npm run lint                   # Run ESLint
 ```
 
-## 📦 Build & Deploy
+## Build & Deploy
 
 ### Build untuk Production
 ```bash
@@ -230,7 +230,7 @@ npm start
 openssl rand -base64 32
 ```
 
-## 🔐 Default Admin Credentials
+## Default Admin Credentials
 
 Setelah run `npx prisma db seed`:
 
@@ -241,7 +241,7 @@ Password: admin123
 
 ⚠️ **PENTING**: Ganti password setelah login pertama!
 
-## 📝 Environment Variables
+## Environment Variables
 
 ### Development (.env)
 ```env
@@ -257,7 +257,7 @@ NEXTAUTH_SECRET="random-secret-key"
 NEXTAUTH_URL="https://your-domain.vercel.app"
 ```
 
-## 📚 Dokumentasi Lengkap
+## Dokumentasi Lengkap
 
 Untuk panduan lengkap, lihat file:
 - `PANDUAN_CUSTOMER.md` - Panduan untuk customer
@@ -265,7 +265,7 @@ Untuk panduan lengkap, lihat file:
 - `CHECKLIST_SERAH_TERIMA.md` - Checklist deployment
 - `INFO_AKSES_CUSTOMER.txt` - Info akses & credentials
 
-## 🎨 Credits
+## Credits
 
 - **Original Template**: [Dewanakl](https://github.com/dewanakl/undangan)
 - **Migration to Next.js**: [Badriana400952](https://github.com/badriana400952)
@@ -273,13 +273,13 @@ Untuk panduan lengkap, lihat file:
 - **Visual Assets**: Pixabay
 - **Icons**: Font Awesome
 
-## 📜 License
+## License
 
 MIT License - Open source and free to use
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
-Migrated to Next.js with ❤️
+Migrated to Next.js with 
 
 Special thanks to:
 - Next.js team for amazing framework
@@ -289,7 +289,7 @@ Special thanks to:
 
 ---
 
-## 📞 Support
+## Support
 
 Jika ada pertanyaan atau butuh bantuan:
 - GitHub Issues: [Create an issue](https://github.com/your-repo/issues)
@@ -301,4 +301,4 @@ Jika ada pertanyaan atau butuh bantuan:
 **Dashboard**: http://localhost:3000/dashboard
 **Login**: http://localhost:3000/login
 
-**Happy Wedding! 💑🎉**
+**Happy Wedding! **

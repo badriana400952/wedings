@@ -14,16 +14,30 @@ import AudioButton from '@/components/AudioButton';
 import ThemeButton from '@/components/ThemeButton';
 import AOSInit from '@/components/AOSInit';
 import clsx from 'clsx';
+import useTemplateWedings from '@/hooks/useTemplateWweding';
+import { useSession } from 'next-auth/react';
+import { formatTanggalIndo } from '@/date';
+import SvgCustom from '@/utils/svg';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [guestName, setGuestName] = useState<string | null>(null);
+  const { templateWeding, handleGetTemplateWeding } = useTemplateWedings()
+  const [showPencil, setShowPencil] = useState<boolean>(false)
+  const { data } = useSession()
+
+  useEffect(() => {
+    if (data?.user.id) {
+      handleGetTemplateWeding(data?.user?.id || '')
+    }
+  }, [data])
+
 
   useEffect(() => {
     // Get guest name from URL - support both ?to= and direct slug
     const params = new URLSearchParams(window.location.search);
     let guestNameFromUrl = params.get('to');
-    
+
     // If no 'to' parameter, check for direct slug after ?
     if (!guestNameFromUrl) {
       const queryString = window.location.search.substring(1); // Remove '?'
@@ -32,12 +46,14 @@ export default function Home() {
         guestNameFromUrl = queryString.replace(/\+/g, ' ');
       }
     }
-    
+
     if (guestNameFromUrl) {
       setGuestName(decodeURIComponent(guestNameFromUrl));
     }
   }, []);
 
+
+  console.log(templateWeding, "templateWedingxx")
   const handleOpen = () => {
     setIsOpen(true);
     document.body.scrollIntoView({ behavior: 'smooth' });
@@ -56,7 +72,13 @@ export default function Home() {
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="id_ID" />
         </Head>
-        <WelcomePage onOpen={handleOpen} guestName={guestName} />
+        <WelcomePage 
+        onOpen={handleOpen} 
+        guestName={guestName} 
+        templateWeding={templateWeding} 
+        showPencil={showPencil}
+        setShowPencil={setShowPencil}
+        />
       </>
     );
   }
@@ -77,11 +99,13 @@ export default function Home() {
       <div className={clsx('min-h-screen', 'bg-gray-50', 'dark:bg-gray-900')}>
         <div className={clsx('flex', 'flex-col', 'lg:flex-row')}>
           {/* Desktop Sidebar */}
-          <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')}>
+          <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')} onDoubleClick={() => setShowPencil(true)}>
             <div className={clsx('relative', 'w-full', 'h-full', 'bg-gray-900', 'flex', 'items-center', 'justify-center')}>
               <div className={clsx('absolute', 'inset-0', 'opacity-30')}>
+        
+
                 <Image
-                  src="/assets/images/a1.jpeg"
+                  src={templateWeding.fotoHeader}
                   alt="background"
                   fill
                   className="object-cover"
@@ -90,20 +114,21 @@ export default function Home() {
                 />
               </div>
               <div className={clsx('relative', 'z-10', 'text-center', 'text-white', 'bg-black/50', 'p-8', 'rounded-3xl')}>
-                <h2 className={clsx('font-esthetic', 'text-4xl', 'mb-4')}>Abdulloh mujaddid <br /> & <br />Ati sunarti</h2>
-                <p className="text-lg">Minggu, 31 Mei 2026</p>
+                <h2 className={clsx('font-esthetic', 'text-4xl', 'mb-4')}>{templateWeding?.namaLengkapPutra ?? "Badriana"} <br /> & <br />{templateWeding?.namaLengkapPutri ?? "Izzah"}</h2>
+                <p className="text-lg">{formatTanggalIndo(templateWeding?.tanggalPernikahan)}</p>
               </div>
             </div>
           </div>
 
+
           {/* Main Content */}
           <div className={clsx('w-full', 'lg:w-1/2', 'xl:w-1/3')}>
             <main>
-              <HomePage />
-              <BrideSection />
-              <WeddingDateSection />
-              <GallerySection />
-              <LoveGiftSection />
+              <HomePage templateWeding={templateWeding} />
+              <BrideSection templateWeding={templateWeding} />
+              <WeddingDateSection templateWeding={templateWeding} />
+              <GallerySection templateWeding={templateWeding} />
+              <LoveGiftSection templateWeding={templateWeding} />
               <CommentSection guestName={guestName} />
               <Footer />
             </main>

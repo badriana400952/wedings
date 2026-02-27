@@ -63,31 +63,31 @@ model TemplateWeding {
 
   designTheme       DesignThemes @default(CLASSIC)
 
-  fotoHeader        String       @map("foto_header")
+  fotoHeader        String       @map("foto_header") @default("")
 
   // Groom
-  namaPutra         String       @map("nama_putra")
-  namaLengkapPutra  String       @map("nama_lengkap_putra")
-  namaAyahPutra     String       @map("nama_ayah_putra")
-  namaIbuPutra      String       @map("nama_ibu_putra")
-  instagramPutra    String       @map("instagram_putra")
-  photoPutra        String       @map("photo_putra")
+  namaPutra         String       @map("nama_putra") @default("")
+  namaLengkapPutra  String       @map("nama_lengkap_putra") @default("")
+  namaAyahPutra     String       @map("nama_ayah_putra") @default("")
+  namaIbuPutra      String       @map("nama_ibu_putra") @default("")
+  instagramPutra    String       @map("instagram_putra") @default("")
+  photoPutra        String       @map("photo_putra") @default("")
 
   // Bride
-  namaPutri         String       @map("nama_putri")
-  namaLengkapPutri  String       @map("nama_lengkap_putri")
-  namaAyahPutri     String       @map("nama_ayah_putri")
-  namaIbuPutri      String       @map("nama_ibu_putri")
-  instagramPutri    String       @map("instagram_putri")
-  photoPutri        String       @map("photo_putri")
+  namaPutri         String       @map("nama_putri") @default("")
+  namaLengkapPutri  String       @map("nama_lengkap_putri") @default("")
+  namaAyahPutri     String       @map("nama_ayah_putri") @default("")
+  namaIbuPutri      String       @map("nama_ibu_putri") @default("")
+  instagramPutri    String       @map("instagram_putri") @default("")
+  photoPutri        String       @map("photo_putri") @default("")
 
   // Wedding Info
-  tanggalPernikahan DateTime     @map("tanggal_pernikahan")
-  linkGoogleCalender String      @map("link_google_calendar")
-  alamatPernikahan  String       @map("alamat_pernikahan")
-  jamMulai          String       @map("jam_mulai")
-  jamSelesai        String       @map("jam_selesai")
-  linkMaps          String       @map("link_maps")
+  tanggalPernikahan DateTime     @map("tanggal_pernikahan") @default(now())
+  linkGoogleCalender String      @map("link_google_calendar") @default("")
+  alamatPernikahan  String       @map("alamat_pernikahan") @default("")
+  jamMulai          String       @map("jam_mulai") @default("")
+  jamSelesai        String       @map("jam_selesai") @default("")
+  linkMaps          String       @map("link_maps") @default("")
 
   // Love Gift
   noAtm             String?      @map("no_atm")
@@ -99,7 +99,9 @@ model TemplateWeding {
   galeryId          String?      @map("galery_id")
   galery            Galery?      @relation(fields: [galeryId], references: [id], onDelete: SetNull)
 
+  pertemuanId String?
   pertemuan         Pertemuan?
+  comentIds String?
   comments          Comment[]
 
   createdAt         DateTime     @default(now()) @map("created_at")
@@ -117,6 +119,10 @@ model Pertemuan {
   templateWedingId  String         @unique @map("template_weding_id")
   templateWeding    TemplateWeding @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
 
+  judulPertemuanSatu String @map("judul_pertamaa")
+  judulPertemuanDua String @map("judul_dua")
+  judulPertemuanTiga String @map("judul_tiga")
+  judulPertemuanEmpat String @map("judul_empat")
   pertemuanPertama  String         @map("pertemuan_pertama")
   pertemuanKedua    String         @map("pertemuan_kedua")
   pertemuanKetiga   String         @map("pertemuan_ketiga")

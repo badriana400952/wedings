@@ -31,7 +31,7 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordValid) {
           throw new Error('Email atau password salah');
         }
-
+        console.log({user})
         return {
           id: user.id,
           email: user.email,

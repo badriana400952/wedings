@@ -1,13 +1,14 @@
 'use client';
 
+import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 
-export default function WeddingDateSection() {
+export default function WeddingDateSection({ templateWeding }: { templateWeding: ITemplateWeding }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const weddingDate = new Date('2026-05-31T09:00:00').getTime();
+    const weddingDate = new Date(templateWeding.tanggalPernikahan).getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -68,12 +69,12 @@ export default function WeddingDateSection() {
         <div className={clsx('space-y-8', 'mt-8')}>
           <div data-aos="fade-right">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Akad</h2>
-            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul 09.00 WIB - Selesai</p>
+            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {templateWeding.jamMulai} WIB - Selesai</p>
           </div>
           
           <div data-aos="fade-left">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
-            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul 10.00 WIB - Selesai</p>
+            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {templateWeding.jamMulai} WIB - Selesai</p>
           </div>
         </div>
         
@@ -93,7 +94,7 @@ export default function WeddingDateSection() {
         
         <div className="mt-8">
           <a
-            href="https://maps.app.goo.gl/2Uf8ths1GtPibe7Q6"
+            href={templateWeding.linkMaps}
             target="_blank"
             rel="noopener noreferrer"
             className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all')}
@@ -103,7 +104,7 @@ export default function WeddingDateSection() {
           </a>
           
           <p className={clsx('mt-4', 'text-sm', 'text-gray-600', 'dark:text-gray-400')}>
-            Gg. Rahwana, Gintung, Kec. Sukadiri, Kabupaten Tangerang, Banten 15330
+            {templateWeding.alamatPernikahan}
           </p>
         </div>
       </div>

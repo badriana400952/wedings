@@ -14,6 +14,14 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'ulems.my.id',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com', // ✅ tambahkan ini
+      },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com', // ✅ tambahkan ini
+      },
     ],
   },
 };
