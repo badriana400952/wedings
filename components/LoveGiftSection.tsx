@@ -85,7 +85,7 @@ export default function LoveGiftSection() {
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex justify-center">
                   <Image
-                    src="/assets/images/donate.png"
+                    src="/assets/images/sawer.png"
                     alt="QRIS"
                     width={300}
                     height={300}

@@ -40,7 +40,7 @@ export default function HomePage() {
         </p>
         
         <a
-          href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Abdul+Mujadid+%26+Ati+sunarti&dates=20260531T020000Z/20260531T150000Z&details=Undangan+Pernikahan+Abdulloh+mujaddid+dan+Ati+sunarti.+Akad+pukul+09.00+WIB,+Resepsi+pukul+22.00+WIB&location=RT+10+RW+02,+Desa+Pajerukan,+Kec.+Kalibagor,+Kab.+Banyumas,+Jawa+Tengah+53191"
+          href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Pernikahan+Abdul+Mujadid+%26+Ati+sunarti&dates=20260531T020000Z/20260531T150000Z&details=Undangan+Pernikahan+Abdulloh+mujaddid+dan+Ati+sunarti.+Akad+pukul+09.00+WIB,+Resepsi+pukul+10.00+WIB&location=RT+10+RW+02,+Desa+Pajerukan,+Kec.+Kalibagor,+Kab.+Banyumas,+Jawa+Tengah+53191"
           target="_blank"
           rel="noopener noreferrer"
           className={clsx('btn', 'btn-outline-auto', 'btn-sm', 'shadow', 'rounded-pill', 'px-3', 'py-1', 'text-gray-900', 'dark:text-white', 'border-gray-900', 'dark:border-white', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'cursor-pointer')} 
