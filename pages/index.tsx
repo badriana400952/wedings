@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (templateWeding?.id) {
-      setPayload({...payload,...templateWeding})
+      setPayload({ ...payload, ...templateWeding })
     }
   }, [templateWeding])
 
@@ -137,12 +137,11 @@ export default function Home() {
           {/* Main Content */}
           <div className={clsx('w-full', 'lg:w-1/2', 'xl:w-1/3')}>
             <main>
-              <HomePage  setPayload={setPayload} payload={payload}         showPencil={showPencil}
-          setShowPencil={setShowPencil} session={data?.user.id}/>
-              <BrideSection  setPayload={setPayload} payload={payload} />
-              <WeddingDateSection  setPayload={setPayload} payload={payload} />
-              <GallerySection  setPayload={setPayload} payload={payload} />
-              <LoveGiftSection  setPayload={setPayload} payload={payload} />
+              <HomePage setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
+              <BrideSection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
+              <WeddingDateSection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
+              <GallerySection setPayload={setPayload} payload={payload} />
+              <LoveGiftSection setPayload={setPayload} payload={payload} />
               <CommentSection guestName={guestName} setPayload={setPayload} payload={payload} />
               <Footer />
             </main>
