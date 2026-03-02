@@ -137,7 +137,8 @@ export default function Home() {
           {/* Main Content */}
           <div className={clsx('w-full', 'lg:w-1/2', 'xl:w-1/3')}>
             <main>
-              <HomePage  setPayload={setPayload} payload={payload} />
+              <HomePage  setPayload={setPayload} payload={payload}         showPencil={showPencil}
+          setShowPencil={setShowPencil} session={data?.user.id}/>
               <BrideSection  setPayload={setPayload} payload={payload} />
               <WeddingDateSection  setPayload={setPayload} payload={payload} />
               <GallerySection  setPayload={setPayload} payload={payload} />

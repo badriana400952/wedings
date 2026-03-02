@@ -6,7 +6,7 @@ import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 
 import SvgCustom from '@/utils/svg';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 
 interface WelcomePageProps {
   onOpen: () => void;
@@ -54,16 +54,23 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
     // Call the original onOpen function
     onOpen();
   };
-console.log(session)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isHoveringImage, setIsHoveringImage] = useState(false)
+  const [isEditingNamaPutra, setIsEditingNamaPutra] = useState(false)
+  const [isEditingNamaPutri, setIsEditingNamaPutri] = useState(false)
+  
   return (
     <div className={clsx('loading-page', 'bg-white-black', 'd-flex', 'justify-content-center', 'align-items-center')} style={{ opacity: 1 }}>
       <div className={clsx('d-flex', 'flex-column', 'text-center', 'overflow-y-auto', 'vh-100', 'justify-content-center', 'align-items-center')}>
         <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>The Wedding Of</h2>
 
         {/* Container untuk image dan pencil */}
-        <div className={clsx('relative', 'inline-block')}>
-          {showPencil && (
+        <div 
+          className={clsx('relative', 'inline-block')}
+          onMouseEnter={() => session && setIsHoveringImage(true)}
+          onMouseLeave={() => session && setIsHoveringImage(false)}
+        >
+          {(showPencil || (session && isHoveringImage)) && (
             <div
               className={clsx(
                 "absolute",
@@ -133,9 +140,16 @@ console.log(session)
             height={220}
             className={clsx(
               'img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto transition-opacity duration-300',
-              showPencil ? 'opacity-50' : 'opacity-100'
+              (showPencil || (session && isHoveringImage)) ? 'opacity-50 cursor-pointer' : 'opacity-100',
+              session ? 'cursor-pointer' : ''
             )}
             priority
+            onClick={() => {
+              // Jika session ada id-nya (user logged in), maka ketika diklik muncul upload
+              if (session) {
+                fileInputRef.current?.click()
+              }
+            }}
             onDoubleClick={() => {
               // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
               if (session) {
@@ -160,35 +174,56 @@ console.log(session)
           )}
           style={{ fontSize: '2.25rem' }}
         >
-          {showPencil ? (
+          {showPencil || (session && isEditingNamaPutra) ? (
             <input
               type="text"
               placeholder="Isi Nama"
-                 onDoubleClick={() => {
-              // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-              if (session) {
-                return; // Tidak melakukan apa-apa jika user logged in
-              }
-              setShowPencil(prev => !prev)
-            }}
+              onDoubleClick={() => {
+                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
+                if (session) {
+                  return; // Tidak melakukan apa-apa jika user logged in
+                }
+                setShowPencil(prev => !prev)
+              }}
               onChange={((e) => setPayload({ ...payload, namaLengkapPutra: e.target.value }))}
+              onBlur={() => session && setIsEditingNamaPutra(false)}
               className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
+              autoFocus
             />
           ) : (
-            payload.namaLengkapPutra 
+            <span 
+              onClick={() => session && setIsEditingNamaPutra(true)}
+              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
+            >
+              {payload.namaLengkapPutra}
+            </span>
           )}
 
           <br /> & <br />
 
-          {showPencil ? (
+          {showPencil || (session && isEditingNamaPutri) ? (
             <input
               type="text"
               placeholder="Isi Nama"
+              onDoubleClick={() => {
+                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
+                if (session) {
+                  return; // Tidak melakukan apa-apa jika user logged in
+                }
+                setShowPencil(prev => !prev)
+              }}
               onChange={((e) => setPayload({ ...payload, namaLengkapPutri: e.target.value }))}
+              onBlur={() => session && setIsEditingNamaPutri(false)}
               className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
+              autoFocus={isEditingNamaPutri}
             />
           ) : (
-            payload.namaLengkapPutri
+            <span 
+              onClick={() => session && setIsEditingNamaPutri(true)}
+              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
+            >
+              {payload.namaLengkapPutri}
+            </span>
           )}
         </h2>
 
