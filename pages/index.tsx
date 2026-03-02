@@ -140,8 +140,8 @@ export default function Home() {
               <HomePage setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
               <BrideSection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
               <WeddingDateSection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
-              <GallerySection setPayload={setPayload} payload={payload} />
-              <LoveGiftSection setPayload={setPayload} payload={payload} />
+              <GallerySection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
+              <LoveGiftSection setPayload={setPayload} payload={payload} showPencil={showPencil} setShowPencil={setShowPencil} session={data?.user.id} />
               <CommentSection guestName={guestName} setPayload={setPayload} payload={payload} />
               <Footer />
             </main>

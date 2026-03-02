@@ -85,20 +85,35 @@ export default function WeddingDateSection({
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Akad</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
               Pukul{' '}
-              {showPencil || (session && isEditingJamMulai) ? (
+              {(session && isEditingJamMulai) || showPencil ? (
                 <input
                   type="text"
                   placeholder="10:00"
                   value={payload.jamMulai || ''}
                   onChange={(e) => setPayload({ ...payload, jamMulai: e.target.value })}
-                  onBlur={() => session && setIsEditingJamMulai(false)}
+                  onBlur={() => {
+                    if (session) {
+                      setIsEditingJamMulai(false)
+                    } else {
+                      setShowPencil(false)
+                    }
+                  }}
                   className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'inline-block', 'w-24')}
                   autoFocus
                 />
               ) : (
                 <span
-                  onClick={() => session && setIsEditingJamMulai(true)}
-                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
+                  onClick={() => {
+                    if (session) {
+                      setIsEditingJamMulai(true)
+                    }
+                  }}
+                  onDoubleClick={() => {
+                    if (!session) {
+                      setShowPencil(true)
+                    }
+                  }}
+                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : 'cursor-pointer')}
                 >
                   {payload.jamMulai}
                 </span>
@@ -111,20 +126,35 @@ export default function WeddingDateSection({
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
               Pukul{' '}
-              {showPencil || (session && isEditingJamSelesai) ? (
+              {(session && isEditingJamSelesai) || showPencil ? (
                 <input
                   type="text"
                   placeholder="14:00"
                   value={payload.jamSelesai || ''}
                   onChange={(e) => setPayload({ ...payload, jamSelesai: e.target.value })}
-                  onBlur={() => session && setIsEditingJamSelesai(false)}
+                  onBlur={() => {
+                    if (session) {
+                      setIsEditingJamSelesai(false)
+                    } else {
+                      setShowPencil(false)
+                    }
+                  }}
                   className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'inline-block', 'w-24')}
                   autoFocus
                 />
               ) : (
                 <span
-                  onClick={() => session && setIsEditingJamSelesai(true)}
-                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
+                  onClick={() => {
+                    if (session) {
+                      setIsEditingJamSelesai(true)
+                    }
+                  }}
+                  onDoubleClick={() => {
+                    if (!session) {
+                      setShowPencil(true)
+                    }
+                  }}
+                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : 'cursor-pointer')}
                 >
                   {payload.jamSelesai}
                 </span>
@@ -150,13 +180,19 @@ export default function WeddingDateSection({
         
         <div className="mt-8">
           <div className="mb-4">
-            {showPencil || (session && isEditingLinkMaps) ? (
+            {(session && isEditingLinkMaps) || showPencil ? (
               <input
                 type="text"
                 placeholder="https://maps.google.com/..."
                 value={payload.linkMaps || ''}
                 onChange={(e) => setPayload({ ...payload, linkMaps: e.target.value })}
-                onBlur={() => session && setIsEditingLinkMaps(false)}
+                onBlur={() => {
+                  if (session) {
+                    setIsEditingLinkMaps(false)
+                  } else {
+                    setShowPencil(false)
+                  }
+                }}
                 className={clsx('bg-transparent', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-full', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full', 'px-6', 'py-2', 'text-gray-900', 'dark:text-white')}
                 autoFocus
               />
@@ -171,7 +207,13 @@ export default function WeddingDateSection({
                     setIsEditingLinkMaps(true)
                   }
                 }}
-                className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all', session ? 'cursor-pointer' : '')}
+                onDoubleClick={(e) => {
+                  if (!session) {
+                    e.preventDefault()
+                    setShowPencil(true)
+                  }
+                }}
+                className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all', 'cursor-pointer')}
               >
                 <i className={clsx('fas', 'fa-map-location-dot', 'mr-2')}></i>
                 Lihat Google Maps
