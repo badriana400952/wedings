@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { ITemplateWeding } from '@/prisma/schema.types';
+import clsx from 'clsx';
 
 interface Comment {
   id: string;
@@ -15,9 +17,11 @@ interface Comment {
 
 interface CommentSectionProps {
   guestName: string | null;
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
 }
 
-export default function CommentSection({ guestName }: CommentSectionProps) {
+export default function CommentSection({ guestName, payload, setPayload, }: CommentSectionProps) {
   const [name, setName] = useState(guestName || '');
   const [presence, setPresence] = useState('0');
   const [comment, setComment] = useState('');
@@ -27,7 +31,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
 
   useEffect(() => {
     fetchComments();
-    
+
     // Check initial theme
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -62,7 +66,7 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !comment || presence === '0') {
       alert('Mohon lengkapi semua field');
       return;
@@ -107,23 +111,23 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
   };
 
   return (
-    <section id="comment" className="!bg-white dark:!bg-gray-800 py-16 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="border-2 border-gray-300 dark:border-gray-600 rounded-3xl shadow-xl p-6 !bg-gray-50 dark:!bg-gray-900">
-          <h2 className="font-esthetic text-5xl text-center mt-4 mb-8 text-gray-900 dark:text-white">
+    <section id="comment" className={clsx('!bg-white', 'dark:!bg-gray-800', 'py-16', 'px-4')}>
+      <div className={clsx('max-w-4xl', 'mx-auto')}>
+        <div className={clsx('border-2', 'border-gray-300', 'dark:border-gray-600', 'rounded-3xl', 'shadow-xl', 'p-6', '!bg-gray-50', 'dark:!bg-gray-900')}>
+          <h2 className={clsx('font-esthetic', 'text-5xl', 'text-center', 'mt-4', 'mb-8', 'text-gray-900', 'dark:text-white')}>
             Ucapan & Doa
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block mb-2 text-gray-900 dark:text-white">
-                <i className="fas fa-person mr-2"></i>Nama
+              <label className={clsx('block', 'mb-2', 'text-gray-900', 'dark:text-white')}>
+                <i className={clsx('fas', 'fa-person', 'mr-2')}></i>Nama
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
+                className={clsx('w-full', 'px-4', 'py-2', 'rounded-2xl', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-white', 'dark:!bg-gray-700', '!text-gray-900', 'dark:!text-white', 'focus:outline-none', 'focus:border-gray-500')}
                 placeholder="Isikan Nama Anda"
                 minLength={2}
                 maxLength={50}
@@ -131,13 +135,13 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
             </div>
 
             <div>
-              <label className="block mb-2 text-gray-900 dark:text-white">
-                <i className="fas fa-person-circle-question mr-2"></i>Presensi
+              <label className={clsx('block', 'mb-2', 'text-gray-900', 'dark:text-white')}>
+                <i className={clsx('fas', 'fa-person-circle-question', 'mr-2')}></i>Presensi
               </label>
               <select
                 value={presence}
                 onChange={(e) => setPresence(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
+                className={clsx('w-full', 'px-4', 'py-2', 'rounded-2xl', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-white', 'dark:!bg-gray-700', '!text-gray-900', 'dark:!text-white', 'focus:outline-none', 'focus:border-gray-500')}
               >
                 <option value="0">Konfirmasi Presensi</option>
                 <option value="1">✅ Datang</option>
@@ -146,13 +150,13 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
             </div>
 
             <div>
-              <label className="block mb-2 text-gray-900 dark:text-white">
-                <i className="fas fa-comment mr-2"></i>Ucapan & Doa
+              <label className={clsx('block', 'mb-2', 'text-gray-900', 'dark:text-white')}>
+                <i className={clsx('fas', 'fa-comment', 'mr-2')}></i>Ucapan & Doa
               </label>
               <textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full px-4 py-2 rounded-2xl border-2 border-gray-300 dark:border-gray-600 !bg-white dark:!bg-gray-700 !text-gray-900 dark:!text-white focus:outline-none focus:border-gray-500"
+                className={clsx('w-full', 'px-4', 'py-2', 'rounded-2xl', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-white', 'dark:!bg-gray-700', '!text-gray-900', 'dark:!text-white', 'focus:outline-none', 'focus:border-gray-500')}
                 rows={4}
                 placeholder="Tulis Ucapan dan Doa"
                 minLength={1}
@@ -163,53 +167,52 @@ export default function CommentSection({ guestName }: CommentSectionProps) {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 rounded-2xl transition-colors disabled:opacity-50 ${
-                theme === 'dark'
+              className={`w-full py-3 rounded-2xl transition-colors disabled:opacity-50 ${theme === 'dark'
                   ? '!bg-white !text-gray-900 hover:!bg-gray-100'
                   : '!bg-gray-900 !text-white hover:!bg-gray-800'
-              }`}
+                }`}
             >
-              <i className="fas fa-paper-plane mr-2"></i>
+              <i className={clsx('fas', 'fa-paper-plane', 'mr-2')}></i>
               {loading ? 'Mengirim...' : 'Send'}
             </button>
           </form>
 
           {/* Comments List */}
-          <div className="mt-8 space-y-4">
+          <div className={clsx('mt-8', 'space-y-4')}>
             {comments.map((c) => (
               <div
                 key={c.id}
-                className="!bg-gray-50 dark:!bg-gray-700 rounded-2xl p-4 shadow"
+                className={clsx('!bg-gray-50', 'dark:!bg-gray-700', 'rounded-2xl', 'p-4', 'shadow')}
               >
-                <div className="flex items-start justify-between">
+                <div className={clsx('flex', 'items-start', 'justify-between')}>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-semibold text-gray-900 dark:text-white">
+                    <div className={clsx('flex', 'items-center', 'gap-2', 'mb-2')}>
+                      <h4 className={clsx('font-semibold', 'text-gray-900', 'dark:text-white')}>
                         {c.name}
                       </h4>
                       <span className="text-sm">
                         {c.presence ? '✅' : '❌'}
                       </span>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                    <p className={clsx('text-gray-700', 'dark:text-gray-300', 'whitespace-pre-wrap')}>
                       {c.comment}
                     </p>
                     {c.gif && (
-                      <Image 
-                        src={c.gif} 
-                        alt="gif" 
+                      <Image
+                        src={c.gif}
+                        alt="gif"
                         width={300}
                         height={200}
-                        className="mt-2 rounded-lg max-w-xs"
+                        className={clsx('mt-2', 'rounded-lg', 'max-w-xs')}
                         unoptimized
                       />
                     )}
-                    <div className="flex items-center gap-4 mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    <div className={clsx('flex', 'items-center', 'gap-4', 'mt-3', 'text-sm', 'text-gray-500', 'dark:text-gray-400')}>
                       <button
                         onClick={() => handleLike(c.id)}
-                        className="flex items-center gap-1 hover:text-red-500"
+                        className={clsx('flex', 'items-center', 'gap-1', 'hover:text-red-500')}
                       >
-                        <i className="fas fa-heart"></i>
+                        <i className={clsx('fas', 'fa-heart')}></i>
                         <span>{c.likesCount}</span>
                       </button>
                       <span>{new Date(c.createdAt).toLocaleDateString('id-ID')}</span>

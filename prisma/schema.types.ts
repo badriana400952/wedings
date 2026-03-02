@@ -51,7 +51,7 @@ export interface ITemplateWeding {
 
   designTheme: DesignThemes
 
-  fotoHeader: string
+  fotoHeader: string | File
 
   // Groom
   namaPutra: string

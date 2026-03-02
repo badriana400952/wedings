@@ -4,19 +4,21 @@ import Image from 'next/image';
 import confetti from 'canvas-confetti';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+
 import SvgCustom from '@/utils/svg';
+import { useRef } from 'react';
 
 interface WelcomePageProps {
   onOpen: () => void;
   guestName: string | null;
-  templateWeding: ITemplateWeding
   showPencil: boolean
   setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
-
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+  payload: ITemplateWeding
+  session: string | undefined
 }
 
-export default function WelcomePage({ onOpen, guestName, templateWeding, showPencil, setShowPencil }: WelcomePageProps) {
+export default function WelcomePage({ onOpen, guestName, payload, showPencil, setShowPencil, setPayload, session }: WelcomePageProps) {
   const { SvgPencil } = SvgCustom()
   const handleOpen = () => {
     // Trigger confetti effect
@@ -52,31 +54,143 @@ export default function WelcomePage({ onOpen, guestName, templateWeding, showPen
     // Call the original onOpen function
     onOpen();
   };
-
+console.log(session)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   return (
     <div className={clsx('loading-page', 'bg-white-black', 'd-flex', 'justify-content-center', 'align-items-center')} style={{ opacity: 1 }}>
       <div className={clsx('d-flex', 'flex-column', 'text-center', 'overflow-y-auto', 'vh-100', 'justify-content-center', 'align-items-center')}>
         <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>The Wedding Of</h2>
-        {showPencil && <div className={clsx('z-100 w-64', 'absolute')} >
-          <SvgPencil />
-        </div>}
-        <Image
-          src={templateWeding.fotoHeader}
-          alt="background"
-          width={220}
-          height={220}
-          className={clsx('img-center-crop', 'rounded-circle', 'border-4', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'mb-4', 'mx-auto')}
-          priority
-          onDoubleClick={() => setShowPencil(true)}
-          style={{
-            width: '220px',
-            height: '220px',
-            objectFit: 'cover',
-            objectPosition: '65% 35%'
-          }}
-        />
 
-        <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>{templateWeding.namaLengkapPutra} <br /> & <br />{templateWeding.namaLengkapPutri}</h2>
+        {/* Container untuk image dan pencil */}
+        <div className={clsx('relative', 'inline-block')}>
+          {showPencil && (
+            <div
+              className={clsx(
+                "absolute",
+                "top-1/2",
+                "left-1/2",
+                "transform",
+                "-translate-x-1/2",
+                "-translate-y-1/2",
+                "z-10"
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className={clsx(
+                  'inline-flex',
+                  'items-center',
+                  'text-white',
+                  'bg-brand',
+                  'hover:bg-brand-strong',
+                  'box-border',
+                  'border-none',
+                  'border-transparent',
+                  'shadow-xs',
+                  'font-medium',
+                  'leading-5',
+                  'rounded-base',
+                  'text-sm',
+                  'px-3',
+                  'py-2',
+                  'focus:outline-none',
+                  'focus:ring-0'
+                )}
+              >
+                <SvgPencil className={clsx('w-9', 'h-9', 'text-gray-800')} />
+              </button>
+
+              <input
+                ref={fileInputRef}
+                id="dropzone-file-2"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    setPayload((prev) => ({
+                      ...prev,
+                      fotoHeader: file
+                    }))
+                  }
+                }}
+              />
+            </div>
+          )}
+
+          <Image
+            src={
+              payload?.fotoHeader 
+                ? (typeof payload.fotoHeader === 'string' 
+                    ? payload.fotoHeader 
+                    : URL.createObjectURL(payload.fotoHeader))
+                : '/default-wedding.jpg'
+            }
+            alt="background"
+            width={220}
+            height={220}
+            className={clsx(
+              'img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto transition-opacity duration-300',
+              showPencil ? 'opacity-50' : 'opacity-100'
+            )}
+            priority
+            onDoubleClick={() => {
+              // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
+              if (session) {
+                return; // Tidak melakukan apa-apa jika user logged in
+              }
+              setShowPencil(prev => !prev)
+            }}
+            style={{
+              width: '220px',
+              height: '220px',
+              objectFit: 'cover',
+              objectPosition: '65% 35%'
+            }}
+          />
+        </div>
+
+        <h2
+          className={clsx(
+            'font-esthetic',
+            'mb-4',
+            'text-center'
+          )}
+          style={{ fontSize: '2.25rem' }}
+        >
+          {showPencil ? (
+            <input
+              type="text"
+              placeholder="Isi Nama"
+                 onDoubleClick={() => {
+              // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
+              if (session) {
+                return; // Tidak melakukan apa-apa jika user logged in
+              }
+              setShowPencil(prev => !prev)
+            }}
+              onChange={((e) => setPayload({ ...payload, namaLengkapPutra: e.target.value }))}
+              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
+            />
+          ) : (
+            payload.namaLengkapPutra 
+          )}
+
+          <br /> & <br />
+
+          {showPencil ? (
+            <input
+              type="text"
+              placeholder="Isi Nama"
+              onChange={((e) => setPayload({ ...payload, namaLengkapPutri: e.target.value }))}
+              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
+            />
+          ) : (
+            payload.namaLengkapPutri
+          )}
+        </h2>
 
         {guestName && (
           <div id="guest-name" className="mb-2">

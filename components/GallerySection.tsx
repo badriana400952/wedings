@@ -5,7 +5,15 @@ import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 
-export default function GallerySection({ templateWeding }: { templateWeding: ITemplateWeding }) {
+interface IPropss {
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+}
+
+export default function GallerySection({
+  payload,
+  setPayload,
+}: IPropss) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const images = [
@@ -26,7 +34,7 @@ export default function GallerySection({ templateWeding }: { templateWeding: ITe
           </h2>
           
           <div className={clsx('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4', 'mt-8')}>
-            {templateWeding?.galery?.fotos.map((img, idx) => (
+            {payload?.galery?.fotos.map((img, idx) => (
               <div key={idx} className={clsx('relative', 'overflow-hidden', 'rounded-2xl', 'shadow-lg', 'cursor-pointer', 'hover:scale-105', 'transition-transform', 'h-64')}>
                 <Image
                   src={img}

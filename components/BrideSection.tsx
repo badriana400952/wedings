@@ -4,7 +4,15 @@ import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 import Image from 'next/image';
 
-export default function BrideSection({ templateWeding }: { templateWeding: ITemplateWeding }) {
+interface IPropss {
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+}
+
+export default function BrideSection({
+  payload,
+  setPayload,
+}: IPropss) {
   return (
     <>
       {/* Wave Separator */}
@@ -36,17 +44,17 @@ export default function BrideSection({ templateWeding }: { templateWeding: ITemp
 
             <div data-aos="fade-right" data-aos-duration="2000" className="pb-1">
               <Image
-                src={templateWeding.photoPutra}
+                src={payload.photoPutra}
                 alt="cowo"
                 width={208}
                 height={208}
                 className={clsx('img-center-crop', 'rounded-circle', 'border-4', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'my-4', 'mx-auto', 'cursor-pointer')}
               />
-              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>{templateWeding.namaLengkapPutra}</h2>
+              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>{payload.namaLengkapPutra}</h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>Putra ke-1</p>
-              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak {templateWeding.namaAyahPutra}</p>
+              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak {payload.namaAyahPutra}</p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>dan</p>
-              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Ibu {templateWeding.namaIbuPutra}</p>
+              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Ibu {payload.namaIbuPutra}</p>
             </div>
 
             {/* Love animation */}
@@ -69,17 +77,17 @@ export default function BrideSection({ templateWeding }: { templateWeding: ITemp
 
             <div data-aos="fade-left" data-aos-duration="2000" className="pb-1">
               <Image
-                src={templateWeding.photoPutri}
+                src={payload.photoPutri}
                 alt="cewe"
                 width={208}
                 height={208}
                 className={clsx('img-center-crop', 'rounded-circle', 'border-4', 'border-gray-300', 'dark:border-gray-600', 'shadow', 'my-4', 'mx-auto', 'cursor-pointer')}
               />
-              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>{templateWeding.namaLengkapPutri}</h2>
+              <h2 className={clsx('font-esthetic', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.125rem' }}>{payload.namaLengkapPutri}</h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>Putri ke-2</p>
-              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak {templateWeding.namaAyahPutri} </p>
+              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Bapak {payload.namaAyahPutri} </p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>dan</p>
-              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Ibu {templateWeding.namaIbuPutri}</p>
+              <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>Ibu {payload.namaIbuPutri}</p>
             </div>
 
             {/* Love animation */}

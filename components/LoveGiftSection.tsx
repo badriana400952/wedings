@@ -4,8 +4,14 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
-
-export default function LoveGiftSection({ templateWeding }: { templateWeding: ITemplateWeding }) {
+interface IPropss {
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+}
+export default function LoveGiftSection({
+  payload,
+  setPayload,
+}: IPropss) {
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   const copyToClipboard = (text: string) => {
@@ -41,20 +47,20 @@ export default function LoveGiftSection({ templateWeding }: { templateWeding: IT
             </div>
             
             <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{templateWeding.namaLengkapPutra}
+              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra}
             </p>
             
             {openSection === 'transfer' && (
               <div className={clsx('mt-4', 'pt-4', 'border-t', 'border-gray-200', 'dark:border-gray-700')}>
                 <p className={clsx('text-gray-700', 'dark:text-gray-300')}>
-                  <i className={clsx('fas', 'fa-building-columns', 'mr-2')}></i>{templateWeding.namaBank}
+                  <i className={clsx('fas', 'fa-building-columns', 'mr-2')}></i>{payload.namaBank}
                 </p>
                 <div className={clsx('flex', 'items-center', 'justify-between', 'mt-2')}>
                   <p className={clsx('text-gray-700', 'dark:text-gray-300')}>
-                    <i className={clsx('fas', 'fa-credit-card', 'mr-2')}></i>{templateWeding.noAtm}
+                    <i className={clsx('fas', 'fa-credit-card', 'mr-2')}></i>{payload.noAtm}
                   </p>
                   <button
-                    onClick={() => copyToClipboard(`${templateWeding.noAtm}`)}
+                    onClick={() => copyToClipboard(`${payload.noAtm}`)}
                     className={clsx('px-3', 'py-1', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-full', 'text-sm', 'text-gray-900', 'dark:text-white', 'hover:bg-gray-100', 'dark:hover:bg-gray-700')}
                   >
                     <i className={clsx('fas', 'fa-copy')}></i>
@@ -80,14 +86,14 @@ export default function LoveGiftSection({ templateWeding }: { templateWeding: IT
             </div>
             
             <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{templateWeding.namaLengkapPutra}
+              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra}
             </p>
             
             {openSection === 'qris' && (
               <div className={clsx('mt-4', 'pt-4', 'border-t', 'border-gray-200', 'dark:border-gray-700')}>
                 <div className={clsx('flex', 'justify-center')}>
                   <Image
-                    src={templateWeding?.fotoQris || "https://res.cloudinary.com/doykilt63/image/upload/v1772185007/udangan/sawer_me1xw1.png"}
+                    src={payload?.fotoQris || "https://res.cloudinary.com/doykilt63/image/upload/v1772185007/udangan/sawer_me1xw1.png"}
                     alt="QRIS"
                     width={300}
                     height={300}
@@ -114,17 +120,17 @@ export default function LoveGiftSection({ templateWeding }: { templateWeding: IT
             </div>
             
             <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{templateWeding.namaLengkapPutra}
+              <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra}
             </p>
             
             {openSection === 'gift' && (
               <div className={clsx('mt-4', 'pt-4', 'border-t', 'border-gray-200', 'dark:border-gray-700', 'space-y-2')}>
                 <div className={clsx('flex', 'items-center', 'justify-between')}>
                   <p className={clsx('text-gray-700', 'dark:text-gray-300')}>
-                    <i className={clsx('fas', 'fa-phone-volume', 'mr-2')}></i>{templateWeding.noHp}
+                    <i className={clsx('fas', 'fa-phone-volume', 'mr-2')}></i>{payload.noHp}
                   </p>
                   <button
-                    onClick={() => copyToClipboard(`${templateWeding.noHp}`)}
+                    onClick={() => copyToClipboard(`${payload.noHp}`)}
                     className={clsx('px-3', 'py-1', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-full', 'text-sm', 'text-gray-900', 'dark:text-white', 'hover:bg-gray-100', 'dark:hover:bg-gray-700')}
                   >
                     <i className={clsx('fas', 'fa-copy')}></i>
@@ -133,7 +139,7 @@ export default function LoveGiftSection({ templateWeding }: { templateWeding: IT
                 <div className={clsx('flex', 'items-center', 'justify-between')}>
                   <p className={clsx('text-gray-700', 'dark:text-gray-300', 'truncate', 'mr-2')}>
                     <i className={clsx('fas', 'fa-location-dot', 'mr-2')}></i>
-                    {templateWeding.alamatPernikahan}
+                    {payload.alamatPernikahan}
                   </p>
                   <button
                     onClick={() => copyToClipboard('Gg. Rahwana, Gintung, Kec. Sukadiri, Kabupaten Tangerang, Banten 15330')}

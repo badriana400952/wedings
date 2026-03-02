@@ -5,14 +5,19 @@ import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 import Image from 'next/image';
 interface Pr {
-  templateWeding: ITemplateWeding
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
 }
-const HomePage: React.FC<Pr> = ({ templateWeding }) => {
+const HomePage: React.FC<Pr> = ({ payload, setPayload }) => {
   return (
     <section id="home" className={clsx('bg-light-dark', 'position-relative', 'overflow-hidden', 'p-0', 'm-0')}>
       <div className={clsx('position-absolute', 'opacity-25', 'top-50', 'start-50', 'translate-middle')} style={{ width: '100%', height: '100%' }}>
         <Image
-          src={templateWeding.fotoHeader}
+          src={
+            typeof payload.fotoHeader === "string"
+              ? payload.fotoHeader
+              : URL.createObjectURL(payload.fotoHeader)
+          }
           alt="bg"
           fill
           className="bg-cover-home"
@@ -27,7 +32,11 @@ const HomePage: React.FC<Pr> = ({ templateWeding }) => {
         </h1>
 
         <Image
-          src={templateWeding.fotoHeader}
+          src={
+            typeof payload.fotoHeader === "string"
+              ? payload.fotoHeader
+              : URL.createObjectURL(payload.fotoHeader)
+          }
           alt="bg"
           width={208}
           height={208}
@@ -36,15 +45,15 @@ const HomePage: React.FC<Pr> = ({ templateWeding }) => {
         />
 
         <h2 className={clsx('font-esthetic', 'my-4', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.25rem' }}>
-          {templateWeding.namaPutra || "Badriana"} & {templateWeding.namaPutri || "Izzah"}
+          {payload.namaPutra || "Badriana"} & {payload.namaPutri || "Izzah"}
         </h2>
 
         <p className={clsx('my-2', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>
-          {formatTanggalIndo(templateWeding?.tanggalPernikahan)}
+          {formatTanggalIndo(payload?.tanggalPernikahan)}
         </p>
 
         <a
-          href={templateWeding.linkGoogleCalender}
+          href={payload.linkGoogleCalender}
           target="_blank"
           rel="noopener noreferrer"
           className={clsx('btn', 'btn-outline-auto', 'btn-sm', 'shadow', 'rounded-pill', 'px-3', 'py-1', 'text-gray-900', 'dark:text-white', 'border-gray-900', 'dark:border-white', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'cursor-pointer')}

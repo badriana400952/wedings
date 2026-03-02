@@ -4,11 +4,19 @@ import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 
-export default function WeddingDateSection({ templateWeding }: { templateWeding: ITemplateWeding }) {
+interface IPropss {
+  payload: ITemplateWeding
+  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+}
+
+export default function WeddingDateSection({
+  payload,
+  setPayload,
+}: IPropss) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const weddingDate = new Date(templateWeding.tanggalPernikahan).getTime();
+    const weddingDate = new Date(payload.tanggalPernikahan).getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -69,12 +77,12 @@ export default function WeddingDateSection({ templateWeding }: { templateWeding:
         <div className={clsx('space-y-8', 'mt-8')}>
           <div data-aos="fade-right">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Akad</h2>
-            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {templateWeding.jamMulai} WIB - Selesai</p>
+            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {payload.jamMulai} WIB - Selesai</p>
           </div>
           
           <div data-aos="fade-left">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
-            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {templateWeding.jamMulai} WIB - Selesai</p>
+            <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Pukul {payload.jamMulai} WIB - Selesai</p>
           </div>
         </div>
         
@@ -94,7 +102,7 @@ export default function WeddingDateSection({ templateWeding }: { templateWeding:
         
         <div className="mt-8">
           <a
-            href={templateWeding.linkMaps}
+            href={payload.linkMaps}
             target="_blank"
             rel="noopener noreferrer"
             className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all')}
@@ -104,7 +112,7 @@ export default function WeddingDateSection({ templateWeding }: { templateWeding:
           </a>
           
           <p className={clsx('mt-4', 'text-sm', 'text-gray-600', 'dark:text-gray-400')}>
-            {templateWeding.alamatPernikahan}
+            {payload.alamatPernikahan}
           </p>
         </div>
       </div>

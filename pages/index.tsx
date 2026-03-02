@@ -18,12 +18,14 @@ import useTemplateWedings from '@/hooks/useTemplateWweding';
 import { useSession } from 'next-auth/react';
 import { formatTanggalIndo } from '@/date';
 import SvgCustom from '@/utils/svg';
+import { ITemplateWeding } from '@/prisma/schema.types';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [guestName, setGuestName] = useState<string | null>(null);
   const { templateWeding, handleGetTemplateWeding } = useTemplateWedings()
   const [showPencil, setShowPencil] = useState<boolean>(false)
+  const [payload, setPayload] = useState<ITemplateWeding>({} as ITemplateWeding)
   const { data } = useSession()
 
   useEffect(() => {
@@ -32,6 +34,11 @@ export default function Home() {
     }
   }, [data])
 
+  useEffect(() => {
+    if (templateWeding?.id) {
+      setPayload({...payload,...templateWeding})
+    }
+  }, [templateWeding])
 
   useEffect(() => {
     // Get guest name from URL - support both ?to= and direct slug
@@ -52,8 +59,8 @@ export default function Home() {
     }
   }, []);
 
+  console.log("payload", payload)
 
-  console.log(templateWeding, "templateWedingxx")
   const handleOpen = () => {
     setIsOpen(true);
     document.body.scrollIntoView({ behavior: 'smooth' });
@@ -72,12 +79,14 @@ export default function Home() {
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="id_ID" />
         </Head>
-        <WelcomePage 
-        onOpen={handleOpen} 
-        guestName={guestName} 
-        templateWeding={templateWeding} 
-        showPencil={showPencil}
-        setShowPencil={setShowPencil}
+        <WelcomePage
+          onOpen={handleOpen}
+          guestName={guestName}
+          showPencil={showPencil}
+          setShowPencil={setShowPencil}
+          setPayload={setPayload}
+          payload={payload}
+          session={data?.user.id}
         />
       </>
     );
@@ -102,10 +111,14 @@ export default function Home() {
           <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')} onDoubleClick={() => setShowPencil(true)}>
             <div className={clsx('relative', 'w-full', 'h-full', 'bg-gray-900', 'flex', 'items-center', 'justify-center')}>
               <div className={clsx('absolute', 'inset-0', 'opacity-30')}>
-        
+
 
                 <Image
-                  src={templateWeding.fotoHeader}
+                  src={
+                    typeof payload.fotoHeader === "string"
+                      ? payload.fotoHeader
+                      : URL.createObjectURL(payload.fotoHeader)
+                  }
                   alt="background"
                   fill
                   className="object-cover"
@@ -114,8 +127,8 @@ export default function Home() {
                 />
               </div>
               <div className={clsx('relative', 'z-10', 'text-center', 'text-white', 'bg-black/50', 'p-8', 'rounded-3xl')}>
-                <h2 className={clsx('font-esthetic', 'text-4xl', 'mb-4')}>{templateWeding?.namaLengkapPutra ?? "Badriana"} <br /> & <br />{templateWeding?.namaLengkapPutri ?? "Izzah"}</h2>
-                <p className="text-lg">{formatTanggalIndo(templateWeding?.tanggalPernikahan)}</p>
+                <h2 className={clsx('font-esthetic', 'text-4xl', 'mb-4')}>{payload?.namaLengkapPutra ?? "Badriana"} <br /> & <br />{payload?.namaLengkapPutri ?? "Izzah"}</h2>
+                <p className="text-lg">{formatTanggalIndo(payload?.tanggalPernikahan)}</p>
               </div>
             </div>
           </div>
@@ -124,12 +137,12 @@ export default function Home() {
           {/* Main Content */}
           <div className={clsx('w-full', 'lg:w-1/2', 'xl:w-1/3')}>
             <main>
-              <HomePage templateWeding={templateWeding} />
-              <BrideSection templateWeding={templateWeding} />
-              <WeddingDateSection templateWeding={templateWeding} />
-              <GallerySection templateWeding={templateWeding} />
-              <LoveGiftSection templateWeding={templateWeding} />
-              <CommentSection guestName={guestName} />
+              <HomePage  setPayload={setPayload} payload={payload} />
+              <BrideSection  setPayload={setPayload} payload={payload} />
+              <WeddingDateSection  setPayload={setPayload} payload={payload} />
+              <GallerySection  setPayload={setPayload} payload={payload} />
+              <LoveGiftSection  setPayload={setPayload} payload={payload} />
+              <CommentSection guestName={guestName} setPayload={setPayload} payload={payload} />
               <Footer />
             </main>
 
