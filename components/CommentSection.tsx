@@ -19,9 +19,10 @@ interface CommentSectionProps {
   guestName: string | null;
   payload: ITemplateWeding
   setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
+  adminId?: string
 }
 
-export default function CommentSection({ guestName, payload, setPayload, }: CommentSectionProps) {
+export default function CommentSection({ guestName, payload, setPayload, adminId }: CommentSectionProps) {
   const [name, setName] = useState(guestName || '');
   const [presence, setPresence] = useState('0');
   const [comment, setComment] = useState('');

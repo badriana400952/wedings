@@ -12,10 +12,11 @@ interface IPropss {
   showPencil: boolean
   setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
   session: string | undefined
+  isAdminView: boolean
 }
 
 export default function BrideSection({
-  payload, setPayload, showPencil, setShowPencil, session
+  payload, setPayload, showPencil, setShowPencil, session, isAdminView
 }: IPropss) {
   const { SvgPencil } = SvgCustom()
   const [isHoveringPhotoPutra, setIsHoveringPhotoPutra] = useState(false)

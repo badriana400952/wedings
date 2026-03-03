@@ -14,9 +14,10 @@ interface Pr {
   showPencil: boolean
   setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
   session: string | undefined
+  isAdminView?: boolean
 }
 
-const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil, session }) => {
+const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil, session, isAdminView = false }) => {
   const { SvgPencil } = SvgCustom()
   const [isEditingNamaPutra, setIsEditingNamaPutra] = useState(false)
   const [isEditingNamaPutri, setIsEditingNamaPutri] = useState(false)

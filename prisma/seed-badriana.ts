@@ -46,12 +46,18 @@ async function main() {
     },
   });
 
-  // 3. Buat Template Wedding untuk Badriana
-  console.log('💍 Creating wedding template...');
-  const weddingDate = new Date();
-  weddingDate.setMonth(weddingDate.getMonth() + 2); // 2 bulan dari sekarang
+  // 3. Cek atau buat Template Wedding untuk Badriana
+  console.log('💍 Checking wedding template...');
+  let templateWeding = await prisma.templateWeding.findUnique({
+    where: { userId: user.id }
+  });
 
-  const templateWeding = await prisma.templateWeding.create({
+  if (!templateWeding) {
+    console.log('💍 Creating wedding template...');
+    const weddingDate = new Date();
+    weddingDate.setMonth(weddingDate.getMonth() + 2); // 2 bulan dari sekarang
+
+    templateWeding = await prisma.templateWeding.create({
     data: {
       userId: user.id,
       designTheme: 'MODERN',

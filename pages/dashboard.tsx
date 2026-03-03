@@ -83,9 +83,9 @@ export default function Dashboard() {
     }
     
     const baseUrl = window.location.origin;
-    // Generate link dengan format: ?nama+tamu (spasi jadi +)
+    // Generate link dengan format: /userId/?nama+tamu
     const encodedName = guestName.trim().replace(/\s+/g, '+');
-    const link = `${baseUrl}/?${encodedName}`;
+    const link = `${baseUrl}/${session?.user.id}/?${encodedName}`;
     setGeneratedLink(link);
   };
 
@@ -134,7 +134,7 @@ export default function Dashboard() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => router.push('/')}
+                onClick={() => router.push(`/${session?.user.id}`)}
                 className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
               >
                 <i className="fas fa-home mr-2"></i>Home

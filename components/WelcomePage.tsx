@@ -16,12 +16,14 @@ interface WelcomePageProps {
   setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
   payload: ITemplateWeding
   session: string | undefined
+  isAdminView?: boolean
 }
 
-export default function WelcomePage({ onOpen, guestName, payload, showPencil, setShowPencil, setPayload, session }: WelcomePageProps) {
+export default function WelcomePage({ onOpen, guestName, payload, showPencil, setShowPencil, setPayload, session, isAdminView = false }: WelcomePageProps) {
   const { SvgPencil } = SvgCustom()
   const handleOpen = () => {
     // Trigger confetti effect
+    console.log("guestName",guestName)
     const duration = 3000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
@@ -67,10 +69,10 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
         {/* Container untuk image dan pencil */}
         <div 
           className={clsx('relative', 'inline-block')}
-          onMouseEnter={() => session && setIsHoveringImage(true)}
-          onMouseLeave={() => session && setIsHoveringImage(false)}
+          onMouseEnter={() => isAdminView && setIsHoveringImage(true)}
+          onMouseLeave={() => isAdminView && setIsHoveringImage(false)}
         >
-          {(showPencil || (session && isHoveringImage)) && (
+          {(showPencil || (isAdminView && isHoveringImage)) && (
             <div
               className={clsx(
                 "absolute",
@@ -140,13 +142,13 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
             height={220}
             className={clsx(
               'img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto transition-opacity duration-300',
-              (showPencil || (session && isHoveringImage)) ? 'opacity-50 cursor-pointer' : 'opacity-100',
-              session ? 'cursor-pointer' : ''
+              (showPencil || (isAdminView && isHoveringImage)) ? 'opacity-50 cursor-pointer' : 'opacity-100',
+              isAdminView ? 'cursor-pointer' : ''
             )}
             priority
             onClick={() => {
-              // Jika session ada id-nya (user logged in), maka ketika diklik muncul upload
-              if (session) {
+              // Hanya admin yang sama bisa edit
+              if (isAdminView) {
                 fileInputRef.current?.click()
               }
             }}
