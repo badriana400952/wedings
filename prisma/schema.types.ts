@@ -54,6 +54,7 @@ export interface ITemplateWeding {
   fotoHeader: string | File
 
   // Groom
+  template:string
   namaPutra: string
   namaLengkapPutra: string
   namaAyahPutra: string

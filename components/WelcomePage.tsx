@@ -23,7 +23,6 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
   const { SvgPencil } = SvgCustom()
   const handleOpen = () => {
     // Trigger confetti effect
-    console.log("guestName",guestName)
     const duration = 3000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };

@@ -46,8 +46,9 @@ model User {
   updatedAt           DateTime @updatedAt @map("updated_at")
 
   templateWeding      TemplateWeding?
-
+  template            String   @map("template") @default("A")  // "A", "B", "C", dll
   sessions            Session[]
+  
 
   @@map("users")
 }
