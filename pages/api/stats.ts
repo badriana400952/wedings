@@ -6,18 +6,45 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ 
+      success: false,
+      error: 'Method not allowed' 
+    });
   }
 
   try {
+    const { templateWedingId } = req.query;
+
+    // If templateWedingId provided, filter by it
+    const whereClause = templateWedingId && typeof templateWedingId === 'string'
+      ? { templateWedingId }
+      : {};
+
     const [comments, likes, present, absent] = await Promise.all([
-      prisma.comment.count(),
-      prisma.like.count(),
-      prisma.comment.count({ where: { presence: true } }),
-      prisma.comment.count({ where: { presence: false } }),
+      prisma.comment.count({ where: whereClause }),
+      prisma.like.count({
+        where: {
+          comment: {
+            ...whereClause,
+          },
+        },
+      }),
+      prisma.comment.count({ 
+        where: { 
+          ...whereClause,
+          presence: true 
+        } 
+      }),
+      prisma.comment.count({ 
+        where: { 
+          ...whereClause,
+          presence: false 
+        } 
+      }),
     ]);
 
     return res.status(200).json({
+      success: true,
       data: {
         comments,
         likes,
@@ -27,6 +54,9 @@ export default async function handler(
     });
   } catch (error) {
     console.error('Error fetching stats:', error);
-    return res.status(500).json({ error: 'Failed to fetch stats' });
+    return res.status(500).json({ 
+      success: false,
+      error: 'Failed to fetch stats' 
+    });
   }
 }

@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
+import axios from 'axios';
 
 interface IPropss {
   payload: ITemplateWeding
@@ -17,66 +18,109 @@ export default function GallerySection({
   payload, setPayload, showPencil, setShowPencil, session
 }: IPropss) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await axios.post('/api/upload/image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    return response.data.urls[0];
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Convert files to data URLs
-    const newPhotos: string[] = [];
-    const fileReaders: FileReader[] = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      const reader = new FileReader();
-      
-      reader.onload = (event) => {
-        const result = event.target?.result as string;
-        newPhotos.push(result);
-        
-        // When all files are read, update payload
-        if (newPhotos.length === files.length) {
-          const currentFotos = payload?.galery?.fotos || [];
-          const updatedFotos = [...currentFotos, ...newPhotos];
-          
-          setPayload({
-            ...payload,
-            galery: {
-              id: payload?.galery?.id || 'temp-gallery-id',
-              fotos: updatedFotos,
-              templateWedings: payload?.galery?.templateWedings || []
-            }
-          });
-        }
-      };
-      
-      reader.readAsDataURL(file);
-      fileReaders.push(reader);
+    if (!payload?.galery?.id) {
+      alert('❌ Galery ID tidak ditemukan');
+      return;
     }
 
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    setUploading(true);
+
+    try {
+      // Upload semua file ke Cloudinary
+      const uploadPromises = Array.from(files).map(file => uploadToCloudinary(file));
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      // Tambahkan foto ke galery via API
+      for (const url of uploadedUrls) {
+        await axios.patch(`/api/galery/${payload.galery.id}`, {
+          action: 'add',
+          foto: url,
+        });
+      }
+
+      // Update local state
+      const currentFotos = payload?.galery?.fotos || [];
+      const updatedFotos = [...currentFotos, ...uploadedUrls];
+      
+      setPayload({
+        ...payload,
+        galery: {
+          ...payload.galery,
+          fotos: updatedFotos,
+        }
+      });
+
+      alert(`✅ ${uploadedUrls.length} foto berhasil ditambahkan!`);
+    } catch (error: any) {
+      console.error('Error uploading photos:', error);
+      alert('❌ Gagal upload foto: ' + (error.response?.data?.message || error.message));
+    } finally {
+      setUploading(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
-  const handleDeletePhoto = (index: number) => {
-    const currentFotos = payload?.galery?.fotos || [];
-    const updatedFotos = currentFotos.filter((_, i) => i !== index);
-    
-    setPayload({
-      ...payload,
-      galery: {
-        id: payload?.galery?.id || 'temp-gallery-id',
-        fotos: updatedFotos,
-        templateWedings: payload?.galery?.templateWedings || []
-      }
-    });
+  const handleDeletePhoto = async (index: number, fotoUrl: string) => {
+    if (!payload?.galery?.id) {
+      alert('❌ Galery ID tidak ditemukan');
+      return;
+    }
+
+    if (!confirm('Hapus foto ini?')) {
+      return;
+    }
+
+    try {
+      // Hapus dari database via API
+      await axios.patch(`/api/galery/${payload.galery.id}`, {
+        action: 'remove',
+        foto: fotoUrl,
+      });
+
+      // Update local state
+      const currentFotos = payload?.galery?.fotos || [];
+      const updatedFotos = currentFotos.filter((_, i) => i !== index);
+      
+      setPayload({
+        ...payload,
+        galery: {
+          ...payload.galery,
+          fotos: updatedFotos,
+        }
+      });
+
+      alert('✅ Foto berhasil dihapus!');
+    } catch (error: any) {
+      console.error('Error deleting photo:', error);
+      alert('❌ Gagal hapus foto: ' + (error.response?.data?.message || error.message));
+    }
   };
 
   const handleGalleryClick = () => {
-    if (session || showPencil) {
+    if ((session || showPencil) && !uploading) {
       fileInputRef.current?.click();
     }
   };
@@ -127,7 +171,7 @@ export default function GallerySection({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDeletePhoto(idx);
+                      handleDeletePhoto(idx, img);
                     }}
                     className={clsx('absolute', 'top-2', 'right-2', 'bg-red-500', 'text-white', 'rounded-full', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'hover:bg-red-600', 'transition-colors', 'z-10')}
                   >
@@ -157,7 +201,14 @@ export default function GallerySection({
           {/* Instruction text */}
           {(session || showPencil) && (
             <p className={clsx('text-center', 'text-sm', 'text-gray-600', 'dark:text-gray-400', 'mt-4')}>
-              Klik area galeri untuk menambah foto, klik tombol X untuk menghapus foto
+              {uploading ? (
+                <>
+                  <i className={clsx('fas', 'fa-spinner', 'fa-spin', 'mr-2')}></i>
+                  Uploading foto...
+                </>
+              ) : (
+                'Klik area galeri untuk menambah foto, klik tombol X untuk menghapus foto'
+              )}
             </p>
           )}
         </div>

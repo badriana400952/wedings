@@ -31,7 +31,9 @@ export default function CommentSection({ guestName, payload, setPayload, adminId
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    fetchComments();
+    if (payload?.id) {
+      fetchComments();
+    }
 
     // Check initial theme
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
@@ -53,11 +55,13 @@ export default function CommentSection({ guestName, payload, setPayload, adminId
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [payload?.id]);
 
   const fetchComments = async () => {
+    if (!payload?.id) return;
+    
     try {
-      const res = await fetch('/api/comments');
+      const res = await fetch(`/api/comments?templateWedingId=${payload.id}`);
       const data = await res.json();
       setComments(data.comments || []);
     } catch (error) {
@@ -73,6 +77,11 @@ export default function CommentSection({ guestName, payload, setPayload, adminId
       return;
     }
 
+    if (!payload?.id) {
+      alert('Template wedding ID tidak ditemukan');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -83,14 +92,19 @@ export default function CommentSection({ guestName, payload, setPayload, adminId
           name,
           presence: presence === '1',
           comment,
+          templateWedingId: payload.id,
         }),
       });
 
-      if (res.ok) {
+      const data = await res.json();
+
+      if (res.ok && data.success) {
         setComment('');
         setPresence('0');
         fetchComments();
         alert('Terima kasih atas ucapan dan doanya! 🎉');
+      } else {
+        alert(data.error || 'Gagal mengirim komentar');
       }
     } catch (error) {
       console.error('Failed to submit comment:', error);

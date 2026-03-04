@@ -34,25 +34,64 @@ export default function Dashboard() {
   const [generatedLink, setGeneratedLink] = useState('');
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (session?.user?.id) {
+      fetchData();
+    }
+  }, [session?.user?.id]);
 
   const fetchData = async () => {
+    if (!session?.user?.id) return;
+
     try {
+      // Get templateWeding first to get the ID
+      const templateRes = await fetch(`/api/landing/${session.user.id}`);
+      const templateData = await templateRes.json();
+      const templateWedingId = templateData.response?.id;
+
+      if (!templateWedingId) {
+        console.error('Template wedding ID not found');
+        setLoading(false);
+        return;
+      }
+
       const [statsRes, commentsRes] = await Promise.all([
-        fetch('/api/stats'),
-        fetch('/api/comments'),
+        fetch(`/api/stats?templateWedingId=${templateWedingId}`),
+        fetch(`/api/comments?templateWedingId=${templateWedingId}`),
       ]);
 
       const statsData = await statsRes.json();
       const commentsData = await commentsRes.json();
 
-      setStats(statsData.data);
+      setStats(statsData.data || { comments: 0, likes: 0, present: 0, absent: 0 });
       setComments(commentsData.comments || []);
     } catch (error) {
       console.error('Failed to fetch data:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm('Yakin ingin menghapus komentar ini? (Komentar dari mantan yang menyakitkan? 💔)')) {
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}/delete`, {
+        method: 'DELETE',
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        alert('✅ Komentar berhasil dihapus!');
+        fetchData(); // Refresh data
+      } else {
+        alert('❌ ' + (data.error || 'Gagal menghapus komentar'));
+      }
+    } catch (error) {
+      console.error('Failed to delete comment:', error);
+      alert('❌ Gagal menghapus komentar');
     }
   };
 
@@ -119,31 +158,31 @@ export default function Dashboard() {
       </Head>
       <div className={clsx('min-h-screen', 'bg-gray-50', 'dark:bg-gray-900')}>
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-4">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <header className={clsx('bg-white', 'dark:bg-gray-800', 'border-b', 'border-gray-200', 'dark:border-gray-700', 'px-4', 'py-4')}>
+          <div className={clsx('max-w-7xl', 'mx-auto', 'flex', 'items-center', 'justify-between')}>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                Undangan<i className="fas fa-fire text-red-500 ml-2"></i>
+              <h1 className={clsx('text-2xl', 'font-bold', 'text-gray-900', 'dark:text-white')}>
+                Undangan<i className={clsx('fas', 'fa-fire', 'text-red-500', 'ml-2')}></i>
               </h1>
               {session?.user && (
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  <i className="fas fa-user mr-1"></i>
+                <p className={clsx('text-sm', 'text-gray-600', 'dark:text-gray-400', 'mt-1')}>
+                  <i className={clsx('fas', 'fa-user', 'mr-1')}></i>
                   {session.user.name || session.user.email}
                 </p>
               )}
             </div>
-            <div className="flex gap-2">
+            <div className={clsx('flex', 'gap-2')}>
               <button
                 onClick={() => router.push(`/${session?.user.id}`)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
+                className={clsx('px-4', 'py-2', 'bg-gray-200', 'dark:bg-gray-700', 'text-gray-900', 'dark:text-white', 'rounded-lg', 'hover:bg-gray-300', 'dark:hover:bg-gray-600')}
               >
-                <i className="fas fa-home mr-2"></i>Home
+                <i className={clsx('fas', 'fa-home', 'mr-2')}></i>Home
               </button>
               <button
                 onClick={() => signOut({ callbackUrl: '/login' })}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                className={clsx('px-4', 'py-2', 'bg-red-500', 'text-white', 'rounded-lg', 'hover:bg-red-600')}
               >
-                <i className="fas fa-sign-out-alt mr-2"></i>Logout
+                <i className={clsx('fas', 'fa-sign-out-alt', 'mr-2')}></i>Logout
               </button>
             </div>
           </div>
@@ -255,7 +294,7 @@ export default function Dashboard() {
                           key={c.id}
                           className={clsx('bg-gray-50', 'dark:bg-gray-700', 'rounded-xl', 'p-4')}
                         >
-                          <div className={clsx('flex', 'items-start', 'justify-between')}>
+                          <div className={clsx('flex', 'items-start', 'justify-between', 'gap-3')}>
                             <div className="flex-1">
                               <div className={clsx('flex', 'items-center', 'gap-2', 'mb-2')}>
                                 <h4 className={clsx('font-semibold', 'text-gray-900', 'dark:text-white')}>
@@ -276,6 +315,13 @@ export default function Dashboard() {
                                 </span>
                               </div>
                             </div>
+                            <button
+                              onClick={() => handleDeleteComment(c.id)}
+                              className={clsx('flex-shrink-0', 'w-9', 'h-9', 'flex', 'items-center', 'justify-center', 'bg-red-500', 'hover:bg-red-600', 'text-white', 'rounded-lg', 'transition-colors')}
+                              title="Hapus komentar"
+                            >
+                              <i className={clsx('fas', 'fa-trash', 'text-sm')}></i>
+                            </button>
                           </div>
                         </div>
                       ))}

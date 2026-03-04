@@ -7,69 +7,75 @@ export default async function handler(
 ) {
   if (req.method === 'GET') {
     try {
+      const { templateWedingId } = req.query;
+
+      if (!templateWedingId || typeof templateWedingId !== 'string') {
+        return res.status(400).json({ 
+          success: false,
+          error: 'templateWedingId is required' 
+        });
+      }
+
       const comments = await prisma.comment.findMany({
-        where: { parentId: null },
+        where: { 
+          templateWedingId: templateWedingId,
+          parentId: null, // Only get top-level comments
+        },
         orderBy: { createdAt: 'desc' },
-        take: 50,
         include: {
           replies: {
             orderBy: { createdAt: 'asc' },
           },
+          likedBy: true,
         },
       });
 
-      return res.status(200).json({ comments });
+      return res.status(200).json({ 
+        success: true,
+        comments 
+      });
     } catch (error) {
       console.error('Error fetching comments:', error);
-      return res.status(500).json({ error: 'Failed to fetch comments' });
+      return res.status(500).json({ 
+        success: false,
+        error: 'Failed to fetch comments' 
+      });
     }
   }
 
   if (req.method === 'POST') {
     try {
-      const { name, presence, comment, gif, parentId } = req.body;
+      const { name, presence, comment, gif, parentId, templateWedingId } = req.body;
 
       if (!name || typeof presence !== 'boolean' || !comment) {
-        return res.status(400).json({ error: 'Invalid input' });
+        return res.status(400).json({ 
+          success: false,
+          error: 'Name, presence, and comment are required' 
+        });
+      }
+
+      if (!templateWedingId) {
+        return res.status(400).json({ 
+          success: false,
+          error: 'templateWedingId is required' 
+        });
+      }
+
+      // Verify templateWeding exists
+      const templateWeding = await prisma.templateWeding.findUnique({
+        where: { id: templateWedingId },
+      });
+
+      if (!templateWeding) {
+        return res.status(404).json({ 
+          success: false,
+          error: 'Template wedding not found' 
+        });
       }
 
       // Get IP and User Agent
       const ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || 'unknown';
       const userAgent = req.headers['user-agent'] || 'unknown';
-
-      // Get first template_weding (or create one if doesn't exist)
-      let templateWeding = await prisma.templateWeding.findFirst();
-      
-      if (!templateWeding) {
-        // If no template exists, create a default one
-        const firstUser = await prisma.user.findFirst();
-        if (firstUser) {
-          templateWeding = await prisma.templateWeding.create({
-            data: {
-              userId: firstUser.id,
-              fotoHeader: '',
-              namaPutra: '',
-              namaLengkapPutra: '',
-              namaAyahPutra: '',
-              namaIbuPutra: '',
-              instagramPutra: '',
-              photoPutra: '',
-              namaPutri: '',
-              namaLengkapPutri: '',
-              namaAyahPutri: '',
-              namaIbuPutri: '',
-              instagramPutri: '',
-              photoPutri: '',
-              tanggalPernikahan: new Date(),
-              linkGoogleCalender: '',
-              alamatPernikahan: '',
-              jamMulai: '',
-              jamSelesai: '',
-              linkMaps: '',
-            },
-          });
-        }
-      }
 
       const newComment = await prisma.comment.create({
         data: {
@@ -80,16 +86,29 @@ export default async function handler(
           ip: Array.isArray(ip) ? ip[0] : ip,
           userAgent,
           parentId: parentId || null,
-          templateWedingId: templateWeding?.id || null,
+          templateWedingId: templateWedingId,
+        },
+        include: {
+          replies: true,
+          likedBy: true,
         },
       });
 
-      return res.status(201).json({ comment: newComment });
+      return res.status(201).json({ 
+        success: true,
+        comment: newComment 
+      });
     } catch (error) {
       console.error('Error creating comment:', error);
-      return res.status(500).json({ error: 'Failed to create comment' });
+      return res.status(500).json({ 
+        success: false,
+        error: 'Failed to create comment' 
+      });
     }
   }
 
-  return res.status(405).json({ error: 'Method not allowed' });
+  return res.status(405).json({ 
+    success: false,
+    error: 'Method not allowed' 
+  });
 }

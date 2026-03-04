@@ -113,6 +113,12 @@ export default function Login() {
             </form>
 
             <div className="mt-6 text-center">
+              <p className="text-gray-600 dark:text-gray-400 mb-3">
+                Belum punya akun?{' '}
+                <a href="/register" className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold">
+                  Daftar di sini
+                </a>
+              </p>
               <button
                 onClick={() => router.push('/')}
                 className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
