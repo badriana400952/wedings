@@ -7,6 +7,9 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import SvgCustom from '@/utils/svg';
 import Calendar from './Calendar';
+import EditableText from './EditableText';
+import EditableDate from './EditableDate';
+import EditableLink from './EditableLink';
 
 interface Pr {
   payload: ITemplateWeding
@@ -17,12 +20,8 @@ interface Pr {
   isAdminView?: boolean
 }
 
-const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil, session, isAdminView = false }) => {
+const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil, session }) => {
   const { SvgPencil } = SvgCustom()
-  const [isEditingNamaPutra, setIsEditingNamaPutra] = useState(false)
-  const [isEditingNamaPutri, setIsEditingNamaPutri] = useState(false)
-  const [isEditingTanggalPernikahan, setIsEditingTanggalPernikahan] = useState(false)
-  const [isEditingLinkGoogleCalendar, setIsEditingLinkGoogleCalendar] = useState(false)
   const [isHoveringImage, setIsHoveringImage] = useState(false)
   const [showCalendar, setShowCalendar] = useState(false)
   
@@ -153,111 +152,50 @@ const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil
         </div>
 
         <h2 className={clsx('font-esthetic', 'my-4', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.25rem' }}>
-          {showPencil || (session && isEditingNamaPutra) ? (
-            <input
-              type="text"
-              placeholder="Isi Nama"
-              onDoubleClick={() => {
-                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-                if (session) {
-                  return; // Tidak melakukan apa-apa jika user logged in
-                }
-                setShowPencil(prev => !prev)
-              }}
-              onChange={((e) => setPayload({ ...payload, namaPutra: e.target.value }))}
-              onBlur={() => session && setIsEditingNamaPutra(false)}
-              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
-              autoFocus
-            />
-          ) : (
-            <span
-              onClick={() => session && setIsEditingNamaPutra(true)}
-              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-            >
-              {payload.namaPutra}
-            </span>
-          )}
+          <EditableText
+            value={payload.namaPutra}
+            onChange={(value) => setPayload({ ...payload, namaPutra: value })}
+            placeholder="Isi Nama Putra"
+            session={session}
+            showPencil={showPencil}
+            setShowPencil={setShowPencil}
+          />
 
           <br /> & <br />
 
-          {showPencil || (session && isEditingNamaPutri) ? (
-            <input
-              type="text"
-              placeholder="Isi Nama"
-              onDoubleClick={() => {
-                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-                if (session) {
-                  return; // Tidak melakukan apa-apa jika user logged in
-                }
-                setShowPencil(prev => !prev)
-              }}
-              onChange={((e) => setPayload({ ...payload, namaPutri: e.target.value }))}
-              onBlur={() => session && setIsEditingNamaPutri(false)}
-              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
-              autoFocus={isEditingNamaPutri}
-            />
-          ) : (
-            <span
-              onClick={() => session && setIsEditingNamaPutri(true)}
-              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-            >
-              {payload.namaPutri}
-            </span>
-          )}
+          <EditableText
+            value={payload.namaPutri}
+            onChange={(value) => setPayload({ ...payload, namaPutri: value })}
+            placeholder="Isi Nama Putri"
+            session={session}
+            showPencil={showPencil}
+            setShowPencil={setShowPencil}
+          />
         </h2>
 
         <div className={clsx('my-2', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>
-          {showPencil ? (
-            <input
-              type="date"
-              value={payload?.tanggalPernikahan || ''}
-              onChange={(e) => setPayload({ ...payload, tanggalPernikahan: e.target.value })}
-              onBlur={() => setShowPencil(false)}
-              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
-              autoFocus
-            />
-          ) : (
-            <span
-              onClick={() => {
-                if (session) {
-                  setShowCalendar(true)
-                }
-              }}
-              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-            >
-              {formatTanggalIndo(payload?.tanggalPernikahan)}
-            </span>
-          )}
+          <EditableDate
+            value={payload?.tanggalPernikahan || ''}
+            onChange={(value) => setPayload({ ...payload, tanggalPernikahan: value })}
+            formatDisplay={formatTanggalIndo}
+            session={session}
+            showPencil={showPencil}
+            setShowPencil={setShowPencil}
+            onCalendarClick={() => setShowCalendar(true)}
+          />
         </div>
 
         <div className="mt-3">
-          {showPencil || (session && isEditingLinkGoogleCalendar) ? (
-            <input
-              type="url"
-              placeholder="https://calendar.google.com/..."
-              value={payload.linkGoogleCalender || ''}
-              onChange={(e) => setPayload({ ...payload, linkGoogleCalender: e.target.value })}
-              onBlur={() => session && setIsEditingLinkGoogleCalendar(false)}
-              className={clsx('bg-transparent', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-pill', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full', 'px-3', 'py-1', 'text-sm')}
-              autoFocus
-            />
-          ) : (
-            <a
-              href={payload.linkGoogleCalender}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                if (session) {
-                  e.preventDefault()
-                  setIsEditingLinkGoogleCalendar(true)
-                }
-              }}
-              className={clsx('btn', 'btn-outline-auto', 'btn-sm', 'shadow', 'rounded-pill', 'px-3', 'py-1', 'text-gray-900', 'dark:text-white', 'border-gray-900', 'dark:border-white', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', session ? 'cursor-pointer' : '')}
-              style={{ fontSize: '0.825rem', textDecoration: 'none' }}
-            >
-              <i className={clsx('fa-solid', 'fa-calendar-check', 'me-2')}></i>Save Google Calendar
-            </a>
-          )}
+          <EditableLink
+            value={payload.linkGoogleCalender || ''}
+            onChange={(value) => setPayload({ ...payload, linkGoogleCalender: value })}
+            placeholder="https://calendar.google.com/..."
+            session={session}
+            showPencil={showPencil}
+            setShowPencil={setShowPencil}
+            linkText="Save Google Calendar"
+            linkIcon="fa-calendar-check"
+          />
         </div>
 
         <div className={clsx('d-flex', 'justify-content-center', 'align-items-center', 'mt-4', 'mb-2')}>

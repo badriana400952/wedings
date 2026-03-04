@@ -45,10 +45,9 @@ model User {
   createdAt           DateTime @default(now()) @map("created_at")
   updatedAt           DateTime @updatedAt @map("updated_at")
 
-  templateWeding      TemplateWeding?
-  template            String   @map("template") @default("A")  // "A", "B", "C", dll
-  sessions            Session[]
-  
+  templateWeding TemplateWeding?
+  template       String          @default("A") @map("template") // "A", "B", "C", dll
+  sessions       Session[]
 
   @@map("users")
 }
@@ -58,55 +57,58 @@ model User {
 //////////////////////
 
 model TemplateWeding {
-  id                String       @id @default(cuid())
-  userId            String       @unique @map("user_id")
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @unique @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  designTheme       DesignThemes @default(CLASSIC)
+  designTheme DesignThemes @default(CLASSIC)
 
-  fotoHeader        String       @map("foto_header") @default("")
+  fotoHeader  String? @map("foto_header")
+  fotoHeader2 String? @map("foto_header2")
+  fotoHeader3 String? @map("foto_header3")
+  fotoHeader4 String? @map("foto_header4")
 
   // Groom
-  namaPutra         String       @map("nama_putra") @default("")
-  namaLengkapPutra  String       @map("nama_lengkap_putra") @default("")
-  namaAyahPutra     String       @map("nama_ayah_putra") @default("")
-  namaIbuPutra      String       @map("nama_ibu_putra") @default("")
-  instagramPutra    String       @map("instagram_putra") @default("")
-  photoPutra        String       @map("photo_putra") @default("")
+  namaPutra        String @default("") @map("nama_putra")
+  namaLengkapPutra String @default("") @map("nama_lengkap_putra")
+  namaAyahPutra    String @default("") @map("nama_ayah_putra")
+  namaIbuPutra     String @default("") @map("nama_ibu_putra")
+  instagramPutra   String @default("") @map("instagram_putra")
+  photoPutra       String @default("") @map("photo_putra")
 
   // Bride
-  namaPutri         String       @map("nama_putri") @default("")
-  namaLengkapPutri  String       @map("nama_lengkap_putri") @default("")
-  namaAyahPutri     String       @map("nama_ayah_putri") @default("")
-  namaIbuPutri      String       @map("nama_ibu_putri") @default("")
-  instagramPutri    String       @map("instagram_putri") @default("")
-  photoPutri        String       @map("photo_putri") @default("")
+  namaPutri        String @default("") @map("nama_putri")
+  namaLengkapPutri String @default("") @map("nama_lengkap_putri")
+  namaAyahPutri    String @default("") @map("nama_ayah_putri")
+  namaIbuPutri     String @default("") @map("nama_ibu_putri")
+  instagramPutri   String @default("") @map("instagram_putri")
+  photoPutri       String @default("") @map("photo_putri")
 
   // Wedding Info
-  tanggalPernikahan DateTime     @map("tanggal_pernikahan") @default(now())
-  linkGoogleCalender String      @map("link_google_calendar") @default("")
-  alamatPernikahan  String       @map("alamat_pernikahan") @default("")
-  jamMulai          String       @map("jam_mulai") @default("")
-  jamSelesai        String       @map("jam_selesai") @default("")
-  linkMaps          String       @map("link_maps") @default("")
+  tanggalPernikahan  DateTime @default(now()) @map("tanggal_pernikahan")
+  linkGoogleCalender String   @default("") @map("link_google_calendar")
+  alamatPernikahan   String   @default("") @map("alamat_pernikahan")
+  jamMulai           String   @default("") @map("jam_mulai")
+  jamSelesai         String   @default("") @map("jam_selesai")
+  linkMaps           String   @default("") @map("link_maps")
 
   // Love Gift
-  noAtm             String?      @map("no_atm")
-  namaBank          String?      @map("nama_bank")
-  fotoQris          String?      @map("foto_qris")
-  noHp              String?      @map("no_hp")
+  noAtm    String? @map("no_atm")
+  namaBank String? @map("nama_bank")
+  fotoQris String? @map("foto_qris")
+  noHp     String? @map("no_hp")
 
   // Relations
-  galeryId          String?      @map("galery_id")
-  galery            Galery?      @relation(fields: [galeryId], references: [id], onDelete: SetNull)
+  galeryId String? @map("galery_id")
+  galery   Galery? @relation(fields: [galeryId], references: [id], onDelete: SetNull)
 
   pertemuanId String?
-  pertemuan         Pertemuan?
-  comentIds String?
-  comments          Comment[]
+  pertemuan   Pertemuan?
+  comentIds   String?
+  comments    Comment[]
 
-  createdAt         DateTime     @default(now()) @map("created_at")
-  updatedAt         DateTime     @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("template_wedings")
 }
@@ -116,18 +118,18 @@ model TemplateWeding {
 //////////////////////
 
 model Pertemuan {
-  id                String         @id @default(uuid())
-  templateWedingId  String         @unique @map("template_weding_id")
-  templateWeding    TemplateWeding @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
+  id               String         @id @default(uuid())
+  templateWedingId String         @unique @map("template_weding_id")
+  templateWeding   TemplateWeding @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
 
-  judulPertemuanSatu String @map("judul_pertamaa")
-  judulPertemuanDua String @map("judul_dua")
-  judulPertemuanTiga String @map("judul_tiga")
+  judulPertemuanSatu  String @map("judul_pertamaa")
+  judulPertemuanDua   String @map("judul_dua")
+  judulPertemuanTiga  String @map("judul_tiga")
   judulPertemuanEmpat String @map("judul_empat")
-  pertemuanPertama  String         @map("pertemuan_pertama")
-  pertemuanKedua    String         @map("pertemuan_kedua")
-  pertemuanKetiga   String         @map("pertemuan_ketiga")
-  pertemuanKeempat  String         @map("pertemuan_keempat")
+  pertemuanPertama    String @map("pertemuan_pertama")
+  pertemuanKedua      String @map("pertemuan_kedua")
+  pertemuanKetiga     String @map("pertemuan_ketiga")
+  pertemuanKeempat    String @map("pertemuan_keempat")
 
   @@map("pertemuan")
 }
@@ -149,26 +151,26 @@ model Galery {
 //////////////////////
 
 model Comment {
-  id               String   @id @default(uuid())
+  id               String  @id @default(uuid())
   name             String
   presence         Boolean
-  comment          String   @db.Text
+  comment          String  @db.Text
   gif              String?
   ip               String
-  userAgent        String   @map("user_agent")
-  likesCount       Int      @default(0) @map("likes_count")
-  parentId         String?  @map("parent_id")
-  templateWedingId String?  @map("template_weding_id")
+  userAgent        String  @map("user_agent")
+  likesCount       Int     @default(0) @map("likes_count")
+  parentId         String? @map("parent_id")
+  templateWedingId String? @map("template_weding_id")
 
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  templateWeding   TemplateWeding? @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
+  templateWeding TemplateWeding? @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
 
-  parent           Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
-  replies          Comment[] @relation("CommentReplies")
+  parent  Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("CommentReplies")
 
-  likedBy          Like[]
+  likedBy Like[]
 
   @@index([parentId])
   @@map("comments")
@@ -184,11 +186,10 @@ model Like {
   sessionId String   @map("session_id")
   createdAt DateTime @default(now()) @map("created_at")
 
-  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
 
   @@unique([commentId, sessionId])
   @@index([commentId])
-
   @@map("likes")
 }
 
@@ -203,10 +204,9 @@ model Session {
   expiresAt DateTime @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([token])
-
   @@map("sessions")
 }

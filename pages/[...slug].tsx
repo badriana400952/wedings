@@ -8,18 +8,18 @@ import { ITemplateWeding } from '@/prisma/schema.types';
 import SimpleModern from '@/components/templates/SimpleModern';
 import TemplateB from '@/components/templates/TemplateB';
 import { useSession } from 'next-auth/react';
+import SimpleSederhana from '@/components/templates/SimpleSederhana';
 
 interface SlugPageProps {
-  adminId: string;
   guestName: string | null;
   templateWedingData: ITemplateWeding | null;
 }
 
-export default function SlugPage({ adminId, guestName: initialGuestName, templateWedingData, }: SlugPageProps) {
+export default function SlugPage({guestName: initialGuestName, templateWedingData, }: SlugPageProps) {
   const router = useRouter();
   const { data } = useSession();
   const [guestName, setGuestName] = useState<string | null>(initialGuestName);
-  
+  const adminId = data?.user.id
   useEffect(() => {
     if (!router.isReady) return;
     const { to, slug, ...rest } = router.query;
@@ -34,12 +34,13 @@ export default function SlugPage({ adminId, guestName: initialGuestName, templat
     }
 
   }, [router.isReady, router.query]);
-
-  switch (data?.user.template) {
+let x = "C"
+  switch (x) {
+  // switch (data?.user.template) {
     case 'A':
       return (
         <SimpleModern
-          adminId={adminId}
+          adminId={adminId || ""}
           guestName={guestName}
           isAdminView={false} 
         />
@@ -47,9 +48,17 @@ export default function SlugPage({ adminId, guestName: initialGuestName, templat
     case 'B':
       return (
         <TemplateB
-          adminId={adminId}
+          adminId={adminId || ""}
           guestName={guestName}
           templateWedingData={templateWedingData}
+          isAdminView={false} 
+        />
+      );
+    case 'C':
+      return (
+        <SimpleSederhana
+          adminId={adminId || ""}
+          guestName={guestName}
           isAdminView={false} 
         />
       );
@@ -57,7 +66,7 @@ export default function SlugPage({ adminId, guestName: initialGuestName, templat
       // Default ke SimpleModern jika tidak ada template
       return (
         <SimpleModern
-          adminId={adminId}
+          adminId={adminId || ""}
           guestName={guestName}
           isAdminView={false}
         />

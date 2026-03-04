@@ -61,6 +61,9 @@ export default async function handler(
           create: {
             designTheme: 'CLASSIC',
             fotoHeader: 'https://res.cloudinary.com/doykilt63/image/upload/v1772183469/udangan/bg_ogyqgr.webp',
+            fotoHeader2: 'https://res.cloudinary.com/doykilt63/image/upload/v1772183469/udangan/bg_ogyqgr.webp',
+            fotoHeader3: 'https://res.cloudinary.com/doykilt63/image/upload/v1772183469/udangan/bg_ogyqgr.webp',
+            fotoHeader4: 'https://res.cloudinary.com/doykilt63/image/upload/v1772183469/udangan/bg_ogyqgr.webp',
             
             // Groom default
             namaPutra: 'Nama Mempelai Pria',

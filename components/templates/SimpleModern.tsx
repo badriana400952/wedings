@@ -32,7 +32,6 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
   const [showPencil, setShowPencil] = useState<boolean>(false);
   const [payload, setPayload] = useState<ITemplateWeding>({} as ITemplateWeding);
   const { data } = useSession();
-  console.log({ payload })
   const [loading, setLoading] = useState(false)
 
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
@@ -282,7 +281,7 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
                 setShowPencil={setShowPencil}
                 session={data?.user.id}
               />
-              <div className='p-3 w-full'>
+              <div className={clsx('p-3', 'w-full')}>
                 <button
                   type="submit"
                   disabled={loading}

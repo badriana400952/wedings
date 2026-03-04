@@ -52,6 +52,9 @@ export interface ITemplateWeding {
   designTheme: DesignThemes
 
   fotoHeader: string | File
+  fotoHeader2?: string | File
+  fotoHeader3?: string | File
+  fotoHeader4?: string | File
 
   // Groom
   template:string
