@@ -45,14 +45,14 @@ export default function LoveGiftSection() {
             {openSection === 'transfer' && (
               <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-gray-700 dark:text-gray-300">
-                  <i className="fas fa-building-columns mr-2"></i>Bank Central Asia
+                  <i className="fas fa-building-columns mr-2"></i>Bank Madriri
                 </p>
                 <div className="flex items-center justify-between mt-2">
                   <p className="text-gray-700 dark:text-gray-300">
-                    <i className="fas fa-credit-card mr-2"></i>7295170905
+                    <i className="fas fa-credit-card mr-2"></i>1550010213919
                   </p>
                   <button
-                    onClick={() => copyToClipboard('7295170905')}
+                    onClick={() => copyToClipboard('1550010213919')}
                     className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
                   >
                     <i className="fas fa-copy"></i>
@@ -63,11 +63,11 @@ export default function LoveGiftSection() {
           </div>
           
           {/* QRIS */}
-          <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
+          {/* <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
             <div className="flex items-center justify-between">
               <div>
                 <i className="fas fa-qrcode mr-2 text-gray-900 dark:text-white"></i>
-                <span className="font-semibold text-gray-900 dark:text-white">Qris</span>
+                <span className="font-semibold text-gray-900 dark:text-white">Qris ffff</span>
               </div>
               <button
                 onClick={() => setOpenSection(openSection === 'qris' ? null : 'qris')}
@@ -94,7 +94,7 @@ export default function LoveGiftSection() {
                 </div>
               </div>
             )}
-          </div>
+          </div> */}
           
           {/* Gift */}
           <div className="!bg-white dark:!bg-gray-800 rounded-2xl shadow-lg p-6 text-left">
