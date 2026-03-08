@@ -87,8 +87,10 @@ model TemplateWeding {
   // Wedding Info
   tanggalPernikahan  DateTime @default(now()) @map("tanggal_pernikahan")
   linkGoogleCalender String   @default("") @map("link_google_calendar")
+  alamatGedungPernikahan   String   @default("") @map("alamat_gedung_pernikahan")
   alamatPernikahan   String   @default("") @map("alamat_pernikahan")
   jamMulai           String   @default("") @map("jam_mulai")
+  jamResepsi           String   @default("") @map("jam_resepsi")
   jamSelesai         String   @default("") @map("jam_selesai")
   linkMaps           String   @default("") @map("link_maps")
 

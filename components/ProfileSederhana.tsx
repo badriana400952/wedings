@@ -5,6 +5,8 @@ import { RevealWrapper } from "./RevealWrapper";
 import SvgCustom from "@/utils/svg";
 import { BaseComponentProps } from "@/types/component-props";
 import clsx from "clsx";
+import EditableTextSederhana from "./EditableTextSederhana";
+import EditableText from "./EditableText";
 
 function Profile({
   payload,
@@ -18,6 +20,7 @@ function Profile({
   const [isHoveringPhotoPutra, setIsHoveringPhotoPutra] = useState(false);
   const fileInputPutriRef = useRef<HTMLInputElement>(null);
   const fileInputPutraRef = useRef<HTMLInputElement>(null);
+  
   return (
     <section id="people">
       <div className={clsx(`bg-[url('/assets/images/bg2.jpg')]`, 'bg-center', 'bg-no-repeat', 'bg-cover', 'px-12', 'py-16')}>
@@ -103,18 +106,58 @@ function Profile({
           <p className={clsx('text-sm', 'leading-relaxed')}>
             <strong>Putri dari</strong>
             <br />
-            Bapak Drs Triwiyanto (Alm) dan
+            Bapak <EditableText
+              value={payload.namaAyahPutri}
+              onChange={(value) => setPayload({ ...payload, namaAyahPutri: value })}
+              placeholder="Nama Ayah Putri"
+              session={session}
+              showPencil={showPencil}
+              setShowPencil={setShowPencil}
+            /> dan
             <br />
-            Ibu Nurleila Entjik Agus Hasyim
+            Ibu <EditableText
+              value={payload.namaIbuPutri}
+              onChange={(value) => setPayload({ ...payload, namaIbuPutri: value })}
+              placeholder="Nama Ibu Putri"
+              session={session}
+              showPencil={showPencil}
+              setShowPencil={setShowPencil}
+            />
           </p>
-          <a
-            href="https://www.instagram.com/lemonnestt/"
-            className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
-          >
-            <SvgIG />
-            <span>lemonnestt</span>
-            <SvgArrow />
-          </a>
+          {session ? (
+            <div
+              className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1')}
+            >
+              <SvgIG />
+              <EditableTextSederhana
+                value={payload.namaPutri}
+                onChange={(value) => setPayload({ ...payload, namaPutri: value })}
+                placeholder="Nama Putri"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
+              <SvgArrow />
+            </div>
+          ) : (
+            <a
+              href={`https://www.instagram.com/${payload.namaPutri || 'lemonnestt'}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
+            >
+              <SvgIG />
+              <EditableTextSederhana
+                value={payload.namaPutri}
+                onChange={(value) => setPayload({ ...payload, namaPutri: value })}
+                placeholder="Nama Putri"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
+              <SvgArrow />
+            </a>
+          )}
         </div>
         <div className={clsx('grid', 'grid-cols-2', 'mt-20')}>
           <RevealWrapper duration={1500} origin="left">
@@ -189,18 +232,58 @@ function Profile({
           <p className={clsx('text-sm', 'leading-relaxed')}>
             <strong>Putra dari</strong>
             <br />
-            Bapak Nuryantoro (Alm) dan
+            Bapak <EditableText
+              value={payload.namaAyahPutra}
+              onChange={(value) => setPayload({ ...payload, namaAyahPutra: value })}
+              placeholder="Nama Ayah Putra"
+              session={session}
+              showPencil={showPencil}
+              setShowPencil={setShowPencil}
+            /> dan
             <br />
-            Ibu Masaat Said
+            Ibu <EditableText
+              value={payload.namaIbuPutra}
+              onChange={(value) => setPayload({ ...payload, namaIbuPutra: value })}
+              placeholder="Nama Ibu Putra"
+              session={session}
+              showPencil={showPencil}
+              setShowPencil={setShowPencil}
+            />
           </p>
-          <a
-            href="https://www.instagram.com/akbar/"
-            className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
-          >
-            <SvgIG />
-            <span>akbar</span>
-            <SvgArrow />
-          </a>
+          {session ? (
+            <div
+              className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1')}
+            >
+              <SvgIG />
+              <EditableTextSederhana
+                value={payload.namaPutra}
+                onChange={(value) => setPayload({ ...payload, namaPutra: value })}
+                placeholder="Nama Putra"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
+              <SvgArrow />
+            </div>
+          ) : (
+            <a
+              href={`https://www.instagram.com/${payload.namaPutra || 'akbar'}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={clsx('text-sm', 'text-white', 'bg-[#424242]', 'px-[0.4375rem]', 'py-1', 'rounded-[0.625rem]', 'flex', 'items-center', 'gap-1', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
+            >
+              <SvgIG />
+              <EditableTextSederhana
+                value={payload.namaPutra}
+                onChange={(value) => setPayload({ ...payload, namaPutra: value })}
+                placeholder="Nama Putra"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
+              <SvgArrow />
+            </a>
+          )}
         </div>
       </div>
     </section>

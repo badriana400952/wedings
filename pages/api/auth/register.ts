@@ -84,8 +84,10 @@ export default async function handler(
             // Wedding info default
             tanggalPernikahan: new Date(),
             linkGoogleCalender: '',
-            alamatPernikahan: 'Alamat Gedung Pernikahan',
+            alamatGedungPernikahan: 'Nama Gedung Pernikahan',
+            alamatPernikahan: 'Alamat Lengkap Gedung Pernikahan',
             jamMulai: '10:00',
+            jamResepsi: '12:00',
             jamSelesai: '14:00',
             linkMaps: '',
             

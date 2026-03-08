@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { BaseComponentProps } from "@/types/component-props";
 import { RevealWrapper } from "./RevealWrapper";
 import SvgCustom from "@/utils/svg";
 import clsx from "clsx";
+import { formatTanggalIndo } from "@/date";
+import EditableDateSederhana from "./EditableDateSederhana";
+import EditableText from "./EditableText";
 
-function WeddingEvents({}: BaseComponentProps) {
-    const {SvgClock} = SvgCustom()
+function WeddingEvents({ payload, setPayload, session, showPencil, setShowPencil }: BaseComponentProps) {
+  const { SvgClock } = SvgCustom()
   return (
     <section id="wedding-events">
       <div className={clsx(`bg-[url('/assets/images/a9.jpeg')]`, 'bg-cover', 'bg-center', 'relative', 'px-8', 'pt-8', 'pb-12', 'lg:px-10', 'lg:pt-10', 'lg:pb-14')}>
@@ -29,12 +32,31 @@ function WeddingEvents({}: BaseComponentProps) {
                 </div>
                 <div className={clsx('w-[80%]', 'bg-white', 'px-4', 'py-6', 'rounded-br-[1.25rem]', 'flex', 'flex-col', 'gap-5', 'items-baseline')}>
                   <h1 className={clsx('italic', 'text-xl', 'font-light')}>
-                    Saturday, 3 June 2023
+                    {formatTanggalIndo(payload.tanggalPernikahan)}
                   </h1>
                   <hr className={clsx('border', 'border-[#5a5a5a80]', 'w-full')} />
                   <p className={clsx('flex', 'items-center', 'text-[#5a5a5a]', 'font-light', 'text-sm', 'gap-1.5')}>
                     <SvgClock />
-                    <span>08.00 WIB - 11.00 WIB</span>
+                    <span>
+                      <EditableText
+                      value={payload.jamMulai}
+                      onChange={(value) => setPayload({ ...payload, jamMulai: value })}
+                      placeholder="10:00"
+                      session={session}
+                      showPencil={showPencil}
+                      setShowPencil={setShowPencil}
+                    /> 
+                    WIB 
+                    -  <EditableText
+                      value={payload.jamResepsi}
+                      onChange={(value) => setPayload({ ...payload, jamResepsi: value })}
+                      placeholder="11:00"
+                      session={session}
+                      showPencil={showPencil}
+                      setShowPencil={setShowPencil}
+                    /> 
+                     WIB
+                    </span>
                   </p>
                   <p className={clsx('text-[0.785rem]', 'text-[#5a5a5a]', 'font-light', 'leading-[1.9]')}>
                     <strong className={clsx('text-black', 'font-bold')}>

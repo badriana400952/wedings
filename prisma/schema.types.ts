@@ -78,6 +78,7 @@ export interface ITemplateWeding {
   linkGoogleCalender: string
   alamatPernikahan: string
   jamMulai: string
+  jamResepsi: string
   jamSelesai: string
   linkMaps: string
 
