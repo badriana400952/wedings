@@ -76,6 +76,7 @@ export interface ITemplateWeding {
   // Wedding Info
   tanggalPernikahan: string 
   linkGoogleCalender: string
+  alamatGedungPernikahan: string
   alamatPernikahan: string
   jamMulai: string
   jamResepsi: string

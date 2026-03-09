@@ -6,4 +6,6 @@ export interface BaseComponentProps {
   session?: any;
   showPencil?: boolean;
   setShowPencil?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleSubmit?: () => void;
+  loading?: boolean
 }

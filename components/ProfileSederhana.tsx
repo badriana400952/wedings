@@ -20,7 +20,7 @@ function Profile({
   const [isHoveringPhotoPutra, setIsHoveringPhotoPutra] = useState(false);
   const fileInputPutriRef = useRef<HTMLInputElement>(null);
   const fileInputPutraRef = useRef<HTMLInputElement>(null);
-  
+
   return (
     <section id="people">
       <div className={clsx(`bg-[url('/assets/images/bg2.jpg')]`, 'bg-center', 'bg-no-repeat', 'bg-cover', 'px-12', 'py-16')}>
@@ -43,7 +43,7 @@ function Profile({
             </RevealWrapper>
           </div>
           <RevealWrapper duration={1500} origin="right">
-            <div 
+            <div
               className={clsx('relative', 'inline-block')}
               onMouseEnter={() => session && setIsHoveringPhotoPutri(true)}
               onMouseLeave={() => session && setIsHoveringPhotoPutri(false)}
@@ -67,7 +67,7 @@ function Profile({
                       if (file) {
                         setPayload((prev) => ({
                           ...prev,
-                          photoPutri: URL.createObjectURL(file)
+                          photoPutri: file as any
                         }));
                       }
                     }}
@@ -75,7 +75,13 @@ function Profile({
                 </div>
               )}
               <img
-                src={payload?.photoPutri || "/assets/images/cewe.webp"}
+                src={
+                  typeof payload?.photoPutri === 'string'
+                    ? payload.photoPutri
+                    : payload?.photoPutri
+                      ? URL.createObjectURL(payload.photoPutri)
+                      : "/assets/images/cewe.webp"
+                }
                 alt="Putri"
                 className={clsx(
                   'translate-x-[3rem]',
@@ -100,7 +106,14 @@ function Profile({
         <div className={clsx('flex', 'flex-col', 'items-end', 'text-right', 'gap-6', 'mt-12')}>
           <RevealWrapper duration={1500} origin="bottom">
             <h1 className={clsx('italic', 'text-2xl', 'font-light')}>
-              Rizkianty Retha Nurtriana
+           <EditableText
+                value={payload.namaLengkapPutra}
+                onChange={(value) => setPayload({ ...payload, namaLengkapPutra: value })}
+                placeholder="Mercure Bandung City Center"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
             </h1>
           </RevealWrapper>
           <p className={clsx('text-sm', 'leading-relaxed')}>
@@ -161,7 +174,7 @@ function Profile({
         </div>
         <div className={clsx('grid', 'grid-cols-2', 'mt-20')}>
           <RevealWrapper duration={1500} origin="left">
-            <div 
+            <div
               className={clsx('relative', 'inline-block')}
               onMouseEnter={() => session && setIsHoveringPhotoPutra(true)}
               onMouseLeave={() => session && setIsHoveringPhotoPutra(false)}
@@ -185,7 +198,7 @@ function Profile({
                       if (file) {
                         setPayload((prev) => ({
                           ...prev,
-                          photoPutra: URL.createObjectURL(file)
+                          photoPutra: file as any
                         }));
                       }
                     }}
@@ -193,7 +206,13 @@ function Profile({
                 </div>
               )}
               <img
-                src={payload?.photoPutra || "/assets/images/cowo.webp"}
+                src={
+                  typeof payload?.photoPutra === 'string'
+                    ? payload.photoPutra
+                    : payload?.photoPutra
+                      ? URL.createObjectURL(payload.photoPutra)
+                      : "/assets/images/cowo.webp"
+                }
                 alt="Putra"
                 className={clsx(
                   '-translate-x-[3rem]',
@@ -226,7 +245,14 @@ function Profile({
         <div className={clsx('flex', 'flex-col', 'items-start', 'text-left', 'gap-6', 'mt-12')}>
           <RevealWrapper duration={1500} origin="bottom">
             <h1 className={clsx('italic', 'text-2xl', 'font-light')}>
-              Akbar Pramono Ramadhan
+              <EditableText
+                value={payload.namaLengkapPutri}
+                onChange={(value) => setPayload({ ...payload, namaLengkapPutri: value })}
+                placeholder="Mercure Bandung City Center"
+                session={session}
+                showPencil={showPencil}
+                setShowPencil={setShowPencil}
+              />
             </h1>
           </RevealWrapper>
           <p className={clsx('text-sm', 'leading-relaxed')}>

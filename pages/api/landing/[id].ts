@@ -92,8 +92,10 @@ export default async function handler(
         namaIbuPutri: getValue(fields.namaIbuPutri) || "",
         instagramPutri: getValue(fields.instagramPutri) || "",
         linkGoogleCalender: getValue(fields.linkGoogleCalender) || "",
+        alamatGedungPernikahan: getValue(fields.alamatGedungPernikahan) || "",
         alamatPernikahan: getValue(fields.alamatPernikahan) || "",
         jamMulai: getValue(fields.jamMulai) || "",
+        jamResepsi: getValue(fields.jamResepsi) || "",
         jamSelesai: getValue(fields.jamSelesai) || "",
         linkMaps: getValue(fields.linkMaps) || "",
         noAtm: getValue(fields.noAtm) || "",
@@ -130,6 +132,9 @@ export default async function handler(
       };
 
       await handleFile("fotoHeader", "fotoHeader");
+      await handleFile("fotoHeader2", "fotoHeader2");
+      await handleFile("fotoHeader3", "fotoHeader3");
+      await handleFile("fotoHeader4", "fotoHeader4");
       await handleFile("photoPutra", "photoPutra");
       await handleFile("photoPutri", "photoPutri");
       await handleFile("fotoQris", "fotoQris");

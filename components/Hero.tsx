@@ -38,9 +38,10 @@ function Hero({
 
   const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log({file})
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPayload({ ...payload, fotoHeader: imageUrl });
+      // Simpan File object, bukan URL
+      setPayload({ ...payload, fotoHeader: file });
     }
   };
 
@@ -53,7 +54,13 @@ function Hero({
       <div 
         className={clsx('min-h-screen', 'bg-cover', 'bg-center', 'text-white', 'relative')}
         style={{ 
-          backgroundImage: `url('${payload?.fotoHeader || '/assets/images/bg.webp'}')` 
+          backgroundImage: `url('${
+            typeof payload?.fotoHeader === 'string' 
+              ? payload.fotoHeader 
+              : payload?.fotoHeader 
+                ? URL.createObjectURL(payload.fotoHeader) 
+                : ''
+          }')` 
         }}
       >
         <div className={clsx('absolute', 'inset-0', 'bg-black/70', 'z-10')} />

@@ -30,8 +30,8 @@ function CountdownComp({
   const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPayload({ ...payload, fotoHeader2: imageUrl });
+      // Simpan File object, bukan URL
+      setPayload({ ...payload, fotoHeader2: file as any });
     }
   };
 
@@ -68,7 +68,13 @@ function CountdownComp({
       <div 
         className={clsx('min-h-screen', 'bg-cover', 'bg-[44.5%]', 'text-white', 'relative', 'py-28', 'flex', 'items-end')}
         style={{ 
-          backgroundImage: `url('${payload?.fotoHeader2 || '/assets/images/banner.webp'}')` 
+          backgroundImage: `url('${
+            typeof payload?.fotoHeader2 === 'string'
+              ? payload.fotoHeader2
+              : payload?.fotoHeader2
+                ? URL.createObjectURL(payload.fotoHeader2)
+                : ''
+          }')` 
         }}
       >
         <div className={clsx('absolute', 'inset-0', 'bg-black/30')} />

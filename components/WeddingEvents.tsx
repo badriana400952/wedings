@@ -39,39 +39,71 @@ function WeddingEvents({ payload, setPayload, session, showPencil, setShowPencil
                     <SvgClock />
                     <span>
                       <EditableText
-                      value={payload.jamMulai}
-                      onChange={(value) => setPayload({ ...payload, jamMulai: value })}
-                      placeholder="10:00"
-                      session={session}
-                      showPencil={showPencil}
-                      setShowPencil={setShowPencil}
-                    /> 
-                    WIB 
-                    -  <EditableText
-                      value={payload.jamResepsi}
-                      onChange={(value) => setPayload({ ...payload, jamResepsi: value })}
-                      placeholder="11:00"
-                      session={session}
-                      showPencil={showPencil}
-                      setShowPencil={setShowPencil}
-                    /> 
-                     WIB
+                        value={payload.jamMulai}
+                        onChange={(value) => setPayload({ ...payload, jamMulai: value })}
+                        placeholder="10:00"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
+                      <span className='ml-1'>WIB</span>
+                      -  <EditableText
+                        value={payload.jamSelesai}
+                        onChange={(value) => setPayload({ ...payload, jamSelesai: value })}
+                        placeholder="11:00"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
+                      <span className='ml-1'>WIB</span>
+
                     </span>
                   </p>
                   <p className={clsx('text-[0.785rem]', 'text-[#5a5a5a]', 'font-light', 'leading-[1.9]')}>
                     <strong className={clsx('text-black', 'font-bold')}>
-                      Mercure Bandung City Center
+                      <EditableText
+                        value={payload.alamatGedungPernikahan}
+                        onChange={(value) => setPayload({ ...payload, alamatGedungPernikahan: value })}
+                        placeholder="Mercure Bandung City Center"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
                     </strong>
                     <br />
-                    Jl. Lengkong Besar No.8, Cikawao, Kec. Lengkong, Kota
-                    Bandung
+                    <EditableText
+                      value={payload.alamatPernikahan}
+                      onChange={(value) => setPayload({ ...payload, alamatPernikahan: value })}
+                      placeholder=" Jl. Lengkong Besar No.8, Cikawao, Kec. Lengkong, Kota
+                    Bandung"
+                      session={session}
+                      showPencil={showPencil}
+                      setShowPencil={setShowPencil}
+                    />
                   </p>
-                  <a
-                    href="https://www.google.com/maps/place/Mercure+Bandung+City+Centre/@-6.9238326,107.608777,17z/data=!3m1!4b1!4m9!3m8!1s0x2e68e628c43b0159:0x7ad6a19680a00592!5m2!4m1!1i2!8m2!3d-6.9238326!4d107.6113519!16s%2Fg%2F11c5ggy5hx"
-                    className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
-                  >
-                    GOOGLE MAPS
-                  </a>
+                  {session ? (
+                    <div
+                      className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'inline-block')}
+                    >
+                      <EditableText
+                        value={payload.linkMaps}
+                        onChange={(value) => setPayload({ ...payload, linkMaps: value })}
+                        placeholder="Link Google Maps"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
+                    </div>
+                  ) : (
+                    <a
+                      href={payload.linkMaps || "https://www.google.com/maps"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
+                    >
+                      GOOGLE MAPS
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -92,27 +124,66 @@ function WeddingEvents({ payload, setPayload, session, showPencil, setShowPencil
                   <div>
                     <p className={clsx('flex', 'items-center', 'text-[#5a5a5a]', 'font-light', 'text-[0.8rem]', 'gap-1.5')}>
                       <SvgClock />
-                      <span>12.00 WIB - 14.00 WIB (Base 1)</span>
+                      <span>
+                        <EditableText
+                          value={payload.jamResepsi}
+                          onChange={(value) => setPayload({ ...payload, jamResepsi: value })}
+                          placeholder="10:00"
+                          session={session}
+                          showPencil={showPencil}
+                          setShowPencil={setShowPencil}
+                        />
+                        <span className='mx-1'>WIB</span>
+                        -   Selesai
+                      </span>
                     </p>
-                    <p className={clsx('flex', 'items-center', 'text-[#5a5a5a]', 'font-light', 'text-[0.8rem]', 'gap-1.5', 'mt-1')}>
-                      <SvgClock />
-                      <span>15.00 WIB - 17.00 WIB (Base 2)</span>
-                    </p>
+
                   </div>
                   <p className={clsx('text-[0.785rem]', 'text-[#5a5a5a]', 'font-light', 'leading-[1.9]')}>
                     <strong className={clsx('text-black', 'font-bold')}>
-                      Mercure Bandung City Center
+                      <EditableText
+                        value={payload.alamatGedungPernikahan}
+                        onChange={(value) => setPayload({ ...payload, alamatGedungPernikahan: value })}
+                        placeholder="Mercure Bandung City Center"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
                     </strong>
                     <br />
-                    Jl. Lengkong Besar No.8, Cikawao, Kec. Lengkong, Kota
-                    Bandung
+                    <EditableText
+                      value={payload.alamatPernikahan}
+                      onChange={(value) => setPayload({ ...payload, alamatPernikahan: value })}
+                      placeholder=" Jl. Lengkong Besar No.8, Cikawao, Kec. Lengkong, Kota
+                    Bandung"
+                      session={session}
+                      showPencil={showPencil}
+                      setShowPencil={setShowPencil}
+                    />
                   </p>
-                  <a
-                    href="https://www.google.com/maps/place/Mercure+Bandung+City+Centre/@-6.9238326,107.608777,17z/data=!3m1!4b1!4m9!3m8!1s0x2e68e628c43b0159:0x7ad6a19680a00592!5m2!4m1!1i2!8m2!3d-6.9238326!4d107.6113519!16s%2Fg%2F11c5ggy5hx"
-                    className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
-                  >
-                    GOOGLE MAPS
-                  </a>
+                  {session ? (
+                    <div
+                      className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'inline-block')}
+                    >
+                      <EditableText
+                        value={payload.linkMaps}
+                        onChange={(value) => setPayload({ ...payload, linkMaps: value })}
+                        placeholder="Link Google Maps"
+                        session={session}
+                        showPencil={showPencil}
+                        setShowPencil={setShowPencil}
+                      />
+                    </div>
+                  ) : (
+                    <a
+                      href={payload.linkMaps || "https://www.google.com/maps"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={clsx('text-[0.75rem]', 'text-[#424242]', 'border', 'border-[#424242]', 'px-[0.4375rem]', 'py-1.5', 'rounded-full', 'hover:scale-90', 'ease-linear', 'duration-[0.2s]')}
+                    >
+                      GOOGLE MAPS
+                    </a>
+                  )}
                 </div>
                 <div className={clsx('w-[20%]', 'bg-[#424242]', 'rounded-br-[1.25rem]', 'flex', 'items-center')}>
                   <p className={clsx('-rotate-90', 'text-center', 'text-white', 'font-bold', 'text-[1.75rem]', '-translate-x-[3rem]', 'lg:-translate-x-[2.35rem]', 'tracking-[5px]')}>
