@@ -57,7 +57,7 @@ function Hero({
           backgroundImage: `url('${
             typeof payload?.fotoHeader === 'string' 
               ? payload.fotoHeader 
-              : payload?.fotoHeader 
+              : payload?.fotoHeader instanceof File
                 ? URL.createObjectURL(payload.fotoHeader) 
                 : ''
           }')` 

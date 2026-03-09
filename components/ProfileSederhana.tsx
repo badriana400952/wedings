@@ -78,8 +78,8 @@ function Profile({
                 src={
                   typeof payload?.photoPutri === 'string'
                     ? payload.photoPutri
-                    : payload?.photoPutri
-                      ? URL.createObjectURL(payload.photoPutri)
+                    : (payload?.photoPutri && typeof payload.photoPutri === 'object' && 'name' in payload.photoPutri)
+                      ? URL.createObjectURL(payload.photoPutri as File)
                       : "/assets/images/cewe.webp"
                 }
                 alt="Putri"
@@ -209,8 +209,8 @@ function Profile({
                 src={
                   typeof payload?.photoPutra === 'string'
                     ? payload.photoPutra
-                    : payload?.photoPutra
-                      ? URL.createObjectURL(payload.photoPutra)
+                    : (payload?.photoPutra && typeof payload.photoPutra === 'object' && 'name' in payload.photoPutra)
+                      ? URL.createObjectURL(payload.photoPutra as File)
                       : "/assets/images/cowo.webp"
                 }
                 alt="Putra"

@@ -34,7 +34,9 @@ const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil
           src={
             typeof payload.fotoHeader === "string"
               ? payload.fotoHeader
-              : URL.createObjectURL(payload.fotoHeader)
+              : payload.fotoHeader instanceof File
+                ? URL.createObjectURL(payload.fotoHeader)
+                : "/assets/images/bg.webp"
           }
           alt="bg"
           fill
@@ -116,7 +118,9 @@ const HomePage: React.FC<Pr> = ({ payload, setPayload, showPencil, setShowPencil
             src={
               typeof payload.fotoHeader === "string"
                 ? payload.fotoHeader
-                : URL.createObjectURL(payload.fotoHeader)
+                : payload.fotoHeader instanceof File
+                  ? URL.createObjectURL(payload.fotoHeader)
+                  : "/assets/images/bg.webp"
             }
             alt="bg"
             width={208}

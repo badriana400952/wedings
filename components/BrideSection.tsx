@@ -115,7 +115,7 @@ export default function BrideSection({
                         if (file) {
                           setPayload((prev) => ({
                             ...prev,
-                            photoPutra: URL.createObjectURL(file)
+                            photoPutra: file as any
                           }))
                         }
                       }}
@@ -124,7 +124,13 @@ export default function BrideSection({
                 )}
 
                 <Image
-                  src={payload.photoPutra}
+                  src={
+                    typeof payload.photoPutra === 'string'
+                      ? payload.photoPutra
+                      : payload.photoPutra instanceof File
+                        ? URL.createObjectURL(payload.photoPutra)
+                        : "/assets/images/cowo.webp"
+                  }
                   alt="cowo"
                   width={208}
                   height={208}
@@ -315,7 +321,7 @@ export default function BrideSection({
                         if (file) {
                           setPayload((prev) => ({
                             ...prev,
-                            photoPutri: URL.createObjectURL(file)
+                            photoPutri: file as any
                           }))
                         }
                       }}
@@ -324,7 +330,13 @@ export default function BrideSection({
                 )}
 
                 <Image
-                  src={payload.photoPutri}
+                  src={
+                    typeof payload.photoPutri === 'string'
+                      ? payload.photoPutri
+                      : payload.photoPutri instanceof File
+                        ? URL.createObjectURL(payload.photoPutri)
+                        : "/assets/images/cewe.webp"
+                  }
                   alt="cewe"
                   width={208}
                   height={208}

@@ -141,7 +141,7 @@ function Gallery({ payload, setPayload, session, showPencil, setShowPencil }: Ba
                     backgroundImage: `url('${
                         typeof payload?.fotoHeader3 === 'string'
                             ? payload.fotoHeader3
-                            : payload?.fotoHeader3
+                            : payload?.fotoHeader3 instanceof File
                                 ? URL.createObjectURL(payload.fotoHeader3)
                                 : '/assets/images/bg.webp'
                     }')` 

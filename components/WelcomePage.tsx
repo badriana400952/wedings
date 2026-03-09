@@ -7,6 +7,8 @@ import clsx from 'clsx';
 
 import SvgCustom from '@/utils/svg';
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 interface WelcomePageProps {
   onOpen: () => void;
@@ -21,6 +23,8 @@ interface WelcomePageProps {
 
 export default function WelcomePage({ onOpen, guestName, payload, showPencil, setShowPencil, setPayload, session, isAdminView = false }: WelcomePageProps) {
   const { SvgPencil } = SvgCustom()
+  const router = useRouter()
+  const {data} = useSession()
   const handleOpen = () => {
     // Trigger confetti effect
     const duration = 3000;
@@ -59,7 +63,9 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
   const [isHoveringImage, setIsHoveringImage] = useState(false)
   const [isEditingNamaPutra, setIsEditingNamaPutra] = useState(false)
   const [isEditingNamaPutri, setIsEditingNamaPutri] = useState(false)
-  
+  const handleToDashboard = () => {
+    router.push('/dashboard')
+  }
   return (
     <div className={clsx('loading-page', 'bg-white-black', 'd-flex', 'justify-content-center', 'align-items-center')} style={{ opacity: 1 }}>
       <div className={clsx('d-flex', 'flex-column', 'text-center', 'overflow-y-auto', 'vh-100', 'justify-content-center', 'align-items-center')}>
@@ -131,9 +137,11 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
           <Image
             src={
               payload?.fotoHeader 
-                ? (typeof payload.fotoHeader === 'string' 
-                    ? payload.fotoHeader 
-                    : URL.createObjectURL(payload.fotoHeader))
+                ? (typeof payload?.fotoHeader === 'string' 
+                    ? payload?.fotoHeader 
+                    : payload?.fotoHeader instanceof File
+                      ? URL.createObjectURL(payload?.fotoHeader)
+                      : '/default-wedding.jpg')
                 : '/default-wedding.jpg'
             }
             alt="background"
@@ -243,6 +251,16 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
           <i className={clsx('fa-solid', 'fa-envelope-open', 'fa-bounce', 'me-2')}></i>
           Open Invitation
         </button>
+        {
+          data?.user.id &&  <button
+          onClick={handleToDashboard}
+          type="button"
+          className={clsx('btn', 'btn-light', 'shadow', 'rounded-4', 'mt-3', 'mx-auto')}
+        >
+          To Dashboard
+        </button>
+        }
+       
       </div>
     </div>
   );

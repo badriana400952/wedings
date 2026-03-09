@@ -68,46 +68,46 @@ export default function SimpleSederhana({
 
 
 
-    //Header & Photos - cek apakah File object
+    //Header & Photos - cek apakah File object, skip jika blob URL
     if (payload.fotoHeader && typeof payload.fotoHeader !== 'string') {
       formData.append('fotoHeader', payload.fotoHeader as File);
-    } else if (typeof payload.fotoHeader === 'string') {
+    } else if (typeof payload.fotoHeader === 'string' && !payload.fotoHeader.startsWith('blob:')) {
       formData.append('fotoHeader', payload.fotoHeader);
     }
 
     if (payload.fotoHeader2 && typeof payload.fotoHeader2 !== 'string') {
       formData.append('fotoHeader2', payload.fotoHeader2 as File);
-    } else if (typeof payload.fotoHeader2 === 'string') {
+    } else if (typeof payload.fotoHeader2 === 'string' && !payload.fotoHeader2.startsWith('blob:')) {
       formData.append('fotoHeader2', payload.fotoHeader2);
     }
 
     if (payload.fotoHeader3 && typeof payload.fotoHeader3 !== 'string') {
       formData.append('fotoHeader3', payload.fotoHeader3 as File);
-    } else if (typeof payload.fotoHeader3 === 'string') {
+    } else if (typeof payload.fotoHeader3 === 'string' && !payload.fotoHeader3.startsWith('blob:')) {
       formData.append('fotoHeader3', payload.fotoHeader3);
     }
 
     if (payload.fotoHeader4 && typeof payload.fotoHeader4 !== 'string') {
       formData.append('fotoHeader4', payload.fotoHeader4 as File);
-    } else if (typeof payload.fotoHeader4 === 'string') {
+    } else if (typeof payload.fotoHeader4 === 'string' && !payload.fotoHeader4.startsWith('blob:')) {
       formData.append('fotoHeader4', payload.fotoHeader4);
     }
 
     if (payload.photoPutra && typeof payload.photoPutra !== 'string') {
       formData.append('photoPutra', payload.photoPutra as File);
-    } else if (typeof payload.photoPutra === 'string') {
+    } else if (typeof payload.photoPutra === 'string' && !payload.photoPutra.startsWith('blob:')) {
       formData.append('photoPutra', payload.photoPutra);
     }
 
     if (payload.photoPutri && typeof payload.photoPutri !== 'string') {
       formData.append('photoPutri', payload.photoPutri as File);
-    } else if (typeof payload.photoPutri === 'string') {
+    } else if (typeof payload.photoPutri === 'string' && !payload.photoPutri.startsWith('blob:')) {
       formData.append('photoPutri', payload.photoPutri);
     }
 
     if (payload.fotoQris && typeof payload.fotoQris !== 'string') {
       formData.append('fotoQris', payload.fotoQris as File);
-    } else if (typeof payload.fotoQris === 'string') {
+    } else if (typeof payload.fotoQris === 'string' && !payload.fotoQris.startsWith('blob:')) {
       formData.append('fotoQris', payload.fotoQris);
     }
 

@@ -53,6 +53,8 @@ export default async function handler(
   // =============================
   if (req.method === "PUT") {
     try {
+      console.log('📥 Received PUT request for user:', id);
+      
       const form = formidable({ multiples: true });
 
       const { fields, files } = await new Promise<{
@@ -64,6 +66,9 @@ export default async function handler(
           else resolve({ fields, files });
         });
       });
+
+      console.log('📦 Files received:', Object.keys(files));
+      console.log('📝 Fields received:', Object.keys(fields));
 
       const getValue = (field: any) =>
         Array.isArray(field) ? field[0] : field;
@@ -124,10 +129,16 @@ export default async function handler(
             ? files[fileKey][0]
             : files[fileKey];
 
+          console.log(`📸 Uploading ${fieldKey}:`, file.originalFilename);
           const uploadedUrl = await uploadToCloudinary(file);
-          if (uploadedUrl) updateData[fieldKey] = uploadedUrl;
+          if (uploadedUrl) {
+            console.log(`✅ ${fieldKey} uploaded:`, uploadedUrl);
+            updateData[fieldKey] = uploadedUrl;
+          }
         } else if (fields[fieldKey]) {
-          updateData[fieldKey] = getValue(fields[fieldKey]);
+          const value = getValue(fields[fieldKey]);
+          console.log(`📝 Keeping existing ${fieldKey}:`, value?.substring(0, 50));
+          updateData[fieldKey] = value;
         }
       };
 

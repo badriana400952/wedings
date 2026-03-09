@@ -140,9 +140,9 @@ export default function Register() {
                   value={formData.template}
                   onChange={(e) => setFormData({ ...formData, template: e.target.value })}
                 >
-                  <option value="A">Template A - Sederhana</option>
+                  <option value="A">Template A - Modern</option>
                   <option value="B">Template B - Classic</option>
-                  <option value="C">Template C - Modern</option>
+                  <option value="C">Template C - Sederhana</option>
                 </select>
               </div>
             </div>

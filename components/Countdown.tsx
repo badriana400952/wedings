@@ -71,7 +71,7 @@ function CountdownComp({
           backgroundImage: `url('${
             typeof payload?.fotoHeader2 === 'string'
               ? payload.fotoHeader2
-              : payload?.fotoHeader2
+              : payload?.fotoHeader2 instanceof File
                 ? URL.createObjectURL(payload.fotoHeader2)
                 : ''
           }')` 

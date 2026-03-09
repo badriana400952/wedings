@@ -13,13 +13,18 @@ import SimpleSederhana from '@/components/templates/SimpleSederhana';
 interface SlugPageProps {
   guestName: string | null;
   templateWedingData: ITemplateWeding | null;
+  adminId: string;
+  namaTemplate: string;
 }
 
-export default function SlugPage({guestName: initialGuestName, templateWedingData, }: SlugPageProps) {
+export default function SlugPage({guestName: initialGuestName, templateWedingData, adminId: propsAdminId, namaTemplate }: SlugPageProps) {
   const router = useRouter();
   const { data } = useSession();
   const [guestName, setGuestName] = useState<string | null>(initialGuestName);
-  const adminId = data?.user.id
+  
+  // Gunakan adminId dari props (URL) untuk guest, atau dari session untuk admin yang login
+  const adminId = data?.user.id || propsAdminId;
+  const isAdminView = data?.user.id === propsAdminId; // Admin view jika ID session sama dengan ID dari URL
   useEffect(() => {
     if (!router.isReady) return;
     const { to, slug, ...rest } = router.query;
@@ -34,41 +39,43 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
     }
 
   }, [router.isReady, router.query]);
-let x = "C"
-  switch (x) {
-  // switch (data?.user.template) {
+
+  // Gunakan template dari props atau dari session
+  const templateToUse = data?.user.template || namaTemplate;
+
+  switch (templateToUse) {
     case 'A':
       return (
         <SimpleModern
-          adminId={adminId || ""}
+          adminId={adminId}
           guestName={guestName}
-          isAdminView={false} 
+          isAdminView={isAdminView} 
         />
       );
     case 'B':
       return (
         <TemplateB
-          adminId={adminId || ""}
+          adminId={adminId}
           guestName={guestName}
           templateWedingData={templateWedingData}
-          isAdminView={false} 
+          isAdminView={isAdminView} 
         />
       );
     case 'C':
       return (
         <SimpleSederhana
-          adminId={adminId || ""}
+          adminId={adminId}
           guestName={guestName}
-          isAdminView={false} 
+          isAdminView={isAdminView} 
         />
       );
     default:
       // Default ke SimpleModern jika tidak ada template
       return (
         <SimpleModern
-          adminId={adminId || ""}
+          adminId={adminId}
           guestName={guestName}
-          isAdminView={false}
+          isAdminView={isAdminView}
         />
       );
   }

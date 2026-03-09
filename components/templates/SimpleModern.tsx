@@ -102,28 +102,28 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
   const handleSubmit = async () => {
     const formData = new FormData();
 
-    // Header & Photos - cek apakah File object
+    // Header & Photos - cek apakah File object, skip jika blob URL
     if (payload.fotoHeader && typeof payload.fotoHeader !== 'string') {
       formData.append('fotoHeader', payload.fotoHeader as File);
-    } else if (typeof payload.fotoHeader === 'string') {
+    } else if (typeof payload.fotoHeader === 'string' && !payload.fotoHeader.startsWith('blob:')) {
       formData.append('fotoHeader', payload.fotoHeader);
     }
 
     if (payload.photoPutra && typeof payload.photoPutra !== 'string') {
       formData.append('photoPutra', payload.photoPutra as File);
-    } else if (typeof payload.photoPutra === 'string') {
+    } else if (typeof payload.photoPutra === 'string' && !payload.photoPutra.startsWith('blob:')) {
       formData.append('photoPutra', payload.photoPutra);
     }
 
     if (payload.photoPutri && typeof payload.photoPutri !== 'string') {
       formData.append('photoPutri', payload.photoPutri as File);
-    } else if (typeof payload.photoPutri === 'string') {
+    } else if (typeof payload.photoPutri === 'string' && !payload.photoPutri.startsWith('blob:')) {
       formData.append('photoPutri', payload.photoPutri);
     }
 
     if (payload.fotoQris && typeof payload.fotoQris !== 'string') {
       formData.append('fotoQris', payload.fotoQris as File);
-    } else if (typeof payload.fotoQris === 'string') {
+    } else if (typeof payload.fotoQris === 'string' && !payload.fotoQris.startsWith('blob:')) {
       formData.append('fotoQris', payload.fotoQris);
     }
 
@@ -220,9 +220,11 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
               <div className={clsx('absolute', 'inset-0', 'opacity-30')}>
                 <Image
                   src={
-                    typeof payload.fotoHeader === "string"
+                    typeof payload?.fotoHeader === "string"
                       ? payload.fotoHeader
-                      : URL.createObjectURL(payload.fotoHeader)
+                      : payload?.fotoHeader instanceof File
+                        ? URL.createObjectURL(payload.fotoHeader)
+                        : "/assets/images/bg.webp"
                   }
                   alt="background"
                   fill

@@ -29,7 +29,7 @@ function Footer({ payload, setPayload, session, showPencil, setShowPencil,handle
           backgroundImage: `url('${
             typeof payload?.fotoHeader4 === 'string'
               ? payload.fotoHeader4
-              : payload?.fotoHeader4
+              : payload?.fotoHeader4 instanceof File
                 ? URL.createObjectURL(payload.fotoHeader4)
                 : '/assets/images/a4.jpeg'
           }')` 
