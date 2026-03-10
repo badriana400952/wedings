@@ -16,9 +16,10 @@ import { useSession } from "next-auth/react";
 import useTemplateWedings from "@/hooks/useTemplateWweding";
 import axios from "axios";
 import { useRouter } from "next/router";
+import ThemeButton from "../ThemeButton";
+import AudioButton from "../AudioButton";
 
 interface SimpleSederhanaProps {
-
   guestName: string | null;
   isAdminView?: boolean;
   adminId?: string;
@@ -268,20 +269,24 @@ export default function SimpleSederhana({
       />
 
       {/* Audio Player */}
-      <AudioPlayer
-        audioUrl="/audio/backsound.mp3"
+      {/* <AudioPlayer
+        audioUrl="assets/music/music.mp3"
         volume={0.25}
-        autoPlay={false}
+        autoPlay={true}
         loop={true}
-      />
+      /> */}
+      <div className={clsx('fixed', 'bottom-24', 'right-4', 'z-50', 'flex', 'flex-col', 'gap-3')}>
+        {/* <ThemeButton /> */}
+        <AudioButton />
+      </div>
 
       {/* Edit Mode Indicator */}
-      {showPencil && (
+      {/* {showPencil && (
         <div className={clsx('fixed', 'top-4', 'left-4', 'z-50', 'bg-yellow-500', 'text-white', 'px-4', 'py-2', 'rounded-lg', 'shadow-lg')}>
           <i className={clsx('fas', 'fa-pencil', 'mr-2')}></i>
           Edit Mode Active
         </div>
-      )}
+      )} */}
     </main>
   );
 }

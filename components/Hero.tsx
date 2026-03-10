@@ -31,7 +31,7 @@ function Hero({
   const [showCalendar, setShowCalendar] = useState(false);
   const [isHoveringBg, setIsHoveringBg] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [play] = useSound("/audio/backsound.mp3", {
+  const [play] = useSound("assets/music/music.mp3", {
     volume: 0.25,
   });
   const {SvgMail} = SvgCustom();

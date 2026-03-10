@@ -11,7 +11,7 @@ interface AudioPlayerProps {
 }
 
 export default function AudioPlayer({
-  audioUrl = '/audio/backsound.mp3',
+  audioUrl = 'assets/music/music.mp3',
   volume = 0.25,
   autoPlay = false,
   loop = true,
