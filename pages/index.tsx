@@ -1,18 +1,30 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
-import WelcomePage from '@/components/WelcomePage';
-import HomePage from '@/components/HomePage';
-import BrideSection from '@/components/BrideSection';
-import WeddingDateSection from '@/components/WeddingDateSection';
-import GallerySection from '@/components/GallerySection';
-import LoveGiftSection from '@/components/LoveGiftSection';
-import CommentSection from '@/components/CommentSection';
-import Footer from '@/components/Footer';
-import BottomNav from '@/components/BottomNav';
-import AudioButton from '@/components/AudioButton';
-import ThemeButton from '@/components/ThemeButton';
-import AOSInit from '@/components/AOSInit';
+import WelcomePage from '../components/WelcomePage';
+import AOSInit from '../components/AOSInit';
+import HomePage from '../components/HomePage';
+import BrideSection from '../components/BrideSection';
+import WeddingDateSection from '../components/WeddingDateSection';
+import GallerySection from '../components/GallerySection';
+import LoveGiftSection from '../components/LoveGiftSection';
+import CommentSection from '../components/CommentSection';
+import Footer from '../components/Footer';
+import BottomNav from '../components/BottomNav';
+import ThemeButton from '../components/ThemeButton';
+import AudioButton from '../components/AudioButton';
+// import WelcomePage from '@/components/WelcomePage';
+// import HomePage from '@/components/HomePage';
+// import BrideSection from '@/components/BrideSection';
+// import WeddingDateSection from '@/components/WeddingDateSection';
+// import GallerySection from '@/components/GallerySection';
+// import LoveGiftSection from '@/components/LoveGiftSection';
+// import CommentSection from '@/components/CommentSection';
+// import Footer from '@/components/Footer';
+// import BottomNav from '@/components/BottomNav';
+// import AudioButton from '@/components/AudioButton';
+// import ThemeButton from '@/components/ThemeButton';
+// import AOSInit from '@/components/AOSInit';
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,11 +58,11 @@ export default function Home() {
     return (
       <>
         <Head>
-          <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online</title>
-          <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
+          <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online</title>
+          <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
           <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation" />
-          <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
-          <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
+          <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
+          <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
           {/* <meta property="og:image" content="/assets/images/a1.jpeg" /> */}
           <meta property="og:image" content="https://wedings.vercel.app/assets/images/link.jpeg" />
           <meta property="og:type" content="website" />
@@ -67,12 +79,12 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online</title>
-        <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
+        <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online</title>
+        <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
         <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation" />
-        <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
-        <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
-        <meta property="og:image" content="/assets/images/a1.jpeg" />
+        <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
+        <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online" />
+        <meta property="og:image" content="https://wedings.vercel.app/assets/images/link.jpeg" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="id_ID" />
       </Head>
