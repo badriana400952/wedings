@@ -22,7 +22,7 @@ export default function Home() {
     // Get guest name from URL - support both ?to= and direct slug
     const params = new URLSearchParams(window.location.search);
     let guestNameFromUrl = params.get('to');
-    
+
     // If no 'to' parameter, check for direct slug after ?
     if (!guestNameFromUrl) {
       const queryString = window.location.search.substring(1); // Remove '?'
@@ -31,7 +31,7 @@ export default function Home() {
         guestNameFromUrl = queryString.replace(/\+/g, ' ');
       }
     }
-    
+
     if (guestNameFromUrl) {
       setGuestName(decodeURIComponent(guestNameFromUrl));
     }
@@ -51,9 +51,13 @@ export default function Home() {
           <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation" />
           <meta property="og:title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
           <meta property="og:description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
-          <meta property="og:image" content="/assets/images/a1.jpeg" />
+          {/* <meta property="og:image" content="/assets/images/a1.jpeg" /> */}
+          <meta property="og:image" content="https://wedings.vercel.app/assets/images/a71.jpeg" />
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="id_ID" />
+
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
         </Head>
         <WelcomePage onOpen={handleOpen} guestName={guestName} />
       </>
