@@ -46,13 +46,13 @@ export default function Home() {
     return (
       <>
         <Head>
-          <title>Website Undangan Pernikahan Wahyu dan Riski Secara Online</title>
-          <meta name="description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
+          <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online</title>
+          <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
           <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation" />
-          <meta property="og:title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
-          <meta property="og:description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
+          <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
+          <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
           {/* <meta property="og:image" content="/assets/images/a1.jpeg" /> */}
-          <meta property="og:image" content="https://wedings.vercel.app/assets/images/headers.jpeg" />
+          <meta property="og:image" content="https://wedings.vercel.app/assets/images/link.jpeg" />
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="id_ID" />
 
@@ -67,11 +67,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Website Undangan Pernikahan Wahyu dan Riski Secara Online</title>
-        <meta name="description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
+        <title>Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online</title>
+        <meta name="description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
         <meta name="keywords" content="undangan, wedding, undangan digital, undangan online, wedding invitation" />
-        <meta property="og:title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
-        <meta property="og:description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
+        <meta property="og:title" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
+        <meta property="og:description" content="Website Undangan Pernikahan Abdulloh Mujaddid dan Ati Sunarti Secara Online dan Riski Secara Online" />
         <meta property="og:image" content="/assets/images/a1.jpeg" />
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="id_ID" />
