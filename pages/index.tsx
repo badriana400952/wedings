@@ -52,7 +52,7 @@ export default function Home() {
           <meta property="og:title" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
           <meta property="og:description" content="Website Undangan Pernikahan Wahyu dan Riski Secara Online" />
           {/* <meta property="og:image" content="/assets/images/a1.jpeg" /> */}
-          <meta property="og:image" content="https://wedings.vercel.app/assets/images/a71.jpeg" />
+          <meta property="og:image" content="https://wedings.vercel.app/assets/images/headers.jpeg" />
           <meta property="og:type" content="website" />
           <meta property="og:locale" content="id_ID" />
 

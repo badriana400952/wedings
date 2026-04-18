@@ -8,8 +8,8 @@ export default function App({ Component, pageProps: { session, ...pageProps } }:
     <SessionProvider session={session}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/a71.jpeg" />
-        <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/a71.jpeg" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/headers.jpeg" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/assets/images/headers.jpeg" />
         
         {/* Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
