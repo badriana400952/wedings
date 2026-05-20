@@ -88,26 +88,25 @@ export default function Dashboard() {
     const link = `${baseUrl}/?to=${encodedName}`;
 
     if (useTemplate) {
-      const template = `Assalamualaikum Warahmatullahi Wabarakatuh
+    const template = `Assalamualaikum Warahmatullahi Wabarakatuh
 
-      Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i ${guestName} untuk menghadiri acara kami.
+Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i ${guestName} untuk menghadiri acara kami.
 
-      Berikut link undangan kami, untuk info lengkap dari acara bisa kunjungi :
+Berikut link undangan kami, untuk info lengkap dari acara bisa kunjungi :
 
-      ${link}
+${link}
 
-      Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
+Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
 
-      Terima kasih banyak atas perhatiannya.
+Terima kasih banyak atas perhatiannya.
 
-      Wassalamualaikum Warahmatullahi Wabarakatuh
+Wassalamualaikum Warahmatullahi Wabarakatuh
 
-      ==========
+==========
 
-      *Copy link dan paste ke browser, jika link tidak bisa dibuka.
-      *Mohon simpan nomor kami jika link tidak bisa di klik.
-      *Nonaktifkan dark mode pada browser agar undangan terlihat maksimal.`;
-
+*Copy link dan paste ke browser, jika link tidak bisa dibuka.
+*Mohon simpan nomor kami jika link tidak bisa di klik.
+*Nonaktifkan dark mode pada browser agar undangan terlihat maksimal.`;
             setGeneratedLink(template);
           } else {
             setGeneratedLink(link);
