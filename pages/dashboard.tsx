@@ -32,6 +32,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [guestName, setGuestName] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
+  const [useTemplate, setUseTemplate] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -81,13 +82,37 @@ export default function Dashboard() {
       alert('Mohon isi nama tamu');
       return;
     }
-    
+
     const baseUrl = window.location.origin;
-    // Generate link dengan format: ?nama+tamu (spasi jadi +)
     const encodedName = guestName.trim().replace(/\s+/g, '+');
-    const link = `${baseUrl}/?${encodedName}`;
-    setGeneratedLink(link);
-  };
+    const link = `${baseUrl}/?to=${encodedName}`;
+
+    if (useTemplate) {
+      const template = `Assalamualaikum Warahmatullahi Wabarakatuh
+
+      Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i ${guestName} untuk menghadiri acara kami.
+
+      Berikut link undangan kami, untuk info lengkap dari acara bisa kunjungi :
+
+      ${link}
+
+      Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.
+
+      Terima kasih banyak atas perhatiannya.
+
+      Wassalamualaikum Warahmatullahi Wabarakatuh
+
+      ==========
+
+      *Copy link dan paste ke browser, jika link tidak bisa dibuka.
+      *Mohon simpan nomor kami jika link tidak bisa di klik.
+      *Nonaktifkan dark mode pada browser agar undangan terlihat maksimal.`;
+
+            setGeneratedLink(template);
+          } else {
+            setGeneratedLink(link);
+          }
+        };
 
   const copyLink = () => {
     if (generatedLink) {
@@ -156,31 +181,28 @@ export default function Dashboard() {
               <div className={clsx('bg-white', 'dark:bg-gray-800', 'rounded-2xl', 'shadow-lg', 'p-4', 'space-y-2')}>
                 <button
                   onClick={() => setActiveTab('home')}
-                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
-                    activeTab === 'home'
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
-                  }`}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${activeTab === 'home'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
+                    }`}
                 >
                   <i className={clsx('fas', 'fa-house', 'mr-3')}></i>Home
                 </button>
                 <button
                   onClick={() => setActiveTab('links')}
-                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
-                    activeTab === 'links'
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
-                  }`}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${activeTab === 'links'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
+                    }`}
                 >
                   <i className={clsx('fas', 'fa-link', 'mr-3')}></i>Generate Link
                 </button>
                 <button
                   onClick={() => setActiveTab('settings')}
-                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${
-                    activeTab === 'settings'
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
-                  }`}
+                  className={`w-full text-left px-4 py-3 rounded-xl transition-colors ${activeTab === 'settings'
+                    ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
+                    }`}
                 >
                   <i className={clsx('fas', 'fa-gear', 'mr-3')}></i>Settings
                 </button>
@@ -289,7 +311,7 @@ export default function Dashboard() {
                   <h2 className={clsx('text-xl', 'font-bold', 'mb-6', 'text-gray-900', 'dark:text-white')}>
                     <i className={clsx('fas', 'fa-link', 'mr-2')}></i>Generate Link Undangan
                   </h2>
-                  
+
                   <div className="space-y-4">
                     <div>
                       <label className={clsx('block', 'mb-2', 'text-gray-700', 'dark:text-gray-300', 'font-medium')}>
@@ -305,6 +327,59 @@ export default function Dashboard() {
                       <small className={clsx('text-gray-500', 'dark:text-gray-400', 'mt-1', 'block')}>
                         Spasi akan otomatis diubah menjadi tanda +
                       </small>
+
+                      <div
+                        className={clsx(
+                          'mt-4',
+                          'flex',
+                          'items-center',
+                          'justify-between',
+                          'p-4',
+                          'rounded-xl',
+                          'bg-gray-50',
+                          'dark:bg-gray-700'
+                        )}
+                      >
+                        <div>
+                          <p className={clsx('font-medium', 'text-gray-900', 'dark:text-white')}>
+                            Gunakan Template Pesan
+                          </p>
+
+                          <p className={clsx('text-sm', 'text-gray-500', 'dark:text-gray-400')}>
+                            Jika aktif akan generate pesan undangan lengkap
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => setUseTemplate(!useTemplate)}
+                          className={clsx(
+                            'relative',
+                            'inline-flex',
+                            'h-6',
+                            'w-11',
+                            'items-center',
+                            'rounded-full',
+                            'transition-colors',
+                            useTemplate
+                              ? 'bg-blue-500'
+                              : 'bg-gray-300 dark:bg-gray-600'
+                          )}
+                        >
+                          <span
+                            className={clsx(
+                              'inline-block',
+                              'h-4',
+                              'w-4',
+                              'transform',
+                              'rounded-full',
+                              'bg-white',
+                              'transition-transform',
+                              useTemplate ? 'translate-x-6' : 'translate-x-1'
+                            )}
+                          />
+                        </button>
+                      </div>
                     </div>
 
                     <button
@@ -320,11 +395,24 @@ export default function Dashboard() {
                           Link Undangan:
                         </label>
                         <div className={clsx('flex', 'gap-2')}>
-                          <input
-                            type="text"
+                          <textarea
                             value={generatedLink}
                             readOnly
-                            className={clsx('flex-1', 'px-4', 'py-2', 'rounded-lg', 'border', 'border-gray-300', 'dark:border-gray-600', 'bg-white', 'dark:bg-gray-800', 'text-gray-900', 'dark:text-white')}
+                            rows={useTemplate ? 16 : 2}
+                            className={clsx(
+                              'flex-1',
+                              'px-4',
+                              'py-2',
+                              'rounded-lg',
+                              'border',
+                              'border-gray-300',
+                              'dark:border-gray-600',
+                              'bg-white',
+                              'dark:bg-gray-800',
+                              'text-gray-900',
+                              'dark:text-white',
+                              'resize-none'
+                            )}
                           />
                           <button
                             onClick={copyLink}
@@ -333,7 +421,7 @@ export default function Dashboard() {
                             <i className={clsx('fas', 'fa-copy')}></i>
                           </button>
                         </div>
-                        
+
                         <div className={clsx('mt-4', 'p-3', 'bg-blue-50', 'dark:bg-blue-900/20', 'rounded-lg')}>
                           <p className={clsx('text-sm', 'text-blue-800', 'dark:text-blue-200')}>
                             <i className={clsx('fas', 'fa-info-circle', 'mr-2')}></i>
