@@ -73,6 +73,7 @@ model TemplateWeding {
   namaLengkapPutra String @default("") @map("nama_lengkap_putra")
   namaAyahPutra    String @default("") @map("nama_ayah_putra")
   namaIbuPutra     String @default("") @map("nama_ibu_putra")
+  kelahiranPutra   String @default("") @map("kelahiran_putra")
   instagramPutra   String @default("") @map("instagram_putra")
   photoPutra       String @default("") @map("photo_putra")
 
@@ -81,6 +82,7 @@ model TemplateWeding {
   namaLengkapPutri String @default("") @map("nama_lengkap_putri")
   namaAyahPutri    String @default("") @map("nama_ayah_putri")
   namaIbuPutri     String @default("") @map("nama_ibu_putri")
+  kelahiranPutri   String @default("") @map("kelahiran_putri")
   instagramPutri   String @default("") @map("instagram_putri")
   photoPutri       String @default("") @map("photo_putri")
 
@@ -90,15 +92,30 @@ model TemplateWeding {
   alamatGedungPernikahan   String   @default("") @map("alamat_gedung_pernikahan")
   alamatPernikahan   String   @default("") @map("alamat_pernikahan")
   jamMulai           String   @default("") @map("jam_mulai")
-  jamResepsi           String   @default("") @map("jam_resepsi")
+  jamResepsi         String   @default("") @map("jam_resepsi")
   jamSelesai         String   @default("") @map("jam_selesai")
   linkMaps           String   @default("") @map("link_maps")
 
+  // Detail Jadwal Akad & Resepsi
+  tanggalAkad        DateTime @default(now()) @map("tanggal_akad")
+  jamAkad            String   @default("") @map("jam_akad")
+  lokasiAkad         String   @default("") @map("lokasi_akad")
+  alamatAkad         String   @default("") @map("alamat_akad")
+  tanggalResepsi     DateTime @default(now()) @map("tanggal_resepsi")
+  lokasiResepsi      String   @default("") @map("lokasi_resepsi")
+
+  // Gambar Bersama — maksimal 6 foto, dipakai di Taman Rahasia atau Kisah Pertemuan
+  bersamaFotos   String[] @default([]) @map("bersama_fotos")
+  bersamaDipakai String   @default("taman") @map("bersama_dipakai") // "taman" | "cerita"
+
   // Love Gift
-  noAtm    String? @map("no_atm")
-  namaBank String? @map("nama_bank")
-  fotoQris String? @map("foto_qris")
-  noHp     String? @map("no_hp")
+  noAtm        String?  @map("no_atm")
+  namaBank     String?  @map("nama_bank")
+  fotoQris     String?  @map("foto_qris")
+  noHp         String?  @map("no_hp")
+  isGiftActive Boolean  @default(true) @map("is_gift_active")
+  isBankActive Boolean  @default(true) @map("is_bank_active")
+  isQrisActive Boolean  @default(true) @map("is_qris_active")
 
   // Relations
   galeryId String? @map("galery_id")
@@ -109,10 +126,34 @@ model TemplateWeding {
   comentIds   String?
   comments    Comment[]
 
+  ucapanHarapan UcapanHarapan[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("template_wedings")
+}
+
+//////////////////////
+// UCAPAN HARAPAN (Pohon Harapan — Template B)
+//////////////////////
+// Tabel khusus, terpisah dari `comments`. Hanya baca-tulis (tanpa like/reply),
+// di-scope per user lewat templateWedingId. Dipakai Pohon Harapan Template B;
+// template lain tidak membaca tabel ini sama sekali.
+model UcapanHarapan {
+  id               String           @id @default(cuid())
+  name             String
+  ucapan           String           @db.Text
+  ip               String
+  userAgent        String           @map("user_agent")
+  templateWedingId String?          @map("template_weding_id")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  templateWeding   TemplateWeding?  @relation(fields: [templateWedingId], references: [id], onDelete: Cascade)
+
+  @@index([templateWedingId])
+  @@map("ucapan_harapan")
 }
 
 //////////////////////

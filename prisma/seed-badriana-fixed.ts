@@ -28,7 +28,7 @@ async function main() {
         canReply: true,
         canEdit: true,
         canDelete: true,
-        namaTemplate: 'A', // Set template A untuk Badriana
+        template: 'A', // Set template A untuk Badriana
       },
     });
     console.log('✅ User Badriana created');

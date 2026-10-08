@@ -57,8 +57,45 @@ export default async function handler(
         });
       }
 
+      let targetGaleryId = id;
+      const existingGalery = await prisma.galery.findUnique({
+        where: { id: targetGaleryId },
+      });
+
+      if (!existingGalery) {
+        // Coba cari template wedding by userId atau templateWeding id
+        const tw = await prisma.templateWeding.findFirst({
+          where: { OR: [{ userId: id }, { id }] },
+          include: { galery: true },
+        });
+
+        if (tw?.galery) {
+          targetGaleryId = tw.galery.id;
+        } else if (tw) {
+          const newGal = await prisma.galery.create({
+            data: {
+              fotos,
+            },
+          });
+          await prisma.templateWeding.update({
+            where: { id: tw.id },
+            data: { galeryId: newGal.id },
+          });
+          return res.status(200).json({
+            success: true,
+            message: 'Galery berhasil diupdate',
+            data: newGal,
+          });
+        } else {
+          return res.status(404).json({
+            success: false,
+            message: 'Galery tidak ditemukan',
+          });
+        }
+      }
+
       const updatedGalery = await prisma.galery.update({
-        where: { id },
+        where: { id: targetGaleryId },
         data: {
           fotos,
         },

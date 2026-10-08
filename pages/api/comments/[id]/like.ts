@@ -9,16 +9,17 @@ export default async function handler(
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  // Get or create session ID from cookie
+  const hadCookie = Boolean(req.cookies.session_id);
+  const sessionId =
+    req.cookies.session_id || `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
   try {
     const { id: commentId } = req.query;
 
     if (typeof commentId !== 'string') {
       return res.status(400).json({ error: 'Invalid comment ID' });
     }
-
-    // Get or create session ID from cookie
-    const sessionId = req.cookies.session_id || 
-      `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
     // Check if already liked
     const existingLike = await prisma.like.findUnique({
@@ -56,16 +57,19 @@ export default async function handler(
         data: { likesCount: { increment: 1 } },
       });
 
-      // Set cookie
-      res.setHeader(
-        'Set-Cookie',
-        `session_id=${sessionId}; Max-Age=${60 * 60 * 24 * 365}; Path=/; HttpOnly; SameSite=Lax`
-      );
-
       return res.status(200).json({ liked: true });
     }
   } catch (error) {
     console.error('Error toggling like:', error);
     return res.status(500).json({ error: 'Failed to toggle like' });
+  } finally {
+    // Cookie tetap dipasang meski aksi pertama yang terjadi adalah "unlike", supaya
+    // session id tidak berubah-ubah di antara permintaan dan status suka tetap konsisten.
+    if (!hadCookie) {
+      res.setHeader(
+        'Set-Cookie',
+        `session_id=${sessionId}; Max-Age=${60 * 60 * 24 * 365}; Path=/; HttpOnly; SameSite=Lax`
+      );
+    }
   }
 }

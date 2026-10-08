@@ -1,145 +1,123 @@
 ===========================================
-UNDANGAN PERNIKAHAN DIGITAL
+UNDANGAN PERNIKAHAN DIGITAL (MULTI-TEMPLATE SAAS)
 ===========================================
 
-📱 URL UNDANGAN (untuk tamu)
-https://your-domain.vercel.app
+📱 URL UNDANGAN & SHARE TAMU
+https://your-domain.vercel.app/[user_id_atau_nama]
 
-Bagikan link ini ke tamu undangan Anda via:
+Untuk menyapa tamu secara personal:
+https://your-domain.vercel.app/[user_id_atau_nama]/to/[Nama+Tamu]
+
+Contoh:
+- https://your-domain.vercel.app/badriana
+- https://your-domain.vercel.app/badriana/to/Bapak+Ahmad+&+Keluarga
+
+Bagikan link ini ke tamu undangan via:
 - WhatsApp
-- Instagram
-- Facebook
-- Email
-- dll
+- Instagram / Bio Link
+- Facebook / Email / Telegram
 
 ===========================================
 
-🔐 AKSES DASHBOARD ADMIN
+🔐 AKSES DASHBOARD ADMIN (PENGATURAN COMPLETE)
 
 URL Login:
 https://your-domain.vercel.app/login
 
-Kredensial:
+Kredensial Default (Seed):
 Email    : admin@undangan.com
 Password : admin123
 
 ⚠️ PENTING: 
-Segera ganti password setelah login pertama!
+Segera ganti password setelah login pertama melalui script atau panel keamanan.
 
 ===========================================
 
-📊 FITUR DASHBOARD
+📊 FITUR LENGKAP DASHBOARD ADMIN (/dashboard)
 
-Setelah login, Anda bisa:
-✅ Melihat semua ucapan & doa dari tamu
-✅ Menghapus ucapan yang tidak sesuai
-✅ Melihat statistik total ucapan
-✅ Logout dengan aman
+Setelah login, Anda memiliki kontrol 100% penuh untuk mengedit:
+
+1. 🎨 PILIHAN TEMA / TEMPLATE UNDANGAN
+   - Template A: Simple Modern Layout
+   - Template B: Taman Rahasia (Editorial Floral Style & Pohon Harapan)
+   - Template C: Kirigami Pastel (Seni Potong Kertas Berlapis & Whimsical)
+
+2. 👰 MEMPELAI PRIA & WANITA (GROOM & BRIDE)
+   - Pria (Putra): Nama Panggilan, Nama Lengkap, Gelar, Orang Tua, Urutan Lahir, Instagram, & Foto Profil.
+   - Wanita (Putri): Nama Panggilan, Nama Lengkap, Gelar, Orang Tua, Urutan Lahir, Instagram, & Foto Profil.
+
+3. 📅 JADWAL & LOKASI ACARA (AKAD & RESEPSI)
+   - Tanggal & Waktu Pernikahan / Akad / Resepsi.
+   - Nama Gedung, Alamat Lengkap, Link Google Maps API, & Link Google Calendar.
+   - Setting Zona Waktu (WIB, WITA, WIT) via `tz`.
+
+4. 🖼️ GALERI ALBUM & KISAH PERTEMUAN (LOVE STORY)
+   - Upload & Kelola Album Foto Photoshoot Prewedding (Cloudinary Integration).
+   - Pengaturan 4 Babak Kisah Pertemuan Cinta + Dokumentasi Foto Kebersamaan.
+
+5. 💳 LOVE GIFT & AMPLOP DIGITAL
+   - Pengaturan Aktif/Nonaktif Bank & QRIS.
+   - Nomor Rekening Bank, Nama Pemilik, Foto QRIS, & Nomor HP Konfirmasi.
+
+6. 💬 MODERASI UCAPAN & RSVP
+   - Melihat & mengelola data kehadiran tamu (Hadir, Berhalangan, Jumlah Pax).
+   - Memoderasi & menghapus komentar/ucapan Pohon Harapan jika diperlukan.
 
 ===========================================
 
 🎯 CARA MENGGUNAKAN
 
-1. UNTUK TAMU
-   - Buka link undangan
-   - Klik "Open Invitation"
-   - Nikmati animasi confetti 🎊
-   - Scroll untuk lihat detail acara
-   - Isi ucapan & doa di form
-   - Klik "Send" untuk kirim ucapan
+1. UNTUK TAMU (GUEST VIEW - MURNI READ-ONLY)
+   - Buka link undangan personal (dengan nama tamu di URL)
+   - Klik "Buka Undangan" (Animasi Buka Gerbang / Cover)
+   - Musik latar otomatis berputar (Audio Autoplay)
+   - Efek partikel kertas & scroll reveal animation
+   - Lihat detail mempelai, countdown, jadwal acara, & lokasi Maps
+   - Mengisi Form Konfirmasi Kehadiran (RSVP) & Doa Restu (Pohon Harapan)
+   - Salin Nomor Rekening / Scan QRIS untuk Love Gift
 
-2. UNTUK ADMIN (Anda)
-   - Buka link login dashboard
-   - Masukkan email & password
-   - Lihat semua ucapan yang masuk
-   - Hapus ucapan jika perlu
-   - Logout setelah selesai
-
-===========================================
-
-✨ FITUR UNDANGAN
-
-✅ Animasi confetti saat buka undangan
-✅ Countdown timer ke hari H
-✅ Dark mode / Light mode
-✅ Audio player (musik background)
-✅ Galeri foto (klik untuk zoom)
-✅ Google Maps lokasi acara
-✅ Save to Google Calendar
-✅ Form ucapan & doa
-✅ Like button untuk ucapan
-✅ Info Love Gift (transfer)
-✅ Responsive (mobile & desktop)
+2. UNTUK ADMIN / PENGANTIN
+   - Login ke https://your-domain.vercel.app/login
+   - Buka halaman Dashboard (`/dashboard`)
+   - Sesuaikan data mempelai, tanggal acara, lokasi, foto, dan amplop digital
+   - Pilih template favorit (A, B, atau C)
+   - Simpan perubahan dan bagikan link undangan ke para tamu
 
 ===========================================
 
-📱 CARA SHARE KE TAMU
+✨ FITUR UNGGULAN UNDANGAN
 
-Via WhatsApp:
-"Assalamualaikum Wr. Wb.
-Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.
+✅ Multi-Template Engine (Modern, Taman Rahasia, Kirigami Pastel)
+✅ Personal Guest Greeting (Nama Tamu otomatis tampil di Cover)
+✅ Animasi Opening Cover Gate & Canvas Particles
+✅ Countdown Timer Akurat ke Hari H
+✅ Audio Player Background Music (Responsive Controls)
+✅ Galeri Foto Interaktif + Lightbox Modal Zoom
+✅ Integrasi Google Maps & Direct Save to Google Calendar
+✅ Form RSVP Kehadiran & Pohon Harapan (Sticky Notes Wishes)
+✅ Amplop Digital (Bank Transfer Copy-to-Clipboard & QRIS Code)
+✅ Integrasi Cloudinary untuk Upload Foto Cepat
+✅ Tampilan 100% Responsive (Mobile & Desktop Friendly)
+
+===========================================
+
+📱 CARA SHARE KE TAMU (WHATSAPP TEMPLATE)
+
+"Tanpa mengurangi rasa hormat, kami mengundang Bapak/Ibu/Saudara/i [Nama Tamu] untuk menghadiri acara pernikahan kami:
+
+[Nama Pria] & [Nama Wanita]
 
 Berikut link undangan digital kami:
-https://your-domain.vercel.app
+https://your-domain.vercel.app/[user]/to/[Nama+Tamu]
 
-Merupakan suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir.
+Merupakan suatu kehormatan & kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
 
-Terima kasih 🙏
-Wassalamualaikum Wr. Wb."
-
-===========================================
-
-📞 SUPPORT & BANTUAN
-
-Jika ada pertanyaan atau masalah:
-- WhatsApp: [nomor developer]
-- Email: [email developer]
-
-Jam kerja support:
-Senin - Jumat: 09.00 - 17.00 WIB
-Sabtu: 09.00 - 12.00 WIB
+Terima kasih 🙏"
 
 ===========================================
 
-📄 DOKUMENTASI LENGKAP
+🎉 UNDANGAN DIGITAL SIAP DIGUNAKAN!
 
-Untuk panduan lengkap, silakan baca file:
-PANDUAN_CUSTOMER.md
-
-Berisi:
-- Cara mengelola dashboard
-- Cara update konten
-- Troubleshooting
-- FAQ
-- Dan informasi penting lainnya
-
+Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fi khair 💑
 ===========================================
 
-💡 TIPS
-
-1. Bagikan link undangan H-30 atau H-14
-2. Cek dashboard setiap hari untuk lihat ucapan baru
-3. Screenshot ucapan favorit sebagai kenangan
-4. Backup ucapan sebelum acara (export dari database)
-5. Jangan share password dashboard ke orang lain
-
-===========================================
-
-🎉 SELAMAT!
-
-Undangan digital Anda sudah siap digunakan!
-Semoga acara pernikahan berjalan lancar dan 
-penuh berkah.
-
-Barakallahu lakuma wa baraka alaikuma 
-wa jama'a bainakuma fi khair 💑
-
-===========================================
-
-Terima kasih telah menggunakan layanan kami!
-
-Developer: [Nama Anda]
-Website: [Website Anda]
-Portfolio: [Portfolio Anda]
-
-===========================================

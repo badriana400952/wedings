@@ -78,7 +78,7 @@ export default async function handler(
         ])
       );
 
-      const files = req.files as any;
+      const files = (req as any).files;
 
       const uploadImage = async (file: any) => {
         if (!file) return null;

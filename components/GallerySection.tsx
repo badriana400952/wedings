@@ -1,129 +1,26 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
-import axios from 'axios';
 
 interface IPropss {
-  payload: ITemplateWeding
-  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
-  showPencil: boolean
-  setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
-  session: string | undefined
+  payload: ITemplateWeding;
+  setPayload?: React.Dispatch<React.SetStateAction<ITemplateWeding>>;
+  showPencil?: boolean;
+  setShowPencil?: React.Dispatch<React.SetStateAction<boolean>>;
+  session?: string | undefined;
 }
 
-export default function GallerySection({
-  payload, setPayload, showPencil, setShowPencil, session
-}: IPropss) {
+export default function GallerySection({ payload }: IPropss) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const uploadToCloudinary = async (file: File): Promise<string> => {
-    const formData = new FormData();
-    formData.append('file', file);
+  const fotos = payload?.galery?.fotos || [];
 
-    const response = await axios.post('/api/upload/image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-
-    return response.data.urls[0];
-  };
-
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    if (!payload?.galery?.id) {
-      alert('❌ Galery ID tidak ditemukan');
-      return;
-    }
-
-    setUploading(true);
-
-    try {
-      // Upload semua file ke Cloudinary
-      const uploadPromises = Array.from(files).map(file => uploadToCloudinary(file));
-      const uploadedUrls = await Promise.all(uploadPromises);
-
-      // Tambahkan foto ke galery via API
-      for (const url of uploadedUrls) {
-        await axios.patch(`/api/galery/${payload.galery.id}`, {
-          action: 'add',
-          foto: url,
-        });
-      }
-
-      // Update local state
-      const currentFotos = payload?.galery?.fotos || [];
-      const updatedFotos = [...currentFotos, ...uploadedUrls];
-      
-      setPayload({
-        ...payload,
-        galery: {
-          ...payload.galery,
-          fotos: updatedFotos,
-        }
-      });
-
-      alert(`✅ ${uploadedUrls.length} foto berhasil ditambahkan!`);
-    } catch (error: any) {
-      console.error('Error uploading photos:', error);
-      alert('❌ Gagal upload foto: ' + (error.response?.data?.message || error.message));
-    } finally {
-      setUploading(false);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
-  };
-
-  const handleDeletePhoto = async (index: number, fotoUrl: string) => {
-    if (!payload?.galery?.id) {
-      alert('❌ Galery ID tidak ditemukan');
-      return;
-    }
-
-    if (!confirm('Hapus foto ini?')) {
-      return;
-    }
-
-    try {
-      // Hapus dari database via API
-      await axios.patch(`/api/galery/${payload.galery.id}`, {
-        action: 'remove',
-        foto: fotoUrl,
-      });
-
-      // Update local state
-      const currentFotos = payload?.galery?.fotos || [];
-      const updatedFotos = currentFotos.filter((_, i) => i !== index);
-      
-      setPayload({
-        ...payload,
-        galery: {
-          ...payload.galery,
-          fotos: updatedFotos,
-        }
-      });
-
-      alert('✅ Foto berhasil dihapus!');
-    } catch (error: any) {
-      console.error('Error deleting photo:', error);
-      alert('❌ Gagal hapus foto: ' + (error.response?.data?.message || error.message));
-    }
-  };
-
-  const handleGalleryClick = () => {
-    if ((session || showPencil) && !uploading) {
-      fileInputRef.current?.click();
-    }
-  };
+  if (!fotos || fotos.length === 0) {
+    return null;
+  }
 
   return (
     <section id="gallery" className={clsx('!bg-gray-50', 'dark:!bg-gray-900', 'py-16', 'px-4')}>
@@ -133,107 +30,51 @@ export default function GallerySection({
             Galeri
           </h2>
 
-          {/* Hidden file input */}
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
-            multiple
-            className="hidden"
-          />
-
-          <div 
-            className={clsx('grid', 'grid-cols-1', 'md:grid-cols-2', 'gap-4', 'mt-8')}
-            onClick={handleGalleryClick}
-            onDoubleClick={() => {
-              if (!session) {
-                setShowPencil(true);
-              }
-            }}
-          >
-            {payload?.galery?.fotos?.map((img, idx) => (
-              <div key={idx} className={clsx('relative', 'overflow-hidden', 'rounded-2xl', 'shadow-lg', 'cursor-pointer', 'hover:scale-105', 'transition-transform', 'h-64')}>
-                <Image
-                  src={img}
-                  alt={`Gallery ${idx + 1}`}
-                  fill
-                  className="object-cover"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedImage(img);
-                  }}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-                
-                {/* Delete button */}
-                {(session || showPencil) && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeletePhoto(idx, img);
-                    }}
-                    className={clsx('absolute', 'top-2', 'right-2', 'bg-red-500', 'text-white', 'rounded-full', 'w-8', 'h-8', 'flex', 'items-center', 'justify-center', 'hover:bg-red-600', 'transition-colors', 'z-10')}
-                  >
-                    <i className={clsx('fas', 'fa-times', 'text-sm')}></i>
-                  </button>
-                )}
-              </div>
-            ))}
-            
-            {/* Add photo placeholder */}
-            {(session || showPencil) && (
+          <div className={clsx('grid', 'grid-cols-2', 'md:grid-cols-3', 'gap-4', 'mt-8')}>
+            {fotos.map((foto, index) => (
               <div 
-                className={clsx('relative', 'overflow-hidden', 'rounded-2xl', 'shadow-lg', 'cursor-pointer', 'hover:scale-105', 'transition-transform', 'h-64', 'border-2', 'border-dashed', 'border-gray-400', 'dark:border-gray-500', 'flex', 'items-center', 'justify-center')}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fileInputRef.current?.click();
-                }}
+                key={index} 
+                className={clsx('relative', 'group', 'overflow-hidden', 'rounded-2xl', 'aspect-square', 'cursor-pointer', 'shadow')}
+                onClick={() => setSelectedImage(foto)}
               >
-                <div className={clsx('text-center', 'p-4')}>
-                  <i className={clsx('fas', 'fa-plus', 'text-4xl', 'text-gray-400', 'dark:text-gray-500', 'mb-2')}></i>
-                  <p className={clsx('text-gray-600', 'dark:text-gray-400')}>Tambah Foto</p>
+                <Image
+                  src={foto}
+                  alt={`Foto Galeri ${index + 1}`}
+                  fill
+                  className={clsx('object-cover', 'rounded-2xl', 'group-hover:scale-105', 'transition-transform', 'duration-300')}
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                />
+                <div className={clsx('absolute', 'inset-0', 'bg-black/20', 'opacity-0', 'group-hover:opacity-100', 'transition-opacity', 'flex', 'items-center', 'justify-center')}>
+                  <i className="fas fa-magnifying-glass-plus text-white text-2xl drop-shadow"></i>
                 </div>
               </div>
-            )}
+            ))}
           </div>
-          
-          {/* Instruction text */}
-          {(session || showPencil) && (
-            <p className={clsx('text-center', 'text-sm', 'text-gray-600', 'dark:text-gray-400', 'mt-4')}>
-              {uploading ? (
-                <>
-                  <i className={clsx('fas', 'fa-spinner', 'fa-spin', 'mr-2')}></i>
-                  Uploading foto...
-                </>
-              ) : (
-                'Klik area galeri untuk menambah foto, klik tombol X untuk menghapus foto'
-              )}
-            </p>
-          )}
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Lightbox Modal */}
       {selectedImage && (
-        <div
-          className={clsx('fixed', 'inset-0', 'z-50', 'flex', 'items-center', 'justify-center', 'bg-black/80', 'p-4')}
+        <div 
+          className={clsx('fixed', 'inset-0', 'bg-black/85', 'z-50', 'flex', 'items-center', 'justify-center', 'p-4')}
           onClick={() => setSelectedImage(null)}
         >
-          <div className={clsx('relative', 'max-w-4xl', 'w-full', 'h-[80vh]')}>
+          <div className={clsx('relative', 'max-w-4xl', 'w-full', 'max-h-[90vh]', 'flex', 'items-center', 'justify-center')}>
             <button
-              className={clsx('absolute', 'top-4', 'right-4', 'text-white', 'bg-black/50', 'rounded-full', 'w-10', 'h-10', 'flex', 'items-center', 'justify-center', 'hover:bg-black/70', 'z-10')}
               onClick={() => setSelectedImage(null)}
+              className={clsx('absolute', '-top-12', 'right-0', 'text-white', 'text-3xl', 'hover:text-gray-300', 'z-50')}
             >
-              <i className={clsx('fas', 'fa-times')}></i>
+              <i className="fas fa-times"></i>
             </button>
-            <Image
-              src={selectedImage}
-              alt="Selected"
-              fill
-              className={clsx('object-contain', 'rounded-2xl')}
-              sizes="100vw"
-            />
+            <div className="relative w-full h-[75vh]" onClick={(e) => e.stopPropagation()}>
+              <Image
+                src={selectedImage}
+                alt="Selected preview"
+                fill
+                className="object-contain rounded-lg"
+                sizes="100vw"
+              />
+            </div>
           </div>
         </div>
       )}

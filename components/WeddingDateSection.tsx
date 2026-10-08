@@ -5,21 +5,15 @@ import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 
 interface IPropss {
-  payload: ITemplateWeding
-  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
-  showPencil: boolean
-  setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
-  session: string | undefined
+  payload: ITemplateWeding;
+  setPayload?: React.Dispatch<React.SetStateAction<ITemplateWeding>>;
+  showPencil?: boolean;
+  setShowPencil?: React.Dispatch<React.SetStateAction<boolean>>;
+  session?: string | undefined;
 }
 
-export default function WeddingDateSection({
-  payload, setPayload, showPencil, setShowPencil, session
-}: IPropss) {
+export default function WeddingDateSection({ payload }: IPropss) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [isEditingJamMulai, setIsEditingJamMulai] = useState(false)
-  const [isEditingJamSelesai, setIsEditingJamSelesai] = useState(false)
-  const [isEditingLinkMaps, setIsEditingLinkMaps] = useState(false)
-  const [isEditingAlamatPernikahan, setIsEditingAlamatPernikahan] = useState(false)
 
   useEffect(() => {
     const weddingDate = new Date(payload.tanggalPernikahan).getTime();
@@ -28,7 +22,6 @@ export default function WeddingDateSection({
       const now = new Date().getTime();
       const distance = weddingDate - now;
 
-      // If wedding date has passed, show 0
       if (distance < 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         return;
@@ -46,7 +39,7 @@ export default function WeddingDateSection({
     const interval = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [payload.tanggalPernikahan]);
 
   return (
     <section id="wedding-date" className={clsx('!bg-white', 'dark:!bg-gray-800', 'py-16', 'px-4')}>
@@ -84,82 +77,14 @@ export default function WeddingDateSection({
           <div data-aos="fade-right">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Akad</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
-              Pukul{' '}
-              {(session && isEditingJamMulai) || showPencil ? (
-                <input
-                  type="text"
-                  placeholder="10:00"
-                  value={payload.jamMulai || ''}
-                  onChange={(e) => setPayload({ ...payload, jamMulai: e.target.value })}
-                  onBlur={() => {
-                    if (session) {
-                      setIsEditingJamMulai(false)
-                    } else {
-                      setShowPencil(false)
-                    }
-                  }}
-                  className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'inline-block', 'w-24')}
-                  autoFocus
-                />
-              ) : (
-                <span
-                  onClick={() => {
-                    if (session) {
-                      setIsEditingJamMulai(true)
-                    }
-                  }}
-                  onDoubleClick={() => {
-                    if (!session) {
-                      setShowPencil(true)
-                    }
-                  }}
-                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : 'cursor-pointer')}
-                >
-                  {payload.jamMulai}
-                </span>
-              )}{' '}
-              WIB
+              Pukul <span>{payload.jamMulai || payload.jamAkad || '08:00'}</span> WIB
             </div>
           </div>
           
           <div data-aos="fade-left">
             <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
-              Pukul{' '}
-              {(session && isEditingJamSelesai) || showPencil ? (
-                <input
-                  type="text"
-                  placeholder="14:00"
-                  value={payload.jamSelesai || ''}
-                  onChange={(e) => setPayload({ ...payload, jamSelesai: e.target.value })}
-                  onBlur={() => {
-                    if (session) {
-                      setIsEditingJamSelesai(false)
-                    } else {
-                      setShowPencil(false)
-                    }
-                  }}
-                  className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'inline-block', 'w-24')}
-                  autoFocus
-                />
-              ) : (
-                <span
-                  onClick={() => {
-                    if (session) {
-                      setIsEditingJamSelesai(true)
-                    }
-                  }}
-                  onDoubleClick={() => {
-                    if (!session) {
-                      setShowPencil(true)
-                    }
-                  }}
-                  className={clsx(session ? 'cursor-pointer hover:opacity-80' : 'cursor-pointer')}
-                >
-                  {payload.jamSelesai}
-                </span>
-              )}{' '}
-              WIB
+              Pukul <span>{payload.jamSelesai || '13:00 - Selesai'}</span> WIB
             </div>
           </div>
         </div>
@@ -179,67 +104,25 @@ export default function WeddingDateSection({
         </div>
         
         <div className="mt-8">
-          <div className="mb-4">
-            {(session && isEditingLinkMaps) || showPencil ? (
-              <input
-                type="text"
-                placeholder="https://maps.google.com/..."
-                value={payload.linkMaps || ''}
-                onChange={(e) => setPayload({ ...payload, linkMaps: e.target.value })}
-                onBlur={() => {
-                  if (session) {
-                    setIsEditingLinkMaps(false)
-                  } else {
-                    setShowPencil(false)
-                  }
-                }}
-                className={clsx('bg-transparent', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-full', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full', 'px-6', 'py-2', 'text-gray-900', 'dark:text-white')}
-                autoFocus
-              />
-            ) : (
+          {payload.linkMaps && (
+            <div className="mb-4">
               <a
                 href={payload.linkMaps}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={(e) => {
-                  if (session) {
-                    e.preventDefault()
-                    setIsEditingLinkMaps(true)
-                  }
-                }}
-                onDoubleClick={(e) => {
-                  if (!session) {
-                    e.preventDefault()
-                    setShowPencil(true)
-                  }
-                }}
-                className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all', 'cursor-pointer')}
+                className={clsx('inline-block', 'px-6', 'py-2', 'border-2', 'border-gray-900', 'dark:border-white', 'text-gray-900', 'dark:text-white', 'rounded-full', 'hover:bg-gray-900', 'hover:text-white', 'dark:hover:bg-white', 'dark:hover:text-gray-900', 'transition-all')}
               >
                 <i className={clsx('fas', 'fa-map-location-dot', 'mr-2')}></i>
                 Lihat Google Maps
               </a>
-            )}
-          </div>
+            </div>
+          )}
           
-          <div className={clsx('mt-4', 'text-sm', 'text-gray-600', 'dark:text-gray-400')}>
-            {showPencil || (session && isEditingAlamatPernikahan) ? (
-              <textarea
-                placeholder="Alamat lengkap pernikahan..."
-                value={payload.alamatPernikahan || ''}
-                onChange={(e) => setPayload({ ...payload, alamatPernikahan: e.target.value })}
-                onBlur={() => session && setIsEditingAlamatPernikahan(false)}
-                className={clsx('bg-transparent', 'border', 'border-gray-300', 'dark:border-gray-600', 'rounded-lg', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full', 'px-4', 'py-2', 'resize-none', 'h-24')}
-                autoFocus
-              />
-            ) : (
-              <p
-                onClick={() => session && setIsEditingAlamatPernikahan(true)}
-                className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-              >
-                {payload.alamatPernikahan}
-              </p>
-            )}
-          </div>
+          {payload.alamatPernikahan && (
+            <div className={clsx('mt-4', 'text-sm', 'text-gray-600', 'dark:text-gray-400', 'max-w-md', 'mx-auto')}>
+              <p>{payload.alamatPernikahan}</p>
+            </div>
+          )}
         </div>
       </div>
     </section>

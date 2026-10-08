@@ -22,9 +22,9 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
   const { data } = useSession();
   const [guestName, setGuestName] = useState<string | null>(initialGuestName);
   
-  // Gunakan adminId dari props (URL) untuk guest, atau dari session untuk admin yang login
-  const adminId = data?.user.id || propsAdminId;
-  const isAdminView = data?.user.id === propsAdminId; // Admin view jika ID session sama dengan ID dari URL
+  // Gunakan adminId dari props (URL) untuk guest
+  const adminId = propsAdminId || data?.user?.id || '';
+  const isAdminView = false; // Halaman undangan murni Read-Only untuk tamu
   useEffect(() => {
     if (!router.isReady) return;
     const { to, slug, ...rest } = router.query;
@@ -40,8 +40,8 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
 
   }, [router.isReady, router.query]);
 
-  // Gunakan template dari props atau dari session
-  const templateToUse = data?.user.template || namaTemplate;
+  // Gunakan template dari database (namaTemplate) atau fallback ke session
+  const templateToUse = namaTemplate || data?.user.template || 'A';
 
   switch (templateToUse) {
     case 'A':
@@ -49,7 +49,7 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
         <SimpleModern
           adminId={adminId}
           guestName={guestName}
-          isAdminView={isAdminView} 
+          isAdminView={false} 
         />
       );
     case 'B':
@@ -58,7 +58,7 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
           adminId={adminId}
           guestName={guestName}
           templateWedingData={templateWedingData}
-          isAdminView={isAdminView} 
+          isAdminView={false} 
         />
       );
     case 'C':
@@ -66,7 +66,8 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
         <SimpleSederhana
           adminId={adminId}
           guestName={guestName}
-          isAdminView={isAdminView} 
+          templateWedingData={templateWedingData}
+          isAdminView={false} 
         />
       );
     default:
@@ -75,7 +76,7 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
         <SimpleModern
           adminId={adminId}
           guestName={guestName}
-          isAdminView={isAdminView}
+          isAdminView={false}
         />
       );
   }
@@ -132,7 +133,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Convert Date objects to strings for JSON serialization
     const serializedTemplateWeding = user.templateWeding ? {
       ...user.templateWeding,
+      // Zona waktu user dipakai template untuk label WIB/WITA/WIT pada jam acara.
+      tz: user.tz || null,
       tanggalPernikahan: user.templateWeding.tanggalPernikahan ? user.templateWeding.tanggalPernikahan.toISOString() : null,
+      tanggalAkad: user.templateWeding.tanggalAkad ? user.templateWeding.tanggalAkad.toISOString() : null,
+      tanggalResepsi: user.templateWeding.tanggalResepsi ? user.templateWeding.tanggalResepsi.toISOString() : null,
       createdAt: user.templateWeding.createdAt ? user.templateWeding.createdAt.toISOString() : null,
       updatedAt: user.templateWeding.updatedAt ? user.templateWeding.updatedAt.toISOString() : null,
       // Convert nested Date objects

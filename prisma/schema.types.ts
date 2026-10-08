@@ -62,16 +62,18 @@ export interface ITemplateWeding {
   namaLengkapPutra: string
   namaAyahPutra: string
   namaIbuPutra: string
+  kelahiranPutra?: string
   instagramPutra: string
-  photoPutra: string
+  photoPutra: string | File
 
   // Bride
   namaPutri: string
   namaLengkapPutri: string
   namaAyahPutri: string
   namaIbuPutri: string
+  kelahiranPutri?: string
   instagramPutri: string
-  photoPutri: string
+  photoPutri: string | File
 
   // Wedding Info
   tanggalPernikahan: string 
@@ -83,11 +85,26 @@ export interface ITemplateWeding {
   jamSelesai: string
   linkMaps: string
 
+  // Detail Jadwal Akad & Resepsi
+  tanggalAkad?: string | Date
+  jamAkad?: string
+  lokasiAkad?: string
+  alamatAkad?: string
+  tanggalResepsi?: string | Date
+  lokasiResepsi?: string
+
+  // Gambar Bersama — maksimal 6 foto, dipakai di Taman Rahasia atau Kisah Pertemuan
+  bersamaFotos?: string[]
+  bersamaDipakai?: string
+
   // Love Gift
   noAtm?: string | null
   namaBank?: string | null
   fotoQris?: string | null
   noHp?: string | null
+  isGiftActive?: boolean
+  isBankActive?: boolean
+  isQrisActive?: boolean
 
   // Relations
   galeryId?: string | null
@@ -98,6 +115,9 @@ export interface ITemplateWeding {
 
   comentIds?: string | null
   comments: IComment[]
+
+  // Tabel khusus Pohon Harapan (Template B) — terpisah dari comments
+  ucapanHarapan: IUcapanHarapan[]
 
   createdAt: Date
   updatedAt: Date
@@ -158,6 +178,20 @@ export interface IComment {
   replies: IComment[]
 
   likedBy: ILike[]
+}
+
+export interface IUcapanHarapan {
+  id: string
+  name: string
+  ucapan: string
+  ip: string
+  userAgent: string
+  templateWedingId?: string | null
+
+  createdAt: Date
+  updatedAt: Date
+
+  templateWeding?: ITemplateWeding | null
 }
 
 //////////////////////

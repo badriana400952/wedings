@@ -14,10 +14,10 @@ const mempelai = {
 };
 
 const ProfilMempelai = ({mempelai}: any) => {
-  const { namaDepan, namaBelakang, orangTua } = mempelai;
+  const { orangTua } = mempelai;
 
-  const namaLengkap = `${namaDepan} ${namaBelakang}`;
-  const namaOrangTua = `Bpk. ${orangTua.pria} & Ibu. ${orangTua.wanita}`;
+  const namaLengkap = mempelai.namaLengkap || `${mempelai.namaDepan || ''} ${mempelai.namaBelakang || ''}`.trim() || 'Mempelai';
+  const namaOrangTua = `Bpk. ${orangTua?.pria || '-'} & Ibu. ${orangTua?.wanita || '-'}`;
 
   return (
     <div

@@ -1,33 +1,34 @@
 import React from "react";
 import TextMask from "../TextMask";
 
-const Hero = () => {
-  // Dummy data
-  const hero = {
-    banner:
-      "https://images.unsplash.com/photo-1523438885200-e635ba2c371e",
-  };
+const Hero = ({ data }: { data?: any }) => {
+  const banner = data?.fotoHeader || "https://images.unsplash.com/photo-1523438885200-e635ba2c371e";
 
-  const wedding = {
-    mempelai: {
-      pria: { namaDepan: "Ahmad" },
-      wanita: { namaDepan: "Siti" },
-    },
-    resepsi: {
-      tanggal: "12 Desember 2026",
-    },
-  };
-
-  const mempelaiPria = wedding.mempelai.pria.namaDepan;
-  const mempelaiWanita = wedding.mempelai.wanita.namaDepan;
+  const mempelaiPria = data?.namaPutra || data?.namaLengkapPutra || "Mempelai Pria";
+  const mempelaiWanita = data?.namaPutri || data?.namaLengkapPutri || "Mempelai Wanita";
   const mempelai = `${mempelaiPria} & ${mempelaiWanita}`;
   const undangan = "The wedding of";
+
+  // Format tanggal jika ada
+  let formattedTanggal = "12 Desember 2026";
+  if (data?.tanggalPernikahan) {
+    try {
+      const d = new Date(data.tanggalPernikahan);
+      formattedTanggal = d.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch {
+      formattedTanggal = String(data.tanggalPernikahan);
+    }
+  }
 
   return (
     <div className="relative h-screen overflow-hidden">
       {/* Background Image */}
       <img
-        src={hero.banner}
+        src={banner}
         alt="Hero background"
         className="w-full h-screen object-cover object-bottom"
       />
@@ -55,7 +56,7 @@ const Hero = () => {
 
           {/* Tanggal */}
           <p className="mt-2 text-center md:text-left text-[2em] md:text-[3em] text-white drop-shadow-[3px_3px_rgba(60,42,33,0.6)]">
-            {wedding.resepsi.tanggal.split(" ").map((text, key) => (
+            {formattedTanggal.split(" ").map((text, key) => (
               <TextMask key={key}>{text}</TextMask>
             ))}
           </p>

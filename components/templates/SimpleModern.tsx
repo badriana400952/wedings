@@ -15,10 +15,8 @@ import ThemeButton from '@/components/ThemeButton';
 import AOSInit from '@/components/AOSInit';
 import clsx from 'clsx';
 import useTemplateWedings from '@/hooks/useTemplateWweding';
-import { useSession } from 'next-auth/react';
 import { formatTanggalIndo } from '@/date';
 import { ITemplateWeding } from '@/prisma/schema.types';
-import axios from 'axios';
 
 interface TemplateAProps {
   adminId: string;
@@ -26,28 +24,27 @@ interface TemplateAProps {
   isAdminView: boolean;
 }
 
-export default function SimpleModern({ adminId, guestName, isAdminView }: TemplateAProps) {
+export default function SimpleModern({ adminId, guestName }: TemplateAProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { templateWeding, handleGetTemplateWeding } = useTemplateWedings();
-  const [showPencil, setShowPencil] = useState<boolean>(false);
   const [payload, setPayload] = useState<ITemplateWeding>({} as ITemplateWeding);
-  const { data } = useSession();
-  const [loading, setLoading] = useState(false)
-
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
+    try {
+      if (sessionStorage.getItem(`invitation_opened_${adminId || 'modern'}`) === 'true') {
+        setIsOpen(true);
+      }
+    } catch {}
+  }, [adminId]);
 
+  useEffect(() => {
     // Check initial theme
     const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
-    setTheme(initialTheme);
 
-    // Listen for theme changes
     const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains('dark');
-      setTheme(isDark ? 'dark' : 'light');
+      // theme tracking if needed
     });
 
     observer.observe(document.documentElement, {
@@ -69,12 +66,15 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
 
   useEffect(() => {
     if (templateWeding?.id) {
-      setPayload({ ...payload, ...templateWeding });
+      setPayload((prev) => ({ ...prev, ...templateWeding }));
     }
   }, [templateWeding]);
 
   const handleOpen = () => {
     setIsOpen(true);
+    try {
+      sessionStorage.setItem(`invitation_opened_${adminId || 'modern'}`, 'true');
+    } catch {}
     document.body.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -88,117 +88,16 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
         <WelcomePage
           onOpen={handleOpen}
           guestName={guestName}
-          showPencil={showPencil}
-          setShowPencil={setShowPencil}
+          showPencil={false}
+          setShowPencil={() => {}}
           setPayload={setPayload}
           payload={payload}
-          session={data?.user.id}
-          isAdminView={isAdminView}
+          session={undefined}
+          isAdminView={false}
         />
       </>
     );
   }
-
-  const handleSubmit = async () => {
-    const formData = new FormData();
-
-    // Header & Photos - cek apakah File object, skip jika blob URL
-    if (payload.fotoHeader && typeof payload.fotoHeader !== 'string') {
-      formData.append('fotoHeader', payload.fotoHeader as File);
-    } else if (typeof payload.fotoHeader === 'string' && !payload.fotoHeader.startsWith('blob:')) {
-      formData.append('fotoHeader', payload.fotoHeader);
-    }
-
-    if (payload.photoPutra && typeof payload.photoPutra !== 'string') {
-      formData.append('photoPutra', payload.photoPutra as File);
-    } else if (typeof payload.photoPutra === 'string' && !payload.photoPutra.startsWith('blob:')) {
-      formData.append('photoPutra', payload.photoPutra);
-    }
-
-    if (payload.photoPutri && typeof payload.photoPutri !== 'string') {
-      formData.append('photoPutri', payload.photoPutri as File);
-    } else if (typeof payload.photoPutri === 'string' && !payload.photoPutri.startsWith('blob:')) {
-      formData.append('photoPutri', payload.photoPutri);
-    }
-
-    if (payload.fotoQris && typeof payload.fotoQris !== 'string') {
-      formData.append('fotoQris', payload.fotoQris as File);
-    } else if (typeof payload.fotoQris === 'string' && !payload.fotoQris.startsWith('blob:')) {
-      formData.append('fotoQris', payload.fotoQris);
-    }
-
-    // Groom Data
-    formData.append('namaPutra', payload.namaPutra || '');
-    formData.append('namaLengkapPutra', payload.namaLengkapPutra || '');
-    formData.append('namaAyahPutra', payload.namaAyahPutra || '');
-    formData.append('namaIbuPutra', payload.namaIbuPutra || '');
-    formData.append('instagramPutra', payload.instagramPutra || '');
-
-    // Bride Data
-    formData.append('namaPutri', payload.namaPutri || '');
-    formData.append('namaLengkapPutri', payload.namaLengkapPutri || '');
-    formData.append('namaAyahPutri', payload.namaAyahPutri || '');
-    formData.append('namaIbuPutri', payload.namaIbuPutri || '');
-    formData.append('instagramPutri', payload.instagramPutri || '');
-
-    // Wedding Info
-    if (payload.tanggalPernikahan) {
-      formData.append('tanggalPernikahan', new Date(payload.tanggalPernikahan).toISOString());
-    }
-    formData.append('linkGoogleCalender', payload.linkGoogleCalender || '');
-    formData.append('alamatPernikahan', payload.alamatPernikahan || '');
-    formData.append('jamMulai', payload.jamMulai || '');
-    formData.append('jamSelesai', payload.jamSelesai || '');
-    formData.append('linkMaps', payload.linkMaps || '');
-
-    // Love Gift
-    formData.append('noAtm', payload.noAtm || '');
-    formData.append('namaBank', payload.namaBank || '');
-    formData.append('noHp', payload.noHp || '');
-
-    // Design Theme
-    formData.append('designTheme', payload.designTheme || 'MODERN');
-
-    // Gallery
-    if (payload.galeryId) {
-      formData.append('galeryId', payload.galeryId);
-    }
-    setLoading(true)
-    try {
-      const response = await axios.put(`/api/landing/${data?.user.id}`, formData, {
-      });
-      console.log({ response });
-      setLoading(false)
-      if (response.data.success) {
-        alert('✅ Data berhasil disimpan!');
-        setLoading(false)
-        window.location.reload();
-      } else {
-        alert(`❌ ${response.data.message || 'Gagal menyimpan data'}`);
-        setLoading(false)
-
-      }
-    } catch (error: any) {
-      console.error('Error saving data:', error);
-      setLoading(false)
-
-      // Tampilkan pesan error yang lebih detail
-      const errorMessage = error.response?.data?.details
-        || error.response?.data?.message
-        || error.message
-        || 'Gagal menyimpan data. Silakan coba lagi.';
-
-      alert(`❌ Error: ${errorMessage}`);
-
-      // Log detail error untuk debugging
-      if (error.response?.data) {
-        console.error('Server error details:', error.response.data);
-        setLoading(false)
-
-      }
-    }
-  };
-
 
   return (
     <>
@@ -210,21 +109,14 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
       <div className={clsx('min-h-screen', 'bg-gray-50', 'dark:bg-gray-900')}>
         <div className={clsx('flex', 'flex-col', 'lg:flex-row')}>
           {/* Desktop Sidebar */}
-          <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')} onDoubleClick={() => {
-            // Hanya admin yang sama bisa trigger edit mode
-            if (isAdminView) {
-              setShowPencil(true);
-            }
-          }}>
+          <div className={clsx('hidden', 'lg:block', 'lg:w-1/2', 'xl:w-2/3', 'sticky', 'top-0', 'h-screen')}>
             <div className={clsx('relative', 'w-full', 'h-full', 'bg-gray-900', 'flex', 'items-center', 'justify-center')}>
               <div className={clsx('absolute', 'inset-0', 'opacity-30')}>
                 <Image
                   src={
                     typeof payload?.fotoHeader === "string"
                       ? payload.fotoHeader
-                      : payload?.fotoHeader instanceof File
-                        ? URL.createObjectURL(payload.fotoHeader)
-                        : "/assets/images/bg.webp"
+                      : "/assets/images/bg.webp"
                   }
                   alt="background"
                   fill
@@ -249,54 +141,40 @@ export default function SimpleModern({ adminId, guestName, isAdminView }: Templa
               <HomePage
                 setPayload={setPayload}
                 payload={payload}
-                showPencil={showPencil}
-                setShowPencil={setShowPencil}
-                session={data?.user.id}
-                isAdminView={isAdminView}
+                showPencil={false}
+                setShowPencil={() => {}}
+                session={undefined}
+                isAdminView={false}
               />
               <BrideSection
                 setPayload={setPayload}
                 payload={payload}
-                showPencil={showPencil}
-                setShowPencil={setShowPencil}
-                session={data?.user.id}
-                isAdminView={isAdminView}
+                showPencil={false}
+                setShowPencil={() => {}}
+                session={undefined}
+                isAdminView={false}
               />
               <WeddingDateSection
                 setPayload={setPayload}
                 payload={payload}
-                showPencil={showPencil}
-                setShowPencil={setShowPencil}
-                session={data?.user.id}
+                showPencil={false}
+                setShowPencil={() => {}}
+                session={undefined}
               />
               <GallerySection
                 setPayload={setPayload}
                 payload={payload}
-                showPencil={showPencil}
-                setShowPencil={setShowPencil}
-                session={data?.user.id}
+                showPencil={false}
+                setShowPencil={() => {}}
+                session={undefined}
               />
               <LoveGiftSection
                 setPayload={setPayload}
                 payload={payload}
-                showPencil={showPencil}
-                setShowPencil={setShowPencil}
-                session={data?.user.id}
+                showPencil={false}
+                setShowPencil={() => {}}
+                session={undefined}
               />
-              <div className={clsx('p-3', 'w-full')}>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`w-full p-3 rounded-2xl transition-colors disabled:opacity-50 ${theme === 'dark'
-                    ? '!bg-white !text-gray-900 hover:!bg-gray-100'
-                    : '!bg-gray-900 !text-white hover:!bg-gray-800'
-                    }`}
-                  onClick={handleSubmit}
-                >
-                  <i className={clsx('fas', 'fa-paper-plane', 'mr-2')}></i>
-                  {loading ? 'Mengirim...' : 'Send'}
-                </button>
-              </div>
               <CommentSection
                 guestName={guestName}
                 setPayload={setPayload}

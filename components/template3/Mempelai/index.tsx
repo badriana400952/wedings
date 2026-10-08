@@ -4,34 +4,29 @@ import ProfilMempelai from "./ProfilMempelai";
 /**
  * Dummy data mempelai
  */
-const pria = {
-  namaDepan: "Ahmad",
-  namaBelakang: "Fauzan",
-  foto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-  bg: "#f5f5f5",
-  orangTua: {
-    pria: "H. Abdullah",
-    wanita: "Hj. Siti Aminah",
-    keterangan: "Putra dari",
-  },
-};
+const Mempelai = ({ data }: { data?: any }) => {
+  const pria = {
+    namaLengkap: data?.namaLengkapPutra || data?.namaPutra || "Mempelai Pria",
+    foto: data?.photoPutra || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
+    bg: "#f5f5f5",
+    orangTua: {
+      pria: data?.namaAyahPutra || "Ayah Pria",
+      wanita: data?.namaIbuPutra || "Ibu Pria",
+      keterangan: data?.kelahiranPutra ? `Putra dari (${data.kelahiranPutra})` : "Putra tercinta dari",
+    },
+  };
 
-const wanita = {
-  namaDepan: "Siti",
-  namaBelakang: "Aisyah",
-  foto: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-  bg: "#ffffff",
-  orangTua: {
-    pria: "H. Hasan",
-    wanita: "Hj. Fatimah",
-    keterangan: "Putri dari",
-  },
-};
+  const wanita = {
+    namaLengkap: data?.namaLengkapPutri || data?.namaPutri || "Mempelai Wanita",
+    foto: data?.photoPutri || "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
+    bg: "#ffffff",
+    orangTua: {
+      pria: data?.namaAyahPutri || "Ayah Wanita",
+      wanita: data?.namaIbuPutri || "Ibu Wanita",
+      keterangan: data?.kelahiranPutri ? `Putri dari (${data.kelahiranPutri})` : "Putri tercinta dari",
+    },
+  };
 
-/**
- * Komponent mempelai
- */
-const Mempelai = () => {
   return (
     <div className="w-full">
       <ProfilMempelai mempelai={pria} />

@@ -25,7 +25,7 @@ export default async function handler(
   // =============================
   if (req.method === "GET") {
     try {
-      const response = await prisma.templateWeding.findUnique({
+      let templateWeding = await prisma.templateWeding.findUnique({
         where: { userId: id },
         include: {
           user: true,
@@ -35,11 +35,31 @@ export default async function handler(
         },
       });
 
-      if (!response) {
+      if (!templateWeding) {
         return res.status(404).json({ message: "Data tidak ditemukan" });
       }
 
-      return res.status(200).json({ response });
+      // Pastikan galery selalu ada
+      if (!templateWeding.galery) {
+        const newGalery = await prisma.galery.create({
+          data: {
+            fotos: [],
+          },
+        });
+
+        templateWeding = await prisma.templateWeding.update({
+          where: { id: templateWeding.id },
+          data: { galeryId: newGalery.id },
+          include: {
+            user: true,
+            galery: true,
+            pertemuan: true,
+            comments: true,
+          },
+        });
+      }
+
+      return res.status(200).json({ response: templateWeding });
     } catch (error) {
       console.error(error);
       return res.status(500).json({
@@ -85,16 +105,23 @@ export default async function handler(
         return uploaded.secure_url;
       };
 
+      const toBoolean = (val: any, defaultVal = true) => {
+        if (val === undefined || val === null || val === "") return defaultVal;
+        return String(val) === "true" || val === true;
+      };
+
       const updateData: any = {
         namaPutra: getValue(fields.namaPutra) || "",
         namaLengkapPutra: getValue(fields.namaLengkapPutra) || "",
         namaAyahPutra: getValue(fields.namaAyahPutra) || "",
         namaIbuPutra: getValue(fields.namaIbuPutra) || "",
+        kelahiranPutra: getValue(fields.kelahiranPutra) || "",
         instagramPutra: getValue(fields.instagramPutra) || "",
         namaPutri: getValue(fields.namaPutri) || "",
         namaLengkapPutri: getValue(fields.namaLengkapPutri) || "",
         namaAyahPutri: getValue(fields.namaAyahPutri) || "",
         namaIbuPutri: getValue(fields.namaIbuPutri) || "",
+        kelahiranPutri: getValue(fields.kelahiranPutri) || "",
         instagramPutri: getValue(fields.instagramPutri) || "",
         linkGoogleCalender: getValue(fields.linkGoogleCalender) || "",
         alamatGedungPernikahan: getValue(fields.alamatGedungPernikahan) || "",
@@ -103,16 +130,51 @@ export default async function handler(
         jamResepsi: getValue(fields.jamResepsi) || "",
         jamSelesai: getValue(fields.jamSelesai) || "",
         linkMaps: getValue(fields.linkMaps) || "",
+        jamAkad: getValue(fields.jamAkad) || "",
+        lokasiAkad: getValue(fields.lokasiAkad) || "",
+        alamatAkad: getValue(fields.alamatAkad) || "",
+        lokasiResepsi: getValue(fields.lokasiResepsi) || "",
         noAtm: getValue(fields.noAtm) || "",
         namaBank: getValue(fields.namaBank) || "",
         noHp: getValue(fields.noHp) || "",
+        isGiftActive: toBoolean(getValue(fields.isGiftActive), true),
+        isBankActive: toBoolean(getValue(fields.isBankActive), true),
+        isQrisActive: toBoolean(getValue(fields.isQrisActive), true),
         designTheme: getValue(fields.designTheme) || "MODERN",
       };
 
+      // Gambar Bersama: hanya ditulis bila dikirim, supaya simpan form utama
+      // tidak menimpa pilihan "Dipakai di" yang sudah disetel di tab Gambar Bersama.
+      if (fields.bersamaFotos !== undefined) {
+        const raw = getValue(fields.bersamaFotos);
+        updateData.bersamaFotos = (Array.isArray(raw) ? raw : String(raw ?? "").split(","))
+          .map((v: any) => String((v && typeof v === "object" ? v.url : v) ?? "").trim())
+          .filter(Boolean)
+          .slice(0, 6);
+      }
+      if (fields.bersamaDipakai !== undefined) {
+        const dipakai = String(getValue(fields.bersamaDipakai) ?? "");
+        updateData.bersamaDipakai = ["taman", "cerita"].includes(dipakai) ? dipakai : "taman";
+      }
+
       // tanggalPernikahan
-      if (fields.tanggalPernikahan) {
+      if (fields.tanggalPernikahan && getValue(fields.tanggalPernikahan)) {
         updateData.tanggalPernikahan = new Date(
           getValue(fields.tanggalPernikahan)
+        );
+      }
+
+      // tanggalAkad
+      if (fields.tanggalAkad && getValue(fields.tanggalAkad)) {
+        updateData.tanggalAkad = new Date(
+          getValue(fields.tanggalAkad)
+        );
+      }
+
+      // tanggalResepsi
+      if (fields.tanggalResepsi && getValue(fields.tanggalResepsi)) {
+        updateData.tanggalResepsi = new Date(
+          getValue(fields.tanggalResepsi)
         );
       }
 

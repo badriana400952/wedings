@@ -63,6 +63,7 @@ export default async function handler(
     return res.status(200).json({
       success: true,
       message: 'Upload berhasil',
+      url: uploadedUrls[0] || null,
       urls: uploadedUrls,
     });
   } catch (error: any) {

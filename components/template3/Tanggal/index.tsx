@@ -2,37 +2,43 @@ import React from "react";
 import { Calendar, Map, MapPin } from "lucide-react";
 import TextMask from "../TextMask";
 
-const Tanggal = () => {
-  const useDB = (selector: any) => {
-    const db = {
-      wedding: {
-        akad: {
-          tanggal: "Sabtu 10 Oktober 2026",
-          jam: "08:00 WIB",
-          lokasi: "Masjid Agung Bandung",
-          alamat: "Jl. Asia Afrika No.1, Bandung",
-          gmaps: {
-            link: "https://maps.google.com",
-          },
-        },
-        resepsi: {
-          tanggal: "Sabtu 10 Oktober 2026",
-          jam: "11:00 WIB - Selesai",
-          lokasi: "Gedung Serbaguna Bandung",
-          alamat: "Jl. Merdeka No.10, Bandung",
-          gmaps: {
-            link: "https://maps.google.com",
-          },
-        },
-      },
-    };
+const Tanggal = ({ data }: { data?: any }) => {
+  const formatTanggal = (dateVal: any, fallback: string) => {
+    if (!dateVal) return fallback;
+    try {
+      const d = new Date(dateVal);
+      return d.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return String(dateVal);
+    }
+  };
 
-    return selector(db);
+  const akad = {
+    tanggal: formatTanggal(data?.tanggalAkad || data?.tanggalPernikahan, "Sabtu 10 Oktober 2026"),
+    jam: data?.jamAkad || data?.jamMulai || "08:00 WIB",
+    lokasi: data?.lokasiAkad || "Masjid Agung",
+    alamat: data?.alamatAkad || data?.alamatPernikahan || "Jl. Asia Afrika No.1",
+    gmaps: {
+      link: data?.linkMaps || "https://maps.google.com",
+    },
+  };
+
+  const resepsi = {
+    tanggal: formatTanggal(data?.tanggalResepsi || data?.tanggalPernikahan, "Sabtu 10 Oktober 2026"),
+    jam: data?.jamResepsi || "11:00 WIB - Selesai",
+    lokasi: data?.lokasiResepsi || data?.alamatGedungPernikahan || "Gedung Serbaguna",
+    alamat: data?.alamatPernikahan || "Jl. Merdeka No.10",
+    gmaps: {
+      link: data?.linkMaps || "https://maps.google.com",
+    },
   };
 
   const textHeader = "Rangkaian Acara Akan Diselenggarakan";
-
-  const { akad, resepsi } = useDB((db: any) => db.wedding);
 
   const CardTanggal = ({
     title,

@@ -4,27 +4,24 @@ import Image from 'next/image';
 import confetti from 'canvas-confetti';
 import { ITemplateWeding } from '@/prisma/schema.types';
 import clsx from 'clsx';
-
-import SvgCustom from '@/utils/svg';
-import { useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 
 interface WelcomePageProps {
   onOpen: () => void;
   guestName: string | null;
-  showPencil: boolean
-  setShowPencil: React.Dispatch<React.SetStateAction<boolean>>
-  setPayload: React.Dispatch<React.SetStateAction<ITemplateWeding>>
-  payload: ITemplateWeding
-  session: string | undefined
-  isAdminView?: boolean
+  showPencil?: boolean;
+  setShowPencil?: React.Dispatch<React.SetStateAction<boolean>>;
+  setPayload?: React.Dispatch<React.SetStateAction<ITemplateWeding>>;
+  payload: ITemplateWeding;
+  session?: string | undefined;
+  isAdminView?: boolean;
 }
 
-export default function WelcomePage({ onOpen, guestName, payload, showPencil, setShowPencil, setPayload, session, isAdminView = false }: WelcomePageProps) {
-  const { SvgPencil } = SvgCustom()
-  const router = useRouter()
-  const {data} = useSession()
+export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageProps) {
+  const router = useRouter();
+  const { data } = useSession();
+
   const handleOpen = () => {
     // Trigger confetti effect
     const duration = 3000;
@@ -56,116 +53,33 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
       });
     }, 250);
 
-    // Call the original onOpen function
     onOpen();
   };
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [isHoveringImage, setIsHoveringImage] = useState(false)
-  const [isEditingNamaPutra, setIsEditingNamaPutra] = useState(false)
-  const [isEditingNamaPutri, setIsEditingNamaPutri] = useState(false)
+
   const handleToDashboard = () => {
-    router.push('/dashboard')
-  }
+    router.push('/dashboard');
+  };
+
   return (
     <div className={clsx('loading-page', 'bg-white-black', 'd-flex', 'justify-content-center', 'align-items-center')} style={{ opacity: 1 }}>
       <div className={clsx('d-flex', 'flex-column', 'text-center', 'overflow-y-auto', 'vh-100', 'justify-content-center', 'align-items-center')}>
         <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>The Wedding Of</h2>
 
-        {/* Container untuk image dan pencil */}
-        <div 
-          className={clsx('relative', 'inline-block')}
-          onMouseEnter={() => isAdminView && setIsHoveringImage(true)}
-          onMouseLeave={() => isAdminView && setIsHoveringImage(false)}
-        >
-          {(showPencil || (isAdminView && isHoveringImage)) && (
-            <div
-              className={clsx(
-                "absolute",
-                "top-1/2",
-                "left-1/2",
-                "transform",
-                "-translate-x-1/2",
-                "-translate-y-1/2",
-                "z-10"
-              )}
-            >
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className={clsx(
-                  'inline-flex',
-                  'items-center',
-                  'text-white',
-                  'bg-brand',
-                  'hover:bg-brand-strong',
-                  'box-border',
-                  'border-none',
-                  'border-transparent',
-                  'shadow-xs',
-                  'font-medium',
-                  'leading-5',
-                  'rounded-base',
-                  'text-sm',
-                  'px-3',
-                  'py-2',
-                  'focus:outline-none',
-                  'focus:ring-0'
-                )}
-              >
-                <SvgPencil className={clsx('w-9', 'h-9', 'text-gray-800')} />
-              </button>
-
-              <input
-                ref={fileInputRef}
-                id="dropzone-file-2"
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if (file) {
-                    setPayload((prev) => ({
-                      ...prev,
-                      fotoHeader: file
-                    }))
-                  }
-                }}
-              />
-            </div>
-          )}
-
+        {/* Foto Pasangan */}
+        <div className={clsx('relative', 'inline-block')}>
           <Image
             src={
               payload?.fotoHeader 
                 ? (typeof payload?.fotoHeader === 'string' 
                     ? payload?.fotoHeader 
-                    : payload?.fotoHeader instanceof File
-                      ? URL.createObjectURL(payload?.fotoHeader)
-                      : '/default-wedding.jpg')
+                    : '/default-wedding.jpg')
                 : '/default-wedding.jpg'
             }
-            alt="background"
+            alt="Foto Mempelai"
             width={220}
             height={220}
-            className={clsx(
-              'img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto transition-opacity duration-300',
-              (showPencil || (isAdminView && isHoveringImage)) ? 'opacity-50 cursor-pointer' : 'opacity-100',
-              isAdminView ? 'cursor-pointer' : ''
-            )}
+            className="img-center-crop rounded-circle border-4 border-gray-300 dark:border-gray-600 shadow mb-4 mx-auto"
             priority
-            onClick={() => {
-              // Hanya admin yang sama bisa edit
-              if (isAdminView) {
-                fileInputRef.current?.click()
-              }
-            }}
-            onDoubleClick={() => {
-              // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-              if (session) {
-                return; // Tidak melakukan apa-apa jika user logged in
-              }
-              setShowPencil(prev => !prev)
-            }}
             style={{
               width: '220px',
               height: '220px',
@@ -183,57 +97,9 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
           )}
           style={{ fontSize: '2.25rem' }}
         >
-          {showPencil || (session && isEditingNamaPutra) ? (
-            <input
-              type="text"
-              placeholder="Isi Nama"
-              onDoubleClick={() => {
-                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-                if (session) {
-                  return; // Tidak melakukan apa-apa jika user logged in
-                }
-                setShowPencil(prev => !prev)
-              }}
-              onChange={((e) => setPayload({ ...payload, namaLengkapPutra: e.target.value }))}
-              onBlur={() => session && setIsEditingNamaPutra(false)}
-              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
-              autoFocus
-            />
-          ) : (
-            <span 
-              onClick={() => session && setIsEditingNamaPutra(true)}
-              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-            >
-              {payload.namaLengkapPutra}
-            </span>
-          )}
-
+          <span>{payload?.namaLengkapPutra || 'Mempelai Pria'}</span>
           <br /> & <br />
-
-          {showPencil || (session && isEditingNamaPutri) ? (
-            <input
-              type="text"
-              placeholder="Isi Nama"
-              onDoubleClick={() => {
-                // Jika data?.user.id ada id nya (user logged in), maka gambar tidak bisa di doubleclick
-                if (session) {
-                  return; // Tidak melakukan apa-apa jika user logged in
-                }
-                setShowPencil(prev => !prev)
-              }}
-              onChange={((e) => setPayload({ ...payload, namaLengkapPutri: e.target.value }))}
-              onBlur={() => session && setIsEditingNamaPutri(false)}
-              className={clsx('bg-transparent', 'border-none', 'outline-none', 'focus:outline-none', 'focus:ring-0', 'shadow-none', 'text-center', 'w-full')}
-              autoFocus={isEditingNamaPutri}
-            />
-          ) : (
-            <span 
-              onClick={() => session && setIsEditingNamaPutri(true)}
-              className={clsx(session ? 'cursor-pointer hover:opacity-80' : '')}
-            >
-              {payload.namaLengkapPutri}
-            </span>
-          )}
+          <span>{payload?.namaLengkapPutri || 'Mempelai Wanita'}</span>
         </h2>
 
         {guestName && (
@@ -251,16 +117,16 @@ export default function WelcomePage({ onOpen, guestName, payload, showPencil, se
           <i className={clsx('fa-solid', 'fa-envelope-open', 'fa-bounce', 'me-2')}></i>
           Open Invitation
         </button>
-        {
-          data?.user.id &&  <button
-          onClick={handleToDashboard}
-          type="button"
-          className={clsx('btn', 'btn-light', 'shadow', 'rounded-4', 'mt-3', 'mx-auto')}
-        >
-          To Dashboard
-        </button>
-        }
-       
+
+        {data?.user?.id && (
+          <button
+            onClick={handleToDashboard}
+            type="button"
+            className={clsx('btn', 'btn-light', 'shadow', 'rounded-4', 'mt-3', 'mx-auto')}
+          >
+            To Dashboard
+          </button>
+        )}
       </div>
     </div>
   );

@@ -3,22 +3,18 @@
 
 import KeluargaBesar from "./KeluargaBesar";
 
-const Footer = () => {
+const Footer = ({ data }: { data?: any }) => {
   const pria = {
-    namaDepan: "Ahmad",
-    namaBelakang: "Fauzan",
     orangTua: {
-      pria: "H. Abdullah",
-      wanita: "Hj. Siti Aminah",
+      pria: data?.namaAyahPutra || "Ayah Mempelai Pria",
+      wanita: data?.namaIbuPutra || "Ibu Mempelai Pria",
     },
   };
 
   const wanita = {
-    namaDepan: "Siti",
-    namaBelakang: "Aisyah",
     orangTua: {
-      pria: "H. Hasan",
-      wanita: "Hj. Fatimah",
+      pria: data?.namaAyahPutri || "Ayah Mempelai Wanita",
+      wanita: data?.namaIbuPutri || "Ibu Mempelai Wanita",
     },
   };
 

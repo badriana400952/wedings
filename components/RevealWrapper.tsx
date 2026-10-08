@@ -7,12 +7,14 @@ interface RevealWrapperProps {
   children: ReactNode;
   duration?: number;
   origin?: 'top' | 'bottom' | 'left' | 'right';
+  className?: string;
 }
 
 export function RevealWrapper({ 
   children, 
   duration = 1000, 
-  origin = 'bottom'
+  origin = 'bottom',
+  className = '',
 }: RevealWrapperProps) {
   const directions = {
     top: { y: -50 },
@@ -23,6 +25,7 @@ export function RevealWrapper({
 
   return (
     <motion.div
+      className={className}
       initial={{ 
         opacity: 0, 
         ...directions[origin] 
