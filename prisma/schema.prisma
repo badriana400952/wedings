@@ -121,6 +121,10 @@ model TemplateWeding {
   galeryId String? @map("galery_id")
   galery   Galery? @relation(fields: [galeryId], references: [id], onDelete: SetNull)
 
+  // Musik latar yang dipilih dari katalog Musik
+  musikId String? @map("musik_id")
+  musik   Musik?  @relation(fields: [musikId], references: [id], onDelete: SetNull)
+
   pertemuanId String?
   pertemuan   Pertemuan?
   comentIds   String?
@@ -187,6 +191,23 @@ model Galery {
   templateWedings TemplateWeding[]
 
   @@map("galeries")
+}
+
+//////////////////////
+// MUSIK
+//////////////////////
+
+model Musik {
+  id        String   @id @default(uuid())
+  judul     String
+  penyanyi  String   @default("")
+  file      String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  templateWedings TemplateWeding[]
+
+  @@map("musik")
 }
 
 //////////////////////

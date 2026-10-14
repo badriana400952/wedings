@@ -110,6 +110,10 @@ export interface ITemplateWeding {
   galeryId?: string | null
   galery?: IGalery | null
 
+  // Musik latar
+  musikId?: string | null
+  musik?: IMusik | null
+
   pertemuanId?: string | null
   pertemuan?: IPertemuan | null
 
@@ -151,6 +155,21 @@ export interface IGalery {
   id: string
   fotos: string[]
   templateWedings: ITemplateWeding[]
+}
+
+//////////////////////
+// MUSIK
+//////////////////////
+
+export interface IMusik {
+  id: string
+  judul: string
+  penyanyi: string
+  file: string
+  createdAt: Date
+  updatedAt: Date
+
+  templateWedings?: ITemplateWeding[]
 }
 
 //////////////////////

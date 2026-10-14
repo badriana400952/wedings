@@ -1,8 +1,17 @@
 # 📜 RULES.md — PANDUAN WAJIB SISTEM & DATABASE UNTUK AI AGENT
 
 > [!IMPORTANT]
-> **BERKAS INI ADALAH PETUNJUK RESMI & WAJIB DIBACA OLEH SETIAP AI (Antigravity, Claude, Cursor, Copilot, dll.) SEBELUM MEMBACA ATAU MEMODIFIKASI KODE.**
-> Seluruh aturan di bawah ini mengikat arsitektur kode dan skema basis data agar penempatan data dinamis dari database ke template tidak tertukar atau salah tabel.
+> **BERKAS INI, `docs/CHANGELOG.md`, DAN `docs/isue-clear.md` WAJIB DIBACA OLEH SETIAP AI AGENT (Antigravity, Claude, Cursor, Copilot, dll.) SEBELUM MEMBACA ATAU MEMODIFIKASI KODE.**
+> 1. **Sebelum bekerja**: AI WAJIB membaca `docs/CHANGELOG.md`, `docs/isue-clear.md`, dan `Rules.md` untuk memahami riwayat perubahan, solusi masalah masa lalu, fitur, flow, dan batasan sistem.
+> 2. **Setelah melakukan perubahan**: AI WAJIB memperbarui `docs/CHANGELOG.md` mencatat ringkasan perubahan/fitur/bug fix yang telah dilakukan secara kronologis dan detail.
+
+---
+
+## ⚡ 0. PROTOKOL WAJIB AI: BACA & UPDATE CHANGELOG.MD
+Setiap AI (baik sesi baru, agent baru, maupun sub-agent) harus mematuhi aturan siklus kerja berikut:
+1. **Langkah Pertama**: Baca `docs/CHANGELOG.md` dan `docs/isue-clear.md` untuk mengetahui apa yang sudah dikerjakan, solusi masalah sebelumnya, file apa yang diubah, dan status pekerjaan sebelumnya.
+2. **Langkah Eksekusi**: Patuhi semua ketentuan database, pemisahan tabel, dan UI read-only di dokumen ini (`Rules.md`).
+3. **Langkah Terakhir**: Catat setiap penambahan, perbaikan bug, atau refactoring ke `docs/CHANGELOG.md` (dan sinkronkan ke `C:\Users\USER.DESKTOP-UQ662UT.000\OneDrive\Dokumen\project\undangan projek\undangan\docs\CHANGELOG.md` jika path tersebut ada).
 
 ---
 

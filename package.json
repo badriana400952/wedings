@@ -11,10 +11,11 @@
         "prisma:migrate": "prisma migrate dev",
         "prisma:studio": "prisma studio",
         "create-admin": "ts-node scripts/create-admin.ts",
-        "change-password": "ts-node scripts/change-password.ts"
+        "change-password": "ts-node scripts/change-password.ts",
+        "seed:musik": "ts-node prisma/seed-musik.ts"
     },
     "dependencies": {
-        "@prisma/client": "^6.2.0",
+        "@prisma/client": "^6.19.3",
         "axios": "^1.13.5",
         "bcryptjs": "^2.4.3",
         "canvas-confetti": "^1.9.4",

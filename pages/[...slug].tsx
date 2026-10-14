@@ -4,11 +4,14 @@ import { GetServerSideProps } from 'next';
 import { prisma } from '@/lib/prisma';
 import { ITemplateWeding } from '@/prisma/schema.types';
 
-// Import templates
-import SimpleModern from '@/components/templates/SimpleModern';
-import TemplateB from '@/components/templates/TemplateB';
+// Import templates dari sentral modular
+import {
+  SimpleModern,
+  TamanRahasia,
+  KirigamiPastel,
+  TumbuhBersama,
+} from '@/components/templates';
 import { useSession } from 'next-auth/react';
-import SimpleSederhana from '@/components/templates/SimpleSederhana';
 
 interface SlugPageProps {
   guestName: string | null;
@@ -49,12 +52,13 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
         <SimpleModern
           adminId={adminId}
           guestName={guestName}
+          templateWedingData={templateWedingData}
           isAdminView={false} 
         />
       );
     case 'B':
       return (
-        <TemplateB
+        <TamanRahasia
           adminId={adminId}
           guestName={guestName}
           templateWedingData={templateWedingData}
@@ -63,11 +67,20 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
       );
     case 'C':
       return (
-        <SimpleSederhana
+        <KirigamiPastel
           adminId={adminId}
           guestName={guestName}
           templateWedingData={templateWedingData}
           isAdminView={false} 
+        />
+      );
+    case 'D':
+      return (
+        <TumbuhBersama
+          adminId={adminId}
+          guestName={guestName}
+          templateWedingData={templateWedingData}
+          isAdminView={false}
         />
       );
     default:
@@ -130,9 +143,44 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
+    let musikData: any = null;
+    if (user.templateWeding) {
+      let mId = (user.templateWeding as any).musikId || (user.templateWeding as any).musik_id;
+      if (!mId && user.templateWeding.id) {
+        try {
+          const twRows: any[] = await prisma.$queryRawUnsafe(
+            `SELECT musik_id FROM "template_wedings" WHERE id = $1 LIMIT 1`,
+            user.templateWeding.id
+          );
+          if (twRows && twRows.length > 0) {
+            mId = twRows[0].musik_id;
+          }
+        } catch (twErr) {
+          console.warn('Gagal query musik_id:', twErr);
+        }
+      }
+
+      if (mId) {
+        try {
+          const mRows: any[] = await prisma.$queryRawUnsafe(
+            `SELECT id, judul, penyanyi, file FROM "musik" WHERE id = $1 LIMIT 1`,
+            mId
+          );
+          if (mRows && mRows.length > 0) {
+            musikData = mRows[0];
+          }
+        } catch (e) {
+          console.warn('Gagal load musik undangan:', e);
+        }
+      }
+    }
+
     // Convert Date objects to strings for JSON serialization
     const serializedTemplateWeding = user.templateWeding ? {
       ...user.templateWeding,
+      // Relasi musik latar yang dipilih
+      musik: musikData,
+      audio: musikData?.file || (user.templateWeding as any).audio || null,
       // Zona waktu user dipakai template untuk label WIB/WITA/WIT pada jam acara.
       tz: user.tz || null,
       tanggalPernikahan: user.templateWeding.tanggalPernikahan ? user.templateWeding.tanggalPernikahan.toISOString() : null,

@@ -111,7 +111,7 @@ export default function Dashboard({
 
   // Tab Navigation State
   const [activeTab, setActiveTab] = useState<
-    'overview' | 'mempelai' | 'acara' | 'gift' | 'galeri' | 'bersama' | 'ucapan' | 'template' | 'links'
+    'overview' | 'mempelai' | 'acara' | 'gift' | 'galeri' | 'bersama' | 'musik' | 'ucapan' | 'template' | 'links'
   >('overview');
 
   const [loading, setLoading] = useState(!initialWeding);
@@ -207,6 +207,13 @@ export default function Dashboard({
   const [uploadingBersama, setUploadingBersama] = useState<number | null>(null);
   const bersamaInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
+  // Musik State — katalog musik + pilihan musik aktif untuk undangan ini
+  const [musikList, setMusikList] = useState<any[]>([]);
+  const [currentMusikId, setCurrentMusikId] = useState<string>(initialWeding?.musikId || '');
+  const [playingMusikId, setPlayingMusikId] = useState<string | null>(null);
+  const [loadingMusik, setLoadingMusik] = useState(false);
+  const musikAudioRef = useRef<HTMLAudioElement | null>(null);
+
   // Link Generator State
   const [guestName, setGuestName] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
@@ -223,6 +230,30 @@ export default function Dashboard({
     }
   }, [effectiveUserId, initialWeding]);
 
+  // Helper aman untuk membaca respons JSON (mencegah SyntaxError Unexpected token < bila server merespons HTML 404/500)
+  const safeParseJson = async (res: Response) => {
+    try {
+      const text = await res.text();
+      if (!text || text.trim().startsWith('<')) return null;
+      return JSON.parse(text);
+    } catch {
+      return null;
+    }
+  };
+
+  // Muat katalog musik sekali saat dashboard dibuka.
+  useEffect(() => {
+    fetch('/api/musik').then(safeParseJson)
+      .then(data => {
+        if (data?.success) setMusikList(data.musik || []);
+      })
+      .catch(err => console.error('Gagal memuat musik:', err));
+
+    return () => {
+      musikAudioRef.current?.pause();
+    };
+  }, []);
+
   const showNotification = (type: 'success' | 'error', text: string) => {
     setMessage({ type, text });
     setTimeout(() => setMessage(null), 5000);
@@ -238,7 +269,7 @@ export default function Dashboard({
     try {
       setLoading(true);
       const templateRes = await fetch(`/api/landing/${targetId}`);
-      const templateJson = await templateRes.json();
+      const templateJson = (await safeParseJson(templateRes)) || {};
       const weding = templateJson.response;
 
       if (weding) {
@@ -295,6 +326,10 @@ export default function Dashboard({
           setGaleriFotos(weding.galery.fotos || []);
         }
 
+        if (weding.musikId) {
+          setCurrentMusikId(weding.musikId);
+        }
+
         // Fetch Stats & Comments
         const [statsRes, commentsRes, ucapanRes] = await Promise.all([
           fetch(`/api/stats?templateWedingId=${weding.id}`),
@@ -302,9 +337,9 @@ export default function Dashboard({
           fetch(`/api/ucapan?templateWedingId=${weding.id}`),
         ]);
 
-        const statsData = await statsRes.json();
-        const commentsData = await commentsRes.json();
-        const ucapanData = await ucapanRes.json();
+        const statsData = (await safeParseJson(statsRes)) || {};
+        const commentsData = (await safeParseJson(commentsRes)) || {};
+        const ucapanData = (await safeParseJson(ucapanRes)) || {};
 
         setStats(statsData.data || { comments: 0, likes: 0, present: 0, absent: 0 });
         setComments(commentsData.comments || []);
@@ -401,6 +436,50 @@ export default function Dashboard({
       console.error(err);
       showNotification('error', '❌ Terjadi kesalahan saat mengganti template');
     }
+  };
+
+  const handleSelectMusik = async (musikId: string) => {
+    if (!effectiveUserId) return;
+    try {
+      setLoadingMusik(true);
+      const res = await fetch(`/api/landing/${effectiveUserId}/musik`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ musikId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setCurrentMusikId(musikId);
+        showNotification('success', '✅ Musik berhasil disimpan ke template undangan!');
+      } else {
+        showNotification('error', '❌ ' + (data.message || 'Gagal menyimpan musik'));
+      }
+    } catch (err) {
+      console.error(err);
+      showNotification('error', '❌ Terjadi kesalahan saat menyimpan musik');
+    } finally {
+      setLoadingMusik(false);
+    }
+  };
+
+  const togglePreviewMusik = (musik: any) => {
+    if (!musikAudioRef.current) {
+      musikAudioRef.current = new Audio();
+    }
+    const audio = musikAudioRef.current;
+
+    if (playingMusikId === musik.id) {
+      audio.pause();
+      setPlayingMusikId(null);
+      return;
+    }
+
+    audio.src = musik.file;
+    audio.currentTime = 0;
+    audio
+      .play()
+      .then(() => setPlayingMusikId(musik.id))
+      .catch(() => setPlayingMusikId(null));
   };
 
   const handleUploadGaleriPhoto = async () => {
@@ -769,6 +848,18 @@ Terima kasih.`;
                 >
                   <i className="fas fa-gift w-5 text-center"></i>
                   Amplop Digital & QRIS
+                </button>
+
+                <button
+                  onClick={() => setActiveTab('musik')}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                    activeTab === 'musik'
+                      ? 'bg-blue-600 text-white shadow-md'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700/50'
+                  }`}
+                >
+                  <i className="fas fa-music w-5 text-center"></i>
+                  Musik Latar
                 </button>
 
                 <button
@@ -1884,6 +1975,79 @@ Terima kasih.`;
               )}
 
               {/* TAB 6: PILIH TEMPLATE */}
+              {/* TAB: MUSIK LATAR */}
+              {activeTab === 'musik' && (
+                <div className="space-y-6">
+                  <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+                    <h3 className="text-lg font-bold flex items-center gap-2">
+                      <i className="fas fa-music text-blue-500"></i>
+                      Koleksi Musik Latar
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1 mb-6">
+                      Pilih satu musik untuk diputar otomatis saat tamu membuka undangan Anda. Tekan tombol putar untuk mendengarkan preview.
+                    </p>
+
+                    {musikList.length === 0 ? (
+                      <div className="text-center py-8 text-gray-500 text-sm">
+                        Belum ada musik tersedia.
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {musikList.map((m: any) => {
+                          const isActive = currentMusikId === m.id;
+                          const isPlaying = playingMusikId === m.id;
+                          return (
+                            <div
+                              key={m.id}
+                              className={clsx(
+                                'flex items-center gap-4 p-4 rounded-2xl border-2 transition-all',
+                                isActive
+                                  ? 'border-blue-600 shadow-sm ring-2 ring-blue-500/20'
+                                  : 'border-gray-200 dark:border-gray-700'
+                              )}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => togglePreviewMusik(m)}
+                                className="w-11 h-11 flex-shrink-0 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 flex items-center justify-center hover:opacity-90 transition-opacity"
+                                aria-label={isPlaying ? 'Jeda musik' : 'Putar musik'}
+                              >
+                                <i className={clsx('fas', isPlaying ? 'fa-pause' : 'fa-play')}></i>
+                              </button>
+
+                              <div className="flex-1 min-w-0">
+                                <p className="font-bold text-sm truncate">{m.judul}</p>
+                                <p className="text-xs text-gray-500 truncate">{m.penyanyi || 'Tidak diketahui'}</p>
+                              </div>
+
+                              {isActive && (
+                                <span className="hidden sm:inline-flex px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold">
+                                  Aktif
+                                </span>
+                              )}
+
+                              <button
+                                type="button"
+                                onClick={() => handleSelectMusik(m.id)}
+                                disabled={loadingMusik || isActive}
+                                className={clsx(
+                                  'px-4 py-2.5 rounded-xl text-xs font-bold transition-all flex-shrink-0',
+                                  isActive
+                                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800 cursor-default'
+                                    : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90'
+                                )}
+                              >
+                                {isActive ? '✓ Terpilih' : loadingMusik ? 'Loading...' : 'Gunakan'}
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {activeTab === 'template' && (
                 <div className="space-y-6">
                   <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
@@ -2006,6 +2170,44 @@ Terima kasih.`;
                           </button>
                         </div>
                       </div>
+
+                      {/* Card Template D */}
+                      <div
+                        className={clsx(
+                          'rounded-2xl border-2 overflow-hidden transition-all flex flex-col',
+                          currentTemplate === 'D'
+                            ? 'border-blue-600 shadow-lg ring-2 ring-blue-500/20'
+                            : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                        )}
+                      >
+                        <div className="h-44 bg-gradient-to-br from-lime-100 to-amber-100 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center p-4 relative">
+                          <i className="fas fa-seedling text-5xl text-lime-600/70"></i>
+                          {currentTemplate === 'D' && (
+                            <span className="absolute top-3 right-3 px-2.5 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-sm">
+                              Sedang Aktif
+                            </span>
+                          )}
+                        </div>
+                        <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                          <div>
+                            <h4 className="font-bold text-base">Template D: Tumbuh Bersama</h4>
+                            <p className="text-xs text-gray-500 mt-1">
+                              Undangan botani interaktif: sobek paket benih, jalinan 4 musim, gugur daun interaktif, synthesizer Web Audio & musik latar.
+                            </p>
+                          </div>
+                          <button
+                            onClick={() => handleSelectTemplate('D')}
+                            className={clsx(
+                              'w-full py-2.5 px-4 rounded-xl text-xs font-bold transition-all',
+                              currentTemplate === 'D'
+                                ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800 cursor-default'
+                                : loadingTemplate ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90 cursor-wait' : 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90'
+                            )}
+                          >
+                            {currentTemplate === 'D' ? '✓ Template Terpilih' : loadingTemplate ? 'Loading...' : 'Gunakan Template Ini'}
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2120,8 +2322,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       where: { userId },
       include: {
         user: true,
-        galery: true,
-      },
+        galery: true,      },
     });
 
     // Pastikan templateWeding & galery selalu ada
@@ -2158,8 +2359,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         },
         include: {
           user: true,
-          galery: true,
-        },
+          galery: true,        },
       });
     } else if (!templateWeding.galery) {
       const newGalery = await prisma.galery.create({
@@ -2170,8 +2370,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         data: { galeryId: newGalery.id },
         include: {
           user: true,
-          galery: true,
-        },
+          galery: true,        },
       });
     }
 

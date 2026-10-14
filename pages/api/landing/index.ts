@@ -46,6 +46,7 @@ export default async function handler(
           galery: true,
           pertemuan: true,
           comments: true,
+          musik: true,
         },
       });
 
