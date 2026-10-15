@@ -10,6 +10,7 @@ import {
   TamanRahasia,
   KirigamiPastel,
   TumbuhBersama,
+  MejaKoki,
 } from '@/components/templates';
 import { useSession } from 'next-auth/react';
 
@@ -77,6 +78,15 @@ export default function SlugPage({guestName: initialGuestName, templateWedingDat
     case 'D':
       return (
         <TumbuhBersama
+          adminId={adminId}
+          guestName={guestName}
+          templateWedingData={templateWedingData}
+          isAdminView={false}
+        />
+      );
+    case 'E':
+      return (
+        <MejaKoki
           adminId={adminId}
           guestName={guestName}
           templateWedingData={templateWedingData}

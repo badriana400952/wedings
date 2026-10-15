@@ -29,6 +29,12 @@
 19. **Pemulihan Penuh Cover "Sobek & Tanam", Stabilisasi DOM Kanvas Pohon, dan Pencegahan Hilangnya Navbar**.
 20. **Integrasi Penuh Database Dinamis, Kebun Doa (`ucapan_harapan`), RSVP Ikut Menanam (`comments`), dan Transfer via ATM pada Template D (Tumbuh Bersama)**.
 21. **Penyusunan Ensiklopedia Pemecahan Masalah & Solusi Teknis Komprehensif (`docs/isue-clear.md`) untuk Pembelajaran AI Masa Depan**.
+22. **Refaktor Modular Dashboard Tanpa Menyenggol Flow, Database, dan Data (`components/dashboard/`)**.
+23. **Pembuatan & Integrasi Penuh Template Baru: Template E (Meja Sang Koki — Fine Dining Degustation Interactive Theme)** terhubung 100% dinamis ke Database, Assets, RSVP, dan Buku Catatan Doa.
+24. **Perbaikan Musik Dobel & Penyelarasan Kolom Foto Database (`fotoHeader`, `photoPutra`, `photoPutri`) pada Template E (Meja Sang Koki)**.
+25. **Penyelarasan QRIS Dinamis, Perbaikan Kontrol On/Off Musik, Penghapusan Nota Hadiah, dan Pemisahan Tabel Database RSVP (`comments`) vs Catatan Doa (`ucapan_harapan`) pada Template E**.
+26. **Perbaikan Masalah Scroll Terkunci saat Halaman Di-refresh pada Template E (Meja Sang Koki)** (`isCoverAlreadyOpened`, session storage key, perbaikan selector CSS `.is-locked` vs `.is-open`).
+27. **Integrasi Penuh Papan Komentar & Kursi Tamu RSVP (`#sec-rsvp`) dengan Tabel Database `comments` pada Template E (Meja Sang Koki)** (`loadRsvpComments`, `buildRsvpCommentCard`, pagination `rsvp-more-btn`, dan like toggling `/api/comments/:id/like`).
 
 ---
 
@@ -622,9 +628,160 @@
 * **Pembaruan Berkas Terkait**:
   - [`AGENTS.md`](file:///D:/badri/weding%204/undangan/AGENTS.md): Menambahkan `docs/isue-clear.md` pada daftar bacaan wajib pertama AI (Langkah 1).
   - [`Rules.md`](file:///D:/badri/weding%204/undangan/Rules.md): Menambahkan referensi `docs/isue-clear.md` pada protokol wajib AI.
-* **Hasil Verifikasi & Dual-Sync**:
-  - Berkas `docs/isue-clear.md` berhasil disinkronkan ke direktori OneDrive:
-    `C:\Users\USER.DESKTOP-UQ662UT.000\OneDrive\Dokumen\project\undangan projek\undangan\docs\isue-clear.md`.
+### 22. Refaktor Modular Dashboard Tanpa Menyenggol Flow, Database, dan Data (`components/dashboard/`)
+
+* **Tanggal & Waktu**: 15 Oktober 2026, 11:20 WIB.
+* **Instruksi Pengguna**:
+  Refaktor dashboard admin tanpa menyenggol atau mengubah alur bisnis (flow), skema/query database, maupun kontrak data. Menerapkan orkestrasi Badri (`design-taste-frontend`, `impeccable`, `anti-slop`, `humanizer`).
+* **Masalah Awal**:
+  Berkas `pages/dashboard.tsx` sebelumnya monolitik dan sangat panjang (2.422 baris kode), mencampur aduk 10 tab konfigurasi, tabel komentar, form mempelai, pengaturan jadwal, upload galeri, upload gambar bersama, katalog musik latar, kartu template, generator tautan tamu, dan logika state ke dalam satu berkas raksasa.
+* **Hasil Diagnosa & Solusi Arsitektur**:
+  1. **Ekstraksi Komponen Modular (`components/dashboard/`)**:
+     - `components/dashboard/types.ts`: Menyimpan definisi antarmuka TypeScript terpusat (`DashboardTab`, `DashboardStats`, `DashboardComment`, `UcapanRow`, `RsvpRow`, `WeddingFormData`).
+     - `components/dashboard/DashboardHeader.tsx`: Bilah header atas yang bersih dengan judul, badge template aktif, tombol lihat undangan, dan logout.
+     - `components/dashboard/DashboardSidebar.tsx`: Navigasi sidebar 10 tab dengan ikon deskriptif, indikator aktif, dan responsif.
+     - `components/dashboard/tabs/TabOverview.tsx`: Kartu statistik cepat dan tabel komentar/RSVP lengkap dengan unduh CSV dan aksi hapus.
+     - `components/dashboard/tabs/TabMempelai.tsx`: Formulir data mempelai pria (`*Putra`) dan wanita (`*Putri`) beserta preview foto.
+     - `components/dashboard/tabs/TabAcara.tsx`: Jadwal hari-H, akad nikah, resepsi, alamat gedung, link Google Maps & Calendar.
+     - `components/dashboard/tabs/TabGift.tsx`: Pengaturan amplop digital, nomor rekening bank, switch toggle, dan unggah QRIS.
+     - `components/dashboard/tabs/TabGaleri.tsx`: Manajemen album photoshoot galeri (unggah Cloudinary, masonry grid, tombol hapus foto).
+     - `components/dashboard/tabs/TabBersama.tsx`: 6 slot foto kenangan kebersamaan dan switch pemakaian (`taman` vs `cerita`).
+     - `components/dashboard/tabs/TabUcapan.tsx`: Tabel moderasi ucapan doa tamu dari tabel `ucapan_harapan` (Pohon Harapan).
+     - `components/dashboard/tabs/TabMusik.tsx`: Katalog musik latar dengan preview pemutaran audio dan pemilihan lagu aktif.
+     - `components/dashboard/tabs/TabTemplate.tsx`: Katalog 4 template (`A`, `B`, `C`, `D`) dengan kartu pratinjau dan tombol aktivasi.
+     - `components/dashboard/tabs/TabLinks.tsx`: Generator tautan tamu personal dengan salin clipboard dan integrasi WhatsApp.
+     - `components/dashboard/index.ts`: Sentral ekspor modul dashboard.
+  2. **Perampingan `pages/dashboard.tsx`**:
+     - Ukuran berkas berkurang drastis dari 2.422 baris menjadi ~520 baris bersih yang bertindak sebagai orkestrator state dan data loader.
+     - Seluruh state, handler API (`handleSaveWeddingData`, `handleSelectTemplate`, `handleSelectMusik`, `handleUploadGaleriPhoto`, dsb.), dan `getServerSideProps` tetap 100% utuh tanpa menyenggol satu pun query database atau endpoint API.
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors** (bersih tanpa type error).
+  - Skema database, relasi tabel, dan query Prisma tetap **100% identik**.
+  - Tampilan dashboard lebih mudah dipelihara (*maintainable*), terstruktur (*decoupled*), dan mengikuti prinsip *Clean Architecture*.
+
+---
+
+### 23. Pembuatan & Integrasi Template Baru: Template E (Meja Sang Koki — Fine Dining Degustation Interactive Theme)
+
+* **Latar Belakang & Permintaan Pengguna**:
+  Membuat template baru di dalam folder `components/` yang 100% mirip dengan desain dan interaksi dari URL Wedivo: `https://invitations.wedivo.id/paqkkqe1mjcttlp7bhaqmiy7tsk2` ("Meja Sang Koki"). Template baru harus mengadopsi pola modular seperti template lainnya (Template B, C, D) dan menggunakan data serta aset dinamis dari database (Prisma / PostgreSQL) secara penuh.
+* **Hasil Ekstraksi & Arsitektur Tema**:
+  1. **Konsep & Nuansa Desain**:
+     - Tema: *Chef's Table Fine Dining Degustation Menu* dengan nuansa warm candlelight, dark brass, gold accents, dan piring keramik degustasi.
+     - Interaksi Cover: Tudung saji perak (*silver cloche*) dengan pegangan emas, uap (*steam*), dan monogram. Tombol **"Angkat Tudung Saji"** mengangkat cloche dengan animasi 3D dan partikel uap.
+     - Menu Degustasi: 4 babak sajian (*Amuse-Bouche*, *Pembuka*, *Hidangan Utama*, *Penutup*) yang memetakan 4 babak kisah cinta dari tabel `pertemuan` dan 4 foto kenangan dari `template_wedings.bersamaFotos`.
+     - Dua Bahan Utama: Kartu flip interaktif bahan mempelai pria (*Chef de Cuisine*) dan mempelai wanita (*Pastry Chef*) dengan detail asal usul, tanggal, dan nama orang tua.
+     - Buku Resep Cinta (*Sec-Resep*): Takaran bumbu rumah tangga (komunikasi, kesabaran, maaf, doa).
+     - Order Chit Reservasi (*Sec-Events*): Kartu tiket order dapur untuk Sesi 01 (Akad Nikah) dan Sesi 02 (Resepsi) lengkap dengan jam, tanggal, alamat gedung, dan rundown.
+     - Cicip Rasa Interaktif (*Sec-Cicip*): Mini-game degustasi interaktif memilih aroma dan rasa.
+     - Kotak Tip Dapur (*Sec-Gifts*): Celengan toples kaca, amplop digital, nomor rekening bank, QRIS, dan formulir konfirmasi nota tanda kasih.
+     - Buku Tamu Dapur (*Sec-Wishes*): Formulir kirim catatan dan papan jepit doa yang terhubung ke `/api/ucapan` (`ucapan_harapan`).
+     - Konfirmasi Kursi (*Sec-Rsvp*): Formulir RSVP terhubung ke `/api/comments` (dengan tag `[RSVP]`).
+     - Navigasi Pass (*Nav-Pass*): Floating dock bernuansa brass bar dengan tombol pintas ke setiap babak sajian.
+  2. **Aset Dekoratif & Gaya**:
+     - CSS diekstrak dan dioptimalkan ke: `public/css/meja-koki.css`.
+     - Script interaktif diisolasi dalam namespace `window.initMejaKoki` di: `public/dist/meja-koki.js`.
+     - Aset gambar template disimpan lokal di: `public/assets/templates/meja-koki/`.
+* **Daftar Berkas yang Dibuat & Dimodifikasi**:
+  1. [`components/templateE-meja-koki/mejaKokiApi.ts`](file:///components/templateE-meja-koki/mejaKokiApi.ts):
+     - Handler API terisolasi untuk RSVP (`postRsvp`), ucapan buku tamu (`postUcapan`), dan pembacaan daftar komentar/doa.
+  2. [`components/templateE-meja-koki/mejaKokiHtml.ts`](file:///components/templateE-meja-koki/mejaKokiHtml.ts):
+     - Generator HTML parametrik yang menghubungkan seluruh elemen visual tema dengan kolom database `TemplateWeding` (mempelai pria/wanita, orang tua, foto profil, jadwal, akad, resepsi, maps, 4 babak cerita cinta, nomor rekening bank, dan QRIS).
+  3. [`components/templateE-meja-koki/MejaKoki.tsx`](file:///components/templateE-meja-koki/MejaKoki.tsx):
+     - React wrapper modular dengan state persistence `sessionStorage` (`invitation_opened_{adminId}`), background music audio dock, live form submissions (RSVP & Buku Tamu tanpa reload halaman), scroll reveal observer fallback, dan clipboard toast.
+  4. [`components/templates/index.ts`](file:///components/templates/index.ts):
+     - Mengekspor `TemplateE` dan `MejaKoki`.
+  5. [`pages/[...slug].tsx`](file:///pages/[...slug].tsx):
+     - Menambahkan handler `case 'E':` pada pemilih template dinamis publik tamu.
+  6. [`components/dashboard/tabs/TabTemplate.tsx`](file:///components/dashboard/tabs/TabTemplate.tsx):
+     - Menambahkan opsi **"Template E: Meja Sang Koki"** (*Fine Dining Degustation Interactive Theme*) pada pilihan template admin.
+  7. [`template.md`](file:///template.md):
+     - Memperbarui katalog daftar template aktif repositori.
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors** (bersih tanpa type error).
+  - `npm run build` sukses 100% mengompilasi seluruh route dan chunking Next.js.
+  - Sesuai protokol `Rules.md`: Pemisahan 4 fitur database terjaga, kolom putra/putri tidak tertukar, tampilan tamu murni read-only.
+
+---
+
+### 24. Perbaikan Musik Dobel & Penyelarasan Kolom Foto Database pada Template E (Meja Sang Koki)
+
+* **Keluhan / Isu Pengguna**:
+  1. Suara musik latar terdengar dobel (dua audio berjalan bersamaan) pada Template E.
+  2. Musik diharapkan hanya berasal murni dari database (tabel `musik` / relasi `user.templateWeding.musik.file`).
+  3. Foto header (`fotoHeader`) belum dipakai di section header/hero, serta Foto Mempelai Pria (`photoPutra`) dan Foto Mempelai Wanita (`photoPutri`) belum terpasang di section *"Dapur ini berdiri di atas dua bahan yang tak tergantikan"*.
+* **Hasil Diagnosa Teknis AI**:
+  1. **Penyebab Musik Dobel**:
+     - *DOM Unmount/Re-render Saat Hydration*: Komponen `MejaKoki.tsx` awalnya menggunakan `useMemo` dengan dependensi `guestName`. Ketika query router membaca parameter tamu, state `guestName` berubah dan memicu re-render `dangerouslySetInnerHTML`. Elemen `<audio>` lama dihancurkan di DOM tanpa di-pause sehingga browser mempertahankan instance audio lama di memori (detached audio), sementara elemen `<audio>` baru dibuat dan mulai berputar lagi.
+     - *Multiple Click Listeners*: `public/dist/meja-koki.js` mengaitkan listener `firstTap` berulang kali setiap kali inisialisasi terpanggil tanpa guard flag window.
+  2. **Penyebab Foto Header & Mempelai Tidak Terpakai**:
+     - Skema Prisma menggunakan field `fotoHeader` (header), `photoPutra` (foto pria, dengan ejaan 'ph'), dan `photoPutri` (foto wanita, dengan ejaan 'ph').
+     - Generator `mejaKokiHtml.ts` sebelumnya mengecek `fotoSampul`, `fotoPutra`, dan `fotoPutri` (dengan huruf 'f'), sehingga jika data Prisma hanya mengisi `photoPutra`, `photoPutri`, dan `fotoHeader`, kode jatuh ke fallback gambar lokal.
+* **Perbaikan yang Dilakukan**:
+  1. **Penyelarasan Kolom Foto Database**:
+     - Mengubah pemetaan di [`components/templateE-meja-koki/mejaKokiHtml.ts`](file:///components/templateE-meja-koki/mejaKokiHtml.ts):
+       - `couplePhoto` (Hero Header): Membaca `data?.fotoHeader || data?.fotoHeader2 || data?.fotoHeader3 || data?.fotoHeader4 || data?.fotoSampul`.
+       - `groomPhoto` (Mempelai Pria): Membaca `data?.photoPutra || data?.fotoPutra`.
+       - `bridePhoto` (Mempelai Wanita): Membaca `data?.photoPutri || data?.fotoPutri`.
+       - Nama orang tua: Membaca `data?.namaAyahPutra || data?.ayahPutra`, `data?.namaIbuPutra || data?.ibuPutra`, `data?.namaAyahPutri || data?.ayahPutri`, `data?.namaIbuPutri || data?.ibuPutri`.
+       - Catatan asal-usul kartu bahan (`#ing-note-groom` & `#ing-note-bride`): Menggunakan `data?.kelahiranPutra` dan `data?.kelahiranPutri` dinamis.
+  2. **Pembersihan & Eliminasi Musik Dobel**:
+     - **Stabilisasi DOM**: Mengganti `useMemo` dengan `useState(() => getMejaKokiHtml(...))` sehingga DOM dan player audio tidak dihancurkan saat query nama tamu terdeteksi. Nama tamu di-update langsung ke node teks tanpa re-render template.
+     - **Hanya Musik Database**: Menghapus fallback musik statis sembarangan (`audioUrl = escapeHtml(data?.audio || data?.musik?.file || '')`). Jika user tidak memilih musik di database, dock musik disembunyikan (`style="display: none;"`) dan audio tidak berputar.
+     - **Single Instance & Guard**: Membungkus listener audio di `meja-koki.js` dengan `window.__MEJA_KOKI_AUDIO_BOUND__` dan memverifikasi `audio.paused` sebelum memanggil `play()`.
+     - **Unmount Cleanup**: Menambahkan `audio.pause()` pada return cleanup `useEffect` di `MejaKoki.tsx` agar tidak ada audio tertinggal di memori browser.
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors**.
+  - `npm run build` sukses 100% tanpa error.
+
+### 25. Penyelarasan QRIS Dinamis, Perbaikan Kontrol On/Off Musik, Penghapusan Nota Hadiah, dan Pemisahan Tabel Database RSVP (`comments`) vs Catatan Doa (`ucapan_harapan`) pada Template E (Meja Sang Koki)
+
+* **Keluhan / Permintaan Pengguna**:
+  1. **QRIS Sesuai Database**: Jika `isQrisActive === false` atau tidak ada foto QRIS, QRIS jangan ditampilkan (mengikuti pola Template B & Template C).
+  2. **Tombol On/Off Musik Tidak Bisa Dimatikan**: Tombol musik `#music-btn` tidak dapat mematikan lagu.
+  3. **Hapus Form "Nota Tanda Kasih"**: Hilangkan seluruh blok form `#gift-receipt` / `#gift-form` dari section `#sec-gifts`.
+  4. **Section RSVP ("Kami hitung kursinya dari sini")**: Gunakan database tabel `comments` (marker `[RSVP]`, `presence: boolean`, pax) persis seperti template lain.
+  5. **Section Catatan / Doa ("Tinggalkan catatan untuk kami")**: Gunakan database tabel `ucapan_harapan` via `/api/ucapan` (GET & POST) persis seperti template lain.
+
+* **Hasil Diagnosa Teknis & Solusi AI**:
+  1. **QRIS Dinamis**:
+     - Memperbaiki perhitungan flag: `const isQrisActive = (data as any)?.isQrisActive !== false && Boolean(data?.fotoQris);`.
+     - Mengondisikan card transfer bank & QRIS: jika `isQrisActive` bernilai `false`, blok QRIS dan gambarnya mutlak tidak dirender ke HTML.
+  2. **Penyebab & Solusi Tombol Musik Tidak Bisa Dimatikan**:
+     - *Penyebab*: Di `meja-koki.js`, terdapat listener global `d.addEventListener("click", firstTap)` dan `touchend` yang tidak mengecek klik pada `#music-btn`. Saat pengunjung menekan `#music-btn` untuk mematikan audio, listener lokal memanggil `pause()`, tetapi event sentuhan/klik memicu `firstTap` yang langsung memanggil `tryPlay()` kembali!
+     - *Solusi*: Menghapus `firstTap` liar dari `document`, memicu pemutaran audio secara aman saat tombol buka cover (`#cover-open-btn`) ditekan, dan mendelegasikan event click toggle audio langsung pada `MejaKoki.tsx` dan `meja-koki.js` dengan `ev.stopPropagation()` & `ev.preventDefault()`.
+  3. **Eliminasi Form Nota Tanda Kasih**:
+     - Menghapus elemen `<div id="gift-receipt">...</div>` dan seluruh elemen form `#gift-form` dari [`mejaKokiHtml.ts`](file:///components/templateE-meja-koki/mejaKokiHtml.ts).
+  4. **Sinkronisasi RSVP (`comments`)**:
+     - Form `#rsvp-form` di [`MejaKoki.tsx`](file:///components/templateE-meja-koki/MejaKoki.tsx) mengirim konfirmasi kehadiran ke `POST /api/comments` dengan `kind: 'rsvp'`, tag `[RSVP]`, `presence: boolean`, dan jumlah pax.
+     - Mengaktifkan class visual `.is-selected` dan `.is-active` pada status kehadiran (`Hadir`, `Diusahakan`, `Berhalangan`).
+  5. **Sinkronisasi Buku Catatan Tamu (`ucapan_harapan`)**:
+     - List `#comments-list` memuat ucapan dari `GET /api/ucapan` dengan parameter `offset` dan limit `6`.
+     - Tombol `#comments-more` ("Muat Catatan Lainnya") memuat ucapan berikutnya dengan paginasi `offset`.
+     - Form `#comments-form` mengirim ucapan ke `POST /api/ucapan` dan langsung menyisipkan (prepend) ucapan baru ke `#comments-list` secara realtime serta menampilkan status sukses `#wishes-done`.
+
+  6. **Perbaikan Bug Scroll Macet saat Refresh Halaman**:
+     - *Penyebab*: Setiap kali halaman di-refresh, skrip [`meja-koki.js`](file:///public/dist/meja-koki.js) menjalankan `initMejaKoki()` yang langsung mengeksekusi `body.classList.add("is-locked")` tanpa mengecek apakah cover sudah pernah dibuka sebelumnya (`sessionStorage`). Ditambah lagi, CSS `#sec-cover.is-open` belum memiliki `pointer-events: none;`, sehingga fixed overlay cover memblokir interaksi dan scroll body terkunci oleh `overflow: hidden`.
+     - *Solusi*:
+       - Di [`meja-koki.js`](file:///public/dist/meja-koki.js): Menambahkan fungsi pengecekan `isCoverAlreadyOpened()` via `sessionStorage` dan state elemen cover. Jika undangan sudah pernah dibuka, cover langsung di-hide dan `body.classList.remove("is-locked")` serta `body.classList.add("is-open")` dijalankan tanpa pernah menaruh `is-locked`.
+       - Di [`meja-koki.css`](file:///public/css/meja-koki.css): Memperbaiki selector locking menjadi `body.is-locked:not(.is-open) { overflow: hidden; }` dan `body.is-open { overflow-y: auto !important; }`. Menambahkan `pointer-events: none !important;` pada `#sec-cover.is-open` dan `#sec-cover.is-gone`.
+       - Di [`MejaKoki.tsx`](file:///components/templateE-meja-koki/MejaKoki.tsx): Memastikan `forceCoverOpen()` dipanggil segera setelah `runInit()` dan mengekspos `__MEJA_KOKI_STORAGE_KEY__` ke `window`.
+
+  7. **Integrasi Penuh Papan Komentar & Kursi Tamu RSVP (`#sec-rsvp`) dengan Tabel Database `comments`**:
+     - *Masalah*: Form konfirmasi reservasi sebelumnya hanya memanggil submit API tanpa menampilkan daftar kursi & catatan tamu yang tersimpan di tabel `comments`.
+     - *Solusi*:
+       - Di [`mejaKokiHtml.ts`](file:///components/templateE-meja-koki/mejaKokiHtml.ts): Menambahkan kontainer `#rsvp-board-comments` yang memuat header daftar kursi & catatan tamu, counter `#rsvp-comments-count`, daftar kartu komentar `#rsvp-comments-list`, pesan kosong `#rsvp-comments-empty`, dan tombol muat lebih banyak `#rsvp-more-btn`.
+       - Di [`meja-koki.css`](file:///public/css/meja-koki.css): Menambahkan styling `.rsvp-comment-card` tema dark charcoal & kuningan emas fine dining dengan badge status kehadiran (`.is-attending` [Hadir], `.is-absent` [Berhalangan], `.is-maybe` [Diusahakan]), serta tombol like interaktif `.rsvp-like-btn`.
+       - Di [`mejaKokiApi.ts`](file:///components/templateE-meja-koki/mejaKokiApi.ts): Menyediakan fungsi `fetchComments(templateWedingId, offset, limit)` dengan filter `kind=rsvp` dan `toggleLike(commentId)` yang memanggil endpoint `POST /api/comments/:id/like`.
+       - Di [`MejaKoki.tsx`](file:///components/templateE-meja-koki/MejaKoki.tsx):
+         - Implementasi `buildRsvpCommentCard(c, opts)` yang mem-parse prefix `[RSVP]`, status kehadiran, jumlah tamu, dan pesan khusus untuk dapur.
+         - Implementasi `loadRsvpComments(reset)` yang memuat data secara asinkron dari API `GET /api/comments?kind=rsvp` dan mendukung paginasi tombol `#rsvp-more-btn`.
+         - Delegated event listener untuk tombol `#rsvp-more-btn` dan tombol like `.rsvp-like-btn` dengan optimistic update.
+         - Pada saat submit form RSVP berhasil, kartu komentar baru langsung di-prepend ke `#rsvp-comments-list`, menyembunyikan state kosong `#rsvp-comments-empty`, menaikkan counter konfirmasi, dan memicu animasi confetti.
+
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors**.
+  - `npm run build` sukses 100% tanpa kendala.
 
 ---
 

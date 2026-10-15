@@ -1,0 +1,13 @@
+export * from './types';
+export { default as DashboardHeader } from './DashboardHeader';
+export { default as DashboardSidebar } from './DashboardSidebar';
+export { default as TabOverview } from './tabs/TabOverview';
+export { default as TabMempelai } from './tabs/TabMempelai';
+export { default as TabAcara } from './tabs/TabAcara';
+export { default as TabGift } from './tabs/TabGift';
+export { default as TabGaleri } from './tabs/TabGaleri';
+export { default as TabBersama } from './tabs/TabBersama';
+export { default as TabUcapan } from './tabs/TabUcapan';
+export { default as TabMusik } from './tabs/TabMusik';
+export { default as TabTemplate } from './tabs/TabTemplate';
+export { default as TabLinks } from './tabs/TabLinks';
