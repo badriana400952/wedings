@@ -50,6 +50,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
   );
 
   const audioUrl = escapeHtml(data?.audio || data?.musik?.file || '');
+  const linkGoogleCalendar = escapeHtml(data?.linkGoogleCalender || data?.linkGoogleCalendar || '');
 
   // Wedding Date & Time Format
   const akadDateRaw = data?.tanggalAkad || data?.tanggalPernikahan || '2026-10-30T09:00:00';
@@ -594,7 +595,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
             </div>
           </div>
           <p id="cd-done">Hari ini sajian kami naik ke meja. Selamat datang!</p>
-          <button type="button" id="cd-cal">
+          <button type="button" id="cd-cal"${linkGoogleCalendar ? ` data-cal-url="${linkGoogleCalendar}"` : ''}>
             Simpan Reservasi ke Kalender
           </button>
         </div>

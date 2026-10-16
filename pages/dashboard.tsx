@@ -831,6 +831,7 @@ Terima kasih.`;
                   currentTemplate={currentTemplate}
                   loadingTemplate={loadingTemplate}
                   onSelectTemplate={handleSelectTemplate}
+                  effectiveUserId={effectiveUserId}
                 />
               )}
 

@@ -53,11 +53,20 @@ window.initMejaKoki = function() {
         var board = byId("cd-board");
         var rawFromBoard = board ? (board.getAttribute("data-wedding-date") || "") : "";
         var weddingISO = window.__MEJA_KOKI_MAIN_DATE__ || rawFromDom || rawFromBoard || "2026-10-30T11:00:00";
-        var weddingAt = new Date(weddingISO);
-        if (isNaN(weddingAt.getTime())) {
-          weddingAt = new Date(weddingISO.split("T")[0]);
-        }
-        var hasWedding = !isNaN(weddingAt.getTime());
+        var parseWeddingDate = function (val) {
+          if (!val) return new Date("2026-10-30T11:00:00");
+          var dt = new Date(val);
+          if (!isNaN(dt.getTime())) return dt;
+          var clean = String(val).replace(" ", "T");
+          dt = new Date(clean);
+          if (!isNaN(dt.getTime())) return dt;
+          var part = clean.split("T")[0];
+          dt = new Date(part);
+          if (!isNaN(dt.getTime())) return dt;
+          return new Date("2026-10-30T11:00:00");
+        };
+        var weddingAt = parseWeddingDate(weddingISO);
+        var hasWedding = true;
 
         var fmtDate = function (dt) {
           return dt.toLocaleDateString("id-ID", {
@@ -520,63 +529,60 @@ window.initMejaKoki = function() {
           setNum(cdEls.s, totalSec % 60);
         };
 
-        if (hasWedding) {
-          tickCountdown();
-          cdTimer = w.setInterval(tickCountdown, 1000);
-        } else if (cdSection) {
-          cdSection.style.display = "none";
-        }
+        tickCountdown();
+        cdTimer = w.setInterval(tickCountdown, 1000);
 
         /* ---------------------------------------------------------------
      SIMPAN RESERVASI KE KALENDER
   ---------------------------------------------------------------- */
         var calBtn = byId("cd-cal");
         if (calBtn) {
-          if (!hasWedding) {
-            calBtn.style.display = "none";
-          } else {
-            calBtn.addEventListener("click", function () {
-              var groomEl = byId("hero-name-groom");
-              var brideEl = byId("hero-name-bride");
-              var venueEl = byId("venue-name");
-              var addrEl = byId("venue-address");
-              var groom = groomEl ? groomEl.textContent.trim() : "";
-              var bride = brideEl ? brideEl.textContent.trim() : "";
-              var place = [
-                venueEl ? venueEl.textContent.trim() : "",
-                addrEl ? addrEl.textContent.trim() : "",
-              ]
-                .filter(function (v) {
-                  return !isBlank(v);
-                })
-                .join(", ");
-              var stamp = function (dt) {
-                return dt
-                  .toISOString()
-                  .replace(/[-:]/g, "")
-                  .replace(/\.\d{3}/, "");
-              };
-              var ends = new Date(weddingAt.getTime() + 3 * 3600 * 1000);
-              var title =
-                "Pernikahan " +
-                (isBlank(groom) ? "" : groom) +
-                " & " +
-                (isBlank(bride) ? "" : bride);
-              var url =
-                "https://calendar.google.com/calendar/render?action=TEMPLATE" +
-                "&text=" +
-                encodeURIComponent(title.trim()) +
-                "&dates=" +
-                stamp(weddingAt) +
-                "/" +
-                stamp(ends) +
-                "&details=" +
-                encodeURIComponent("Meja Sang Koki — satu malam, satu kisah.") +
-                "&location=" +
-                encodeURIComponent(place);
-              w.open(url, "_blank", "noopener");
-            });
-          }
+          calBtn.addEventListener("click", function () {
+            var customUrl = calBtn.getAttribute("data-cal-url");
+            if (customUrl && customUrl.trim()) {
+              w.open(customUrl.trim(), "_blank", "noopener,noreferrer");
+              return;
+            }
+            var groomEl = byId("hero-name-groom");
+            var brideEl = byId("hero-name-bride");
+            var venueEl = byId("venue-name");
+            var addrEl = byId("venue-address");
+            var groom = groomEl ? groomEl.textContent.trim() : "";
+            var bride = brideEl ? brideEl.textContent.trim() : "";
+            var place = [
+              venueEl ? venueEl.textContent.trim() : "",
+              addrEl ? addrEl.textContent.trim() : "",
+            ]
+              .filter(function (v) {
+                return !isBlank(v);
+              })
+              .join(", ");
+            var stamp = function (dt) {
+              return dt
+                .toISOString()
+                .replace(/[-:]/g, "")
+                .replace(/\.\d{3}/, "");
+            };
+            var ends = new Date(weddingAt.getTime() + 3 * 3600 * 1000);
+            var title =
+              "Pernikahan " +
+              (isBlank(groom) ? "" : groom) +
+              " & " +
+              (isBlank(bride) ? "" : bride);
+            var url =
+              "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+              "&text=" +
+              encodeURIComponent(title.trim() || "Pernikahan Kami") +
+              "&dates=" +
+              stamp(weddingAt) +
+              "/" +
+              stamp(ends) +
+              "&details=" +
+              encodeURIComponent("Meja Sang Koki — satu malam, satu kisah.") +
+              "&location=" +
+              encodeURIComponent(place);
+            w.open(url, "_blank", "noopener,noreferrer");
+          });
         }
 
         /* ---------------------------------------------------------------

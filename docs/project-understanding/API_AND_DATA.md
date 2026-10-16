@@ -2,6 +2,8 @@
 
 Dokumen ini mendokumentasikan spesifikasi seluruh endpoint REST API serta struktur skema database PostgreSQL yang dikelola melalui Prisma ORM.
 
+> 📘 **Dokumentasi Lengkap Pemetaan Field per Template**: Untuk daftar detail field yang digunakan dan tidak digunakan di setiap template undangan (Template A s/d E), silakan lihat: [DATABASE_SCHEMA_DAN_FIELD_TEMPLATE.md](../DATABASE_SCHEMA_DAN_FIELD_TEMPLATE.md).
+
 ---
 
 ## 1. Entity-Relationship Diagram (ERD Database)

@@ -1221,13 +1221,15 @@
         color: var(--brass-lt);
       }
       #sec-countdown.is-served #cd-dials {
-        display: none;
+        display: grid;
+        opacity: 0.85;
       }
       #sec-countdown.is-served #cd-done {
         display: block;
         animation: tickPop 0.7s var(--ease-out);
       }
       #cd-cal {
+        cursor: pointer;
         display: block;
         width: 100%;
         max-width: 290px;

@@ -653,7 +653,41 @@ const MejaKoki: React.FC<MejaKokiProps> = ({
         return;
       }
 
-      // 10. Handle Card Mempelai Flip (.ing-card)
+      // 10. Handle Simpan Reservasi ke Kalender (#cd-cal)
+      const calBtn = target.closest('#cd-cal') as HTMLElement | null;
+      if (calBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const customCalUrl =
+          calBtn.getAttribute('data-cal-url') ||
+          (templateWedingData?.linkGoogleCalender || '').trim();
+        if (customCalUrl) {
+          window.open(customCalUrl, '_blank', 'noopener,noreferrer');
+          return;
+        }
+
+        const groomEl = document.getElementById('hero-name-groom');
+        const brideEl = document.getElementById('hero-name-bride');
+        const venueEl = document.getElementById('venue-name');
+        const addrEl = document.getElementById('venue-address');
+        const gName = groomEl ? groomEl.textContent?.trim() || '' : '';
+        const bName = brideEl ? brideEl.textContent?.trim() || '' : '';
+        const place = [
+          venueEl ? venueEl.textContent?.trim() || '' : '',
+          addrEl ? addrEl.textContent?.trim() || '' : '',
+        ].filter(Boolean).join(', ');
+
+        const dt = weddingTargetIso ? new Date(weddingTargetIso) : new Date();
+        const validDt = isNaN(dt.getTime()) ? new Date() : dt;
+        const ends = new Date(validDt.getTime() + 3 * 3600 * 1000);
+        const stamp = (d: Date) => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        const title = `Pernikahan ${gName} & ${bName}`.trim() || 'Pernikahan Kami';
+        const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${stamp(validDt)}/${stamp(ends)}&details=${encodeURIComponent('Meja Sang Koki — satu malam, satu kisah.')}&location=${encodeURIComponent(place)}`;
+        window.open(url, '_blank', 'noopener,noreferrer');
+        return;
+      }
+
+      // 11. Handle Card Mempelai Flip (.ing-card)
       const coupleCard = target.closest('.ing-card') as HTMLElement | null;
       if (coupleCard) {
         e.preventDefault();
