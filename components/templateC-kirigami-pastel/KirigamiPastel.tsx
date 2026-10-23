@@ -94,12 +94,67 @@ const KirigamiPastel: React.FC<KirigamiPastelProps> = ({
 
     (window as any).__KIRIGAMI_GALLERY_URLS__ = galleryUrls;
 
-    // 3. Pass wedding date for countdown
+    // 3. Robust Native Countdown Timer
     const weddingDateRaw =
       templateWedingData?.tanggalPernikahan ||
       templateWedingData?.tanggalAkad ||
-      '2026-10-30T09:00:00';
+      templateWedingData?.tanggalResepsi ||
+      '2026-11-20T09:00:00';
     (window as any).__KIRIGAMI_MAIN_DATE__ = weddingDateRaw;
+
+    const parseTargetDate = (): Date => {
+      const parsed = new Date(weddingDateRaw);
+      if (!isNaN(parsed.getTime())) return parsed;
+      return new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    };
+
+    const targetDate = parseTargetDate();
+    const pad = (n: number) => (n < 10 ? '0' + n : String(n));
+
+    const updateCountdown = () => {
+      const now = Date.now();
+      const diff = targetDate.getTime() - now;
+
+      const cdGrid = document.getElementById('cd-grid');
+      const cdDone = document.getElementById('cd-done');
+      const elDays = document.getElementById('cd-days');
+      const elHours = document.getElementById('cd-hours');
+      const elMin = document.getElementById('cd-min');
+      const elSec = document.getElementById('cd-sec');
+
+      // Selalu pastikan cd-grid terlihat dan tidak tersembunyi
+      if (cdGrid) {
+        cdGrid.classList.remove('is-done');
+        cdGrid.style.display = 'grid';
+      }
+
+      if (diff <= 0) {
+        if (elDays) elDays.textContent = '0';
+        if (elHours) elHours.textContent = '00';
+        if (elMin) elMin.textContent = '00';
+        if (elSec) elSec.textContent = '00';
+        if (cdDone) {
+          cdDone.style.display = 'block';
+        }
+        return;
+      }
+
+      if (cdDone) cdDone.style.display = 'none';
+
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / 86400);
+      const hours = Math.floor((totalSec % 86400) / 3600);
+      const mins = Math.floor((totalSec % 3600) / 60);
+      const secs = totalSec % 60;
+
+      if (elDays) elDays.textContent = String(days);
+      if (elHours) elHours.textContent = pad(hours);
+      if (elMin) elMin.textContent = pad(mins);
+      if (elSec) elSec.textContent = pad(secs);
+    };
+
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
 
     // 4. Toast notification helper
     (window as any).copyRekening = function (number: string) {
@@ -466,6 +521,7 @@ const KirigamiPastel: React.FC<KirigamiPastelProps> = ({
     }
 
     return () => {
+      clearInterval(countdownInterval);
       clearTimeout(timer);
       if (moTimer) clearTimeout(moTimer);
       mutObserver.disconnect();

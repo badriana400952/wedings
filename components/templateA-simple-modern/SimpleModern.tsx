@@ -83,7 +83,7 @@ export default function SimpleModern({ adminId, guestName, templateWedingData }:
     return (
       <>
         <Head>
-          <title>Undangan Pernikahan - Template A</title>
+          <title>{`Undangan Pernikahan ${payload?.namaPutra || 'Mempelai Pria'} & ${payload?.namaPutri || 'Mempelai Wanita'}`}</title>
           <meta name="description" content="Website Undangan Pernikahan Template A" />
         </Head>
         <WelcomePage
@@ -103,7 +103,7 @@ export default function SimpleModern({ adminId, guestName, templateWedingData }:
   return (
     <>
       <Head>
-        <title>Undangan Pernikahan - Template A</title>
+        <title>{`Undangan Pernikahan ${payload?.namaPutra || 'Mempelai Pria'} & ${payload?.namaPutri || 'Mempelai Wanita'}`}</title>
         <meta name="description" content="Website Undangan Pernikahan Template A" />
       </Head>
       <AOSInit />
@@ -182,7 +182,7 @@ export default function SimpleModern({ adminId, guestName, templateWedingData }:
                 payload={payload}
                 adminId={adminId}
               />
-              <Footer />
+              <Footer payload={payload} />
             </main>
 
             <BottomNav />

@@ -1,3 +1,5 @@
+import { getKirigamiPastelContent } from '@/lib/templatePresets';
+
 function formatTanggalIndo(dateString: string | Date | null | undefined): string {
   if (!dateString) return 'Tanggal tidak tersedia';
   const date = dateString instanceof Date ? dateString : new Date(dateString);
@@ -459,7 +461,7 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
             </g>
           </svg>
           <p id="hero-date" class="reveal"></p>
-          <p id="hero-quote" class="reveal">Dua lembar kertas berbeda warna, digunting hati-hati, lalu direkat menjadi satu karya yang utuh.</p>
+          <p id="hero-quote" class="reveal">__HERO_QUOTE__</p>
           <div id="hero-scroll" class="reveal" aria-hidden="true">
             <span id="hero-scroll-line"></span>
             <span id="hero-scroll-text">Gulir</span>
@@ -936,9 +938,10 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
           </div>
         </div>
         <p id="cd-done">Hari bahagia telah tiba — sampai jumpa di sana!</p>
-        <button type="button" id="cal-btn" class="reveal">
+        <a id="cal-btn" href="__CAL_LINK__" target="_blank" rel="noopener noreferrer" class="reveal" style="text-decoration:none;display:inline-block;">
           Simpan ke Kalender
-        </button>
+        </a>
+        <div id="wedding-date-raw" hidden>__WEDDING_DATE_RAW__</div>
       </div>
     </section>
 
@@ -946,7 +949,7 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
       <div class="wrap">
         <p class="eyebrow reveal" id="venue-eyebrow">Lokasi Acara</p>
         <h2 class="h-sec reveal" id="venue-title">__VENUE_NAME__</h2>
-        <p class="lead reveal" id="venue-addr">280 Gloucester Rd, Causeway Bay, Hong Kong Island, Hong Kong</p>
+        <p class="lead reveal" id="venue-addr">__VENUE_ADDR__</p>
         <div id="map-frame" class="reveal reveal-z">
           <iframe
             id="map-embed"
@@ -997,33 +1000,33 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
         <div id="folds-list">
           <details class="fold reveal reveal-l" id="fold-1">
             <summary class="fold-q" id="fold-1-q">
-              Siapa yang paling sering telat?<span
+              __FOLD_1_Q__<span
                 class="fold-mark"
                 id="fold-1-mark"
                 aria-hidden="true"
               ></span>
             </summary>
-            <div class="fold-a" id="fold-1-a">Bagas, dengan alasan yang selalu baru dan selalu kreatif.</div>
+            <div class="fold-a" id="fold-1-a">__FOLD_1_A__</div>
           </details>
           <details class="fold reveal reveal-r" id="fold-2">
             <summary class="fold-q" id="fold-2-q">
-              Lagu wajib di mobil?<span
+              __FOLD_2_Q__<span
                 class="fold-mark"
                 id="fold-2-mark"
                 aria-hidden="true"
               ></span>
             </summary>
-            <div class="fold-a" id="fold-2-a">Playlist yang sama sejak 2021, diputar berulang tanpa pernah bosan.</div>
+            <div class="fold-a" id="fold-2-a">__FOLD_2_A__</div>
           </details>
           <details class="fold reveal reveal-l" id="fold-3">
             <summary class="fold-q" id="fold-3-q">
-              Rencana bulan madu?<span
+              __FOLD_3_Q__<span
                 class="fold-mark"
                 id="fold-3-mark"
                 aria-hidden="true"
               ></span>
             </summary>
-            <div class="fold-a" id="fold-3-a">Menyusuri pulau kecil, membawa buku, dan tidak membuat jadwal sama sekali.</div>
+            <div class="fold-a" id="fold-3-a">__FOLD_3_A__</div>
           </details>
         </div>
       </div>
@@ -1033,13 +1036,13 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
       <div class="wrap">
         <p class="eyebrow reveal" id="dress-eyebrow">Busana</p>
         <h2 class="h-sec reveal" id="dress-title">Palet Hari Itu</h2>
-        <p class="lead reveal" id="dress-text">Kami mengundang Anda mengenakan busana bernuansa pastel lembut agar seluruh momen terasa seperti satu karya kertas yang utuh.</p>
+        <p class="lead reveal" id="dress-text">__DRESSCODE_TEXT__</p>
         <div id="dress-chips" class="reveal reveal-z"></div>
         <div id="dress-data" hidden>
-          <span id="dress-c1">#f3b8c6</span>
-          <span id="dress-c2">#a8d8c6</span>
-          <span id="dress-c3">#f8cba4</span>
-          <span id="dress-c4">#cfc0ea</span>
+          <span id="dress-c1">__DRESS_C1__</span>
+          <span id="dress-c2">__DRESS_C2__</span>
+          <span id="dress-c3">__DRESS_C3__</span>
+          <span id="dress-c4">__DRESS_C4__</span>
         </div>
       </div>
     </section>
@@ -1282,6 +1285,7 @@ export const BASE_KIRIGAMI_HTML = `<div id="bg-wash" aria-hidden="true"></div>
           __BRIDE_NAME__ &amp; __GROOM_NAME__
         </h2>
         <p class="reveal" id="closing-date"></p>
+        <p class="reveal" id="closing-tagar" style="font-weight:700;color:var(--rose);margin-top:10px;">__TAGAR_PERNIKAHAN__</p>
       </div>
     </footer>
 
@@ -2083,24 +2087,32 @@ function escapeHtml(str: string): string {
 }
 
 export function getKirigamiPastelHtml(data: any, guestName: string | null): string {
+  const cContent = getKirigamiPastelContent(data?.customContent);
+
   const groom = data?.namaPutra || 'Mempelai Pria';
   const bride = data?.namaPutri || 'Mempelai Wanita';
   const groomFull = data?.namaLengkapPutra || groom;
   const brideFull = data?.namaLengkapPutri || bride;
 
-  const groomParents = data?.kelahiranPutra
-    ? `${data.kelahiranPutra} dari Bapak ${data?.namaAyahPutra || '...'} & Ibu ${data?.namaIbuPutra || '...'}`
-    : (data?.namaAyahPutra || data?.namaIbuPutra)
-      ? `Putra dari Bapak ${data?.namaAyahPutra || '...'} & Ibu ${data?.namaIbuPutra || '...'}`
-      : 'Putra tercinta dari keluarga terhormat';
+  const ketPria = cContent.keteranganAnakPria || data?.kelahiranPutra || 'Putra pertama dari';
+  const ketWanita = cContent.keteranganAnakWanita || data?.kelahiranPutri || 'Putri kedua dari';
 
-  const brideParents = data?.kelahiranPutri
-    ? `${data.kelahiranPutri} dari Bapak ${data?.namaAyahPutri || '...'} & Ibu ${data?.namaIbuPutri || '...'}`
-    : (data?.namaAyahPutri || data?.namaIbuPutri)
-      ? `Putri dari Bapak ${data?.namaAyahPutri || '...'} & Ibu ${data?.namaIbuPutri || '...'}`
-      : 'Putri tercinta dari keluarga terhormat';
+  const groomParents = (data?.namaAyahPutra || data?.namaIbuPutra)
+    ? `${ketPria} Bapak ${data?.namaAyahPutra || '...'} & Ibu ${data?.namaIbuPutra || '...'}`
+    : `${ketPria} keluarga terhormat`;
 
-  const weddingDateObj = data?.tanggalPernikahan ? new Date(data.tanggalPernikahan) : new Date();
+  const brideParents = (data?.namaAyahPutri || data?.namaIbuPutri)
+    ? `${ketWanita} Bapak ${data?.namaAyahPutri || '...'} & Ibu ${data?.namaIbuPutri || '...'}`
+    : `${ketWanita} keluarga terhormat`;
+
+  const rawDate = data?.tanggalPernikahan || data?.tanggalAkad || data?.tanggalResepsi;
+  let weddingDateObj: Date;
+  if (rawDate && !isNaN(new Date(rawDate).getTime())) {
+    weddingDateObj = new Date(rawDate);
+  } else {
+    // Default 30 hari ke depan jika tanggal belum diatur agar countdown bergerak
+    weddingDateObj = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  }
   const weddingDateStr = formatTanggalIndo(weddingDateObj);
   const weddingDateIso = weddingDateObj.toISOString();
 
@@ -2125,25 +2137,51 @@ export function getKirigamiPastelHtml(data: any, guestName: string | null): stri
   const resepsiAddr = data?.alamatPernikahan || data?.alamatAkad || 'Alamat lengkap acara resepsi pernikahan';
 
   const mapsLink = data?.linkMaps || 'https://maps.google.com';
-  const calLink = data?.linkGoogleCalender || '#';
 
-  const heroQuote = 'Dua lembar kertas berbeda warna, digunting hati-hati, lalu direkat menjadi satu karya yang utuh.';
-  const closingMessage = 'Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.';
+  // Google Calendar Link generator
+  const calTitle = encodeURIComponent(`Pernikahan ${bride} & ${groom}`);
+  const calDetails = encodeURIComponent(`Undangan Pernikahan ${bride} & ${groom}`);
+  const calLocation = encodeURIComponent(akadVenue || resepsiVenue || '');
+  const startCalIso = weddingDateObj.toISOString().replace(/-|:|\.\d\d\d/g, '');
+  const endCalIso = new Date(weddingDateObj.getTime() + 4 * 3600000).toISOString().replace(/-|:|\.\d\d\d/g, '');
+  const defaultCalLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${calTitle}&dates=${startCalIso}/${endCalIso}&details=${calDetails}&location=${calLocation}`;
+  const calLink = data?.linkGoogleCalender && data.linkGoogleCalender.startsWith('http')
+    ? data.linkGoogleCalender
+    : defaultCalLink;
+
+  const heroQuote = cContent.heroQuote;
+  const closingMessage = cContent.pesanPenutup;
+  const tagarPernikahan = cContent.tagarPernikahan;
 
   // Stories
   const p = data?.pertemuan;
   const bersamaList = Array.isArray(data?.bersamaFotos) ? data.bersamaFotos : [];
-  const story1Title = p?.judulPertemuanSatu || 'Guntingan Pertama';
-  const story1Text = p?.pertemuanPertama || 'Kisah awal perkenalan kami yang bermula dengan sederhana namun penuh makna.';
-  const story1Photo = bersamaList[0] || '';
+  const story1Title = cContent.story1Title || p?.judulPertemuanSatu || 'Guntingan Pertama';
+  const story1Text = cContent.story1Story || p?.pertemuanPertama || 'Kisah awal perkenalan kami yang bermula dengan sederhana namun penuh makna.';
+  const story1Photo = cContent.story1Photo || bersamaList[0] || '';
 
-  const story2Title = p?.judulPertemuanDua || 'Lipatan Kedua';
-  const story2Text = p?.pertemuanKedua || 'Perjalanan waktu dan komitmen yang bertumbuh seiring berjalannya hari demi hari bersama.';
-  const story2Photo = bersamaList[1] || '';
+  const story2Title = cContent.story2Title || p?.judulPertemuanDua || 'Lipatan Kedua';
+  const story2Text = cContent.story2Story || p?.pertemuanKedua || 'Perjalanan waktu dan komitmen yang bertumbuh seiring berjalannya hari demi hari bersama.';
+  const story2Photo = cContent.story2Photo || bersamaList[1] || '';
 
-  const story3Title = p?.judulPertemuanTiga || 'Rekatan Terakhir';
-  const story3Text = p?.pertemuanKetiga || 'Keputusan suci untuk mengikat janji seumur hidup dalam sebuah ikatan pernikahan yang berkah.';
-  const story3Photo = bersamaList[2] || '';
+  const story3Title = cContent.story3Title || p?.judulPertemuanTiga || 'Rekatan Terakhir';
+  const story3Text = cContent.story3Story || p?.pertemuanKetiga || 'Keputusan suci untuk mengikat janji seumur hidup dalam sebuah ikatan pernikahan yang berkah.';
+  const story3Photo = cContent.story3Photo || bersamaList[2] || '';
+
+  // Folds (Secret Folds Q&A)
+  const fold1Q = cContent.secretFolds?.[0]?.pertanyaan || 'Siapa yang paling sering telat?';
+  const fold1A = cContent.secretFolds?.[0]?.jawaban || 'Bagas, dengan alasan yang selalu baru dan selalu kreatif.';
+  const fold2Q = cContent.secretFolds?.[1]?.pertanyaan || 'Lagu wajib di mobil?';
+  const fold2A = cContent.secretFolds?.[1]?.jawaban || 'Playlist yang sama sejak 2021, diputar berulang tanpa pernah bosan.';
+  const fold3Q = cContent.secretFolds?.[2]?.pertanyaan || 'Rencana bulan madu?';
+  const fold3A = cContent.secretFolds?.[2]?.jawaban || 'Menyusuri pulau kecil, membawa buku, dan tidak membuat jadwal sama sekali.';
+
+  // Dresscode
+  const dresscodeText = cContent.dresscodeText;
+  const dressC1 = cContent.dresscodeColors?.[0] || '#f3b8c6';
+  const dressC2 = cContent.dresscodeColors?.[1] || '#a8d8c6';
+  const dressC3 = cContent.dresscodeColors?.[2] || '#f8cba4';
+  const dressC4 = cContent.dresscodeColors?.[3] || '#cfc0ea';
 
   // Digital gifts
   const isGiftActive = data?.isGiftActive !== false;
@@ -2246,6 +2284,19 @@ export function getKirigamiPastelHtml(data: any, guestName: string | null): stri
     .replace(/__VENUE_NAME__/g, escapeHtml(akadVenue || resepsiVenue))
     .replace(/__VENUE_ADDR__/g, escapeHtml(akadAddr || resepsiAddr))
     .replace(/__DYNAMIC_GIFTS_SECTION__/g, dynamicGiftsHtml)
+    .replace(/__FOLD_1_Q__/g, escapeHtml(fold1Q))
+    .replace(/__FOLD_1_A__/g, escapeHtml(fold1A))
+    .replace(/__FOLD_2_Q__/g, escapeHtml(fold2Q))
+    .replace(/__FOLD_2_A__/g, escapeHtml(fold2A))
+    .replace(/__FOLD_3_Q__/g, escapeHtml(fold3Q))
+    .replace(/__FOLD_3_A__/g, escapeHtml(fold3A))
+    .replace(/__DRESSCODE_TEXT__/g, escapeHtml(dresscodeText))
+    .replace(/__DRESS_C1__/g, escapeHtml(dressC1))
+    .replace(/__DRESS_C2__/g, escapeHtml(dressC2))
+    .replace(/__DRESS_C3__/g, escapeHtml(dressC3))
+    .replace(/__DRESS_C4__/g, escapeHtml(dressC4))
+    .replace(/__TAGAR_PERNIKAHAN__/g, escapeHtml(tagarPernikahan))
+    .replace(/__WEDDING_DATE_RAW__/g, weddingDateIso)
     .replace(/__AUDIO_URL__/g, escapeHtml(data?.audio || data?.musik?.file || '/assets/music/music.mp3'));
 
   return output;

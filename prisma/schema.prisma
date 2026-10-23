@@ -132,6 +132,9 @@ model TemplateWeding {
 
   ucapanHarapan UcapanHarapan[]
 
+  // Data kustom dinamis per-template (JSON)
+  customContent Json? @map("custom_content")
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 
 interface Comment {
@@ -23,6 +24,7 @@ interface CommentSectionProps {
 }
 
 export default function CommentSection({ guestName, payload, setPayload, adminId }: CommentSectionProps) {
+  const aContent = getSimpleModernContent(payload?.customContent);
   const [name, setName] = useState(guestName || '');
   const [presence, setPresence] = useState('0');
   const [comment, setComment] = useState('');
@@ -130,7 +132,7 @@ export default function CommentSection({ guestName, payload, setPayload, adminId
       <div className={clsx('max-w-4xl', 'mx-auto')}>
         <div className={clsx('border-2', 'border-gray-300', 'dark:border-gray-600', 'rounded-3xl', 'shadow-xl', 'p-6', '!bg-gray-50', 'dark:!bg-gray-900')}>
           <h2 className={clsx('font-esthetic', 'text-5xl', 'text-center', 'mt-4', 'mb-8', 'text-gray-900', 'dark:text-white')}>
-            Ucapan & Doa
+            {aContent.commentTitle}
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">

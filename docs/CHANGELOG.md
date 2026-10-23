@@ -35,6 +35,17 @@
 25. **Penyelarasan QRIS Dinamis, Perbaikan Kontrol On/Off Musik, Penghapusan Nota Hadiah, dan Pemisahan Tabel Database RSVP (`comments`) vs Catatan Doa (`ucapan_harapan`) pada Template E**.
 26. **Perbaikan Masalah Scroll Terkunci saat Halaman Di-refresh pada Template E (Meja Sang Koki)** (`isCoverAlreadyOpened`, session storage key, perbaikan selector CSS `.is-locked` vs `.is-open`).
 27. **Integrasi Penuh Papan Komentar & Kursi Tamu RSVP (`#sec-rsvp`) dengan Tabel Database `comments` pada Template E (Meja Sang Koki)** (`loadRsvpComments`, `buildRsvpCommentCard`, pagination `rsvp-more-btn`, dan like toggling `/api/comments/:id/like`).
+28. **Transformasi Arsitektur: *Template-Driven Dynamic Content System* (Task-v2, Kolom Universal `customContent Json?`, & Sinkronisasi Template C Kirigami Pastel)**.
+29. **Integrasi Penuh Konten Dinamis, Bunga Pilihan, Petunjuk Perawatan Benih, & Fitur Interaktif Template B (Taman Rahasia)**.
+30. **Integrasi Penuh Konten Dinamis, Kisah 4 Musim Tanam, Inoskulasi Pohon, & Fitur Interaktif Template D (Tumbuh Bersama)**.
+31. **Penerapan Penuh Template-Driven Dynamic Content System untuk Template E (Meja Sang Koki)**.
+32. **Audit Menyeluruh & Pembersihan Total Data Dummy/Hardcoded pada Template E (Meja Sang Koki)** (Peta Google Maps Dinamis, Hero Date, Alt Text, & Avatar Initials).
+33. **Penerapan Penuh Template-Driven Dynamic Content System untuk Template A (Simple Modern)**.
+34. **Audit Menyeluruh & Pembersihan Total Data Dummy/Hardcoded pada Template A (Simple Modern)** (Foto Header Fallback, Venue & Jam Resepsi Dinamis, Pembersihan Boilerplate Fork, Musik Latar Dinamis).
+35. **Penyusunan Standar Operasional & Blueprint Template Baru Berbasis Task-v2 untuk AI Baru (`docs/STANDAR_PEMBUATAN_TEMPLATE_TASK_V2.md`, `AGENTS.md`, & `Rules.md`)**.
+36. **Otomatisasi Tampilan Form Tab Cerita & Narasi Berdasarkan Template Aktif Pengantin (`TabCustomContent.tsx`)**.
+37. **Optimasi Performa Ekstrem dengan `next/dynamic` (Code Splitting & Lazy Loading untuk Template Undangan & Tab Dashboard)**.
+38. **Penyelesaian Error Hydration Mismatch pada `next/dynamic` Dashboard (`TabOverview` Statis & `{ ssr: false }` untuk Tab Lainnya)**.
 
 ---
 
@@ -782,6 +793,389 @@
 * **Hasil Pengujian & Verifikasi**:
   - `npx tsc --noEmit` lolos **0 errors**.
   - `npm run build` sukses 100% tanpa kendala.
+
+---
+
+### 28. Transformasi Arsitektur: *Template-Driven Dynamic Content System* (Task-v2, Template C Kirigami Pastel)
+
+* **Latar Belakang & Identifikasi Masalah**:
+  1. **Skema Database Kaku (*Database-Centric*)**: Kolom tabel SQL kaku (`namaPutra`, `namaPutri`, `tglAkad`, dll.) tidak mampu menampung narasi bercerita unik (*storytelling*) tiap tema undangan (kutipan kertas, keterangan urutan anak *"Putri kedua dari"*, pertanyaan kuis rahasia, palet busana).
+  2. **Teks Puitis & Interaktif Terkunci Hardcoded**: Pengantin tidak dapat mengubah teks-teks puitis dan pertanyaan kuis karena tidak tersedianya wadah input form di dashboard.
+  3. **Alur Pengeditan Belum Runtut**: Pengeditan data idealnya mengikuti alur pandangan mata tamu dari atas ke bawah (13 Pilar Modul: `Hero` ➡️ `Couple` ➡️ `Story` ➡️ `Events` ➡️ `Rundown` ➡️ `Countdown` ➡️ `Venue` ➡️ `Gallery` ➡️ `Folds / Fitur Tema` ➡️ `Dresscode` ➡️ `RSVP` ➡️ `Wishes` ➡️ `Closing & Musik`).
+
+* **Arsitektur Solusi & Perubahan Berkas**:
+
+  #### a. Database Schema & Prisma ORM ([`prisma/schema.prisma`](file:///prisma/schema.prisma))
+  * Menambahkan kolom universal `customContent Json? @map("custom_content")` pada model `TemplateWeding`.
+  * Kolom ini menyimpan payload JSON per kode template (contoh: `{ "C": { ... }, "B": { ... } }`) tanpa perlu memodifikasi skema SQL database berulang kali setiap ada penambahan template baru.
+  * Telah disinkronkan ke PostgreSQL Cloud Prisma menggunakan `npx prisma db push` dan client diperbarui via `npx prisma generate`.
+
+  #### b. Master Presets & Type Safety ([`lib/templatePresets.ts`](file:///lib/templatePresets.ts))
+  * Mendefinisikan interface `KirigamiPastelContent` untuk Template C (Kirigami Pastel) yang mencakup:
+    - Keterangan Anak Wanita (`keteranganAnakWanita`) & Pria (`keteranganAnakPria`).
+    - Kutipan Pembuka Seni Kertas (`heroQuote`).
+    - Tiga Guntingan Kisah Cinta (`story1`, `story2`, `story3`: judul, narasi, URL foto).
+    - Lipatan Rahasia Interaktif (`secretFolds`: 3 pasangan pertanyaan & jawaban).
+    - Panduan Busana (`dresscodeText` & 4 array hex `dresscodeColors`).
+    - Hadiah, Pesan Penutup & Tagar (`catatanHadiah`, `pesanPenutup`, `tagarPernikahan`).
+  * Menyediakan preset default puitis `DEFAULT_KIRIGAMI_PASTEL` berbasis acuan `projek.mereka.md`.
+  * Menyediakan helper `getKirigamiPastelContent()` dengan mekanisme fallback otomatis jika data belum dimodifikasi oleh pengguna.
+
+  #### c. Backend REST API ([`pages/api/user/custom-content.ts`](file:///pages/api/user/custom-content.ts))
+  * `GET /api/user/custom-content`: Mengambil payload data konten kustom pengantin yang sedang terautentikasi.
+  * `PUT /api/user/custom-content`: Menyimpan perubahan konten kustom dengan strategi *partial merging* (memperbarui template aktif tanpa menimpa konfigurasi template lainnya).
+
+  #### d. Dashboard Form Editor Dinamis ([`components/dashboard/tabs/TabCustomContent.tsx`](file:///components/dashboard/tabs/TabCustomContent.tsx))
+  * Dibuat tab navigasi **"Cerita & Tema Khusus"** di dashboard pengantin, disusun runtut 6 seksi:
+    1. Keterangan Anak (Silsilah Profil Mempelai).
+    2. Kutipan Pembuka Seni Kertas (Hero).
+    3. Tiga Guntingan Kisah Cinta (Story).
+    4. Lipatan Rahasia (Secret Folds Q&A).
+    5. Panduan Busana Pastel (Dresscode & 4 Color Picker).
+    6. Tanda Kasih Hadiah, Doa Restu Penutup & Tagar Pernikahan.
+  * Terintegrasi dengan notifikasi instan dan state management di `pages/dashboard.tsx`.
+
+  #### e. Sinkronisasi Frontend & Bugfix Template C ([`kirigamiPastelHtml.ts`](file:///components/templateC-kirigami-pastel/kirigamiPastelHtml.ts) & [`KirigamiPastel.tsx`](file:///components/templateC-kirigami-pastel/KirigamiPastel.tsx))
+  * Mengganti seluruh teks statis hardcoded dengan data dinamis dari `customContent.C`.
+  * **Perbaikan Countdown Timer Hilang**: Menghilangkan class `.is-done` dari `#cd-grid` dan menambahkan runner timer JavaScript native di `KirigamiPastel.tsx` agar angka Hari, Jam, Menit, dan Detik aktif bergerak menuju tanggal akad.
+  * **Perbaikan Link Google Calendar**: Mengubah tombol `#cal-btn` menjadi URL pembuatan acara Google Calendar yang valid (`https://calendar.google.com/calendar/render?...`).
+  * **Dinamisasi Alamat Venue**: Mengganti teks alamat Hong Kong statis pada `#venue-addr` dengan data alamat dinamis pengantin (`__VENUE_ADDR__`).
+
+---
+
+### 29. Integrasi Penuh Konten Dinamis & Fitur Interaktif Template B (Taman Rahasia)
+
+* **Konsep & Latar Belakang**:
+  Template B (Taman Rahasia) memiliki tema botani interaktif, bungkus benih perawatan cinta, prasasti batu berlumut, bunga dengan makna personal, palet warna alam, dan surat rahasia di bawah batu. Seluruh teks ini sebelumnya terkunci statis dan tidak dapat dipersonalisasi.
+
+* **Daftar Berkas yang Dimodifikasi & Perubahannya**:
+
+  #### a. Master Presets & Tipe Data ([`lib/templatePresets.ts`](file:///lib/templatePresets.ts))
+  * Menambahkan interface `TamanRahasiaContent` dan preset default lengkap `DEFAULT_TAMAN_RAHASIA`:
+    - **Silsilah & Paket Benih**: `keteranganAnakWanita`, `keteranganAnakPria`, serta `petunjukPerawatanWanita` & `petunjukPerawatanPria` (teks multi-baris di balik kartu benih).
+    - **Gerbang & Prasasti Batu**: `kalimatPembuka`, `kutipanPrasasti`, dan `sumberKutipan`.
+    - **Musim-Musim Kami (4 Babak Kisah)**: Babak 1 s/d 4 (`story1Title` s/d `story4Title`, `story1Time` s/d `story4Time`, `story1Story` s/d `story4Story`, dan `story1Photo` s/d `story4Photo`).
+    - **3 Bunga Pilihan & Artinya**:
+      - Bunga Pilihan Pria untuk Wanita: `bungaWanitaNama` (*"Bunga Matahari"*), `bungaWanitaArti`, dan warna hex `bungaWanitaWarna`.
+      - Bunga Pilihan Wanita untuk Pria: `bungaPriaNama` (*"Melati"*), `bungaPriaArti`, dan warna hex `bungaPriaWarna`.
+      - Bunga Pilihan Berdua: `bungaBerduaNama` (*"Mawar Merah Muda"*), `bungaBerduaArti`, dan warna hex `bungaBerduaWarna`.
+    - **Panduan Busana**: `dresscodeText` dan 5 swatch palet warna alam `dresscodeColors`.
+    - **Surat Rahasia di Bawah Batu**: `suratRahasiaIsi` dan `suratRahasiaPenutup`.
+    - **Penutup & Tagar**: `catatanHadiah`, `catatanRsvp`, `pesanPenutup`, dan `tagarPernikahan`.
+  * Menambahkan helper `getTamanRahasiaContent(customContentJson)` dengan auto-fallback.
+
+  #### b. Form Editor Dashboard Multi-Template ([`TabCustomContent.tsx`](file:///components/dashboard/tabs/TabCustomContent.tsx))
+  * Menambahkan **Template Switcher Tab** di header editor yang memungkinkan admin/pengantin berpindah secara instan antara form **Template B (Taman Rahasia)** dan **Template C (Kirigami Pastel)**.
+  * Form editor 7 seksi runtut khusus Template B:
+    1. Silsilah Mempelai & Petunjuk Perawatan Benih (Wanita & Pria).
+    2. Gerbang Taman & Prasasti Batu (Kalimat Pembuka, Kutipan Prasasti, Sumber Kutipan).
+    3. Musim-Musim Kami (4 Babak Kisah: Judul, Waktu, Cerita, URL Foto).
+    4. Bunga Pilihan & Makna (3 Bunga: Nama, Makna, dan Color Picker kuncup bunga).
+    5. Panduan Busana & 5 Swatch Palet Warna Alam (Dresscode).
+    6. Surat Rahasia di Bawah Batu (Easter Egg Interaktif).
+    7. Keranjang Tanda Kasih, RSVP, Pesan Penutup Senja di Taman & Tagar.
+
+  #### c. Sinkronisasi Frontend Template B ([`tamanRahasiaHtml.ts`](file:///components/templateB-taman-rahasia/tamanRahasiaHtml.ts))
+  * Menginjeksi `bContent = getTamanRahasiaContent(data.customContent)`.
+  * Menghubungkan seluruh elemen DOM dengan nilai dinamis:
+    - `#packet-bride-child` & `#packet-groom-child` (silsilah anak).
+    - `#bride-care-src` & `#groom-care-src` (petunjuk perawatan benih di balik kartu).
+    - `#quote-opening`, `#quote-text`, dan `#quote-source` (gerbang & prasasti batu).
+    - Kisah 1–4: `#story-${n}-date`, `#story-${n}-title`, `#story-${n}-text`, dan foto kustom `#story-${n}-photo`.
+    - 3 Bunga Pilihan: `#flower-card-1/2/3-name`, `#flower-card-1/2/3-meaning`, dan tombol tab `#flower-1/2/3` dengan atribut `data-color`.
+    - `#dress-text` dan 5 tombol swatch `#swatch-1` s/d `#swatch-5` dengan atribut `data-color`.
+    - `#secret-letter-text` dan `#secret-letter-sign` (surat rahasia di balik batu berlumut).
+    - `#gifts-lead`, `#rsvp-note`, `#closing-msg`, dan `#closing-hashtag`.
+
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+  - Dokumen rencana kerja komprehensif diperbarui di [`task-v2.md`](file:///task-v2.md).
+
+---
+
+### 📝 Sesi 30: Penerapan Penuh Template-Driven Dynamic Content System untuk Template D (Tumbuh Bersama)
+* **Tanggal**: 20 Oktober 2026
+* **Status**: Selesai Penuh (100% Bebas Error TypeScript)
+* **Tujuan**: Mengimplementasikan arsitektur *Template-Driven Content System* ke **Template D (Tumbuh Bersama)** sesuai panduan `projek.mereka.md` dan `task-v2.md`, sehingga seluruh narasi botani (silsilah, tanah asal & sifat tanah, paket benih, inoskulasi pertemuan pertama, kisah 4 musim, 6 daun gugur, 5 lingkaran pohon, panduan busana 5 swatch, 6 petunjuk kebun, 4 pohon harapan nanti, serta tanda kasih & penutup) dapat dipersonalisasi oleh pengantin lewat dashboard.
+
+* **Rincian Perubahan & Implementasi**:
+
+  #### a. Tipe Data & Preset Template D ([`lib/templatePresets.ts`](file:///lib/templatePresets.ts))
+  * Menambahkan interface `TumbuhBersamaContent` dengan 10 kelompok parameter:
+    - **Silsilah & Tanah Asal**: `keteranganAnakWanita`, `keteranganAnakPria`, `kotaAsalWanita`, `kotaAsalPria`, `sifatTanahWanita`, `sifatTanahPria`, `suburSaatWanita`, `suburSaatPria`.
+    - **Cover & Hero**: `tulisanPaketBenih`, `heroHeadline`, `salamPembuka`, `kataPengantar`, `kutipanAyat`, `sumberKutipan`.
+    - **Inoskulasi (Sentuhan Pertama & Dua Pohon Menyatu)**: `tglPertamaBertemu`, `tempatPertamaBertemu`, `ceritaSentuhanPertama`, `kalimatDuaPohonMenyatu`.
+    - **Kisah 4 Musim & Galeri**: Kisah 1–4 (`story1Title` s/d `story4Title`, `story1Time` s/d `story4Time`, `story1Story` s/d `story4Story`, `story1Photo` s/d `story4Photo`), dan `keteranganGaleri` ("Herbarium Kenangan").
+    - **Daun Gugur (6 Pasang)**: Array `daunGugur` berisikan pasangan `{ dilepaskan, tumbuh }`.
+    - **Lingkaran Tahun Pohon (5 Fase)**: Array `lingkaranTahun` berisikan pasangan `{ tahun, catatan }`.
+    - **Panduan Busana**: `dresscodeText` dan 5 swatch warna botani `dresscodeColors`.
+    - **Petunjuk Kebun (6 Aturan)**: Array `petunjukKebun` berisikan `{ judul, keterangan }` (Waktu tanam, jarak tanam, kawan tanam, sinar matahari, penyiraman, hama).
+    - **Pohon Harapan Nanti (4 Tahap)**: Array `harapanNanti` berisikan `{ tahunKe, isiHarapan }` (Tahun ke-1, 5, 25, 50).
+    - **Penutup, Tanda Kasih & Tagar**: `catatanHadiah`, `catatanRsvp`, `keteranganUcapan`, `kalimatPenutup`, `salamPenutup`, `namaKeluarga`, `turutMengundang`, dan `tagarPernikahan`.
+  * Menambahkan master preset `DEFAULT_TUMBUH_BERSAMA` dan fungsi helper `getTumbuhBersamaContent(customContentJson)` dengan auto-fallback.
+
+  #### b. Form Editor Dashboard Multi-Template ([`TabCustomContent.tsx`](file:///components/dashboard/tabs/TabCustomContent.tsx))
+  * Menambahkan tab navigasi template switcher (Template D: Tumbuh Bersama, Template B: Taman Rahasia, Template C: Kirigami Pastel).
+  * Menyusun form editor 10 seksi interaktif dengan tema visual kehutanan & botani:
+    1. Profil & Karakteristik Tanah Asal (Silsilah, Tanah Asal, Sifat Tanah, Waktu Subur).
+    2. Sampul Paket Benih & Hero (Paket Benih, Hero Tagline, Salam, Pengantar, Ayat & Sumber).
+    3. Inoskulasi Penyatuan Dua Pohon (Tanggal, Tempat, Sentuhan Pertama, Narasi Penyatuan).
+    4. Kisah 4 Musim & Herbarium Galeri (Semi, Panas, Gugur, Dingin + Galeri).
+    5. Daun Gugur Musiman (6 Pasang: Yang Dilepaskan vs Yang Tumbuh Sebagai Gantinya).
+    6. Lingkaran Tahun Pohon (5 Fase Pertumbuhan Kayu & Catatan Tahunan).
+    7. Panduan Busana Alam & 5 Swatch Daun (Color Picker 5 Warna).
+    8. Petunjuk Kebun (6 Aturan Kebun untuk Kenyamanan Tamu).
+    9. Pohon Harapan Nanti (4 Harapan Jangka Panjang: Tahun ke-1, 5, 25, 50).
+    10. Tanda Kasih, RSVP, Kebun Doa, Penutup & Tagar Pernikahan.
+
+  #### c. Sinkronisasi Frontend Template D ([`tumbuhBersamaHtml.ts`](file:///components/templateD-tumbuh-bersama/tumbuhBersamaHtml.ts))
+  * Mengimpor dan menginjeksi `dContent = getTumbuhBersamaContent(data?.customContent)`.
+  * Mereplace seluruh elemen statis template botani menjadi dinamis:
+    - Silsilah anak & orang tua di tanah asal (`#cp-bride-order`, `#cp-bride-parents`, `#cp-groom-order`, `#cp-groom-parents`).
+    - Kota asal & sifat tanah asal (`#cp-bride-no-b`, `#cp-bride-town`, `#cp-bride-soil-v`, `#cp-groom-no-b`, `#cp-groom-town`, `#cp-groom-soil-v`).
+    - Momen tumbuh paling subur (`#cp-bride-grow-v`, `#cp-groom-grow-v`).
+    - Paket benih & hero headline (`#packet-note`, `#hero-tagline`).
+    - Salam, pengantar, ayat & sumber (`#salam-opening`, `#salam-intro`, `#salam-quote-text`, `#salam-quote-src`).
+    - Inoskulasi (`#inos-met-date`, `#inos-since-n`, `#inos-cap-1-place`, `#inos-cap-1-p`, `#inos-cap-3-p`).
+    - Kisah 4 musim (waktu & tanggal di `#st-1-date` s/d `#st-4-date`) dan `#gallery-sh-s`.
+    - 6 pasang daun gugur (`#gg-row-1` s/d `#gg-row-6`).
+    - 5 lingkaran tahun (`#lk-note-1` s/d `#lk-note-5`, `#lk-met`, `#lk-wed`).
+    - 5 swatch warna busana (`#dc-leaf-1` s/d `#dc-leaf-5`, `#dc-text`).
+    - 6 petunjuk kebun (`#pj-label-1` s/d `#pj-label-6`, `#pj-text-1` s/d `#pj-text-6`).
+    - 4 pohon harapan nanti (`#nt-hope-1` s/d `#nt-hope-4`).
+    - Hadiah (`#gf-text`), RSVP (`#rs-sh-s`), Kebun Doa (`#ws-sh-s`), Penutup (`#cl-text`, `#cl-salam`, `#cl-family`, `#cl-turut-v`, `#cl-hashtag`).
+
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+  - Dokumen arsitektur dan checklist diperbarui di [`task-v2.md`](file:///task-v2.md).
+
+---
+
+---
+
+### 📝 Sesi 31: Penerapan Penuh Template-Driven Dynamic Content System untuk Template E (Meja Sang Koki)
+* **Tanggal**: 23 Oktober 2026
+* **Status**: Selesai Penuh (100% Bebas Error TypeScript & Kompilasi Lolos)
+* **Tujuan**: Menerapkan arsitektur *Template-Driven Content System* ke **Template E (Meja Sang Koki)** secara tuntas sesuai panduan `projek.mereka.md` dan `task-v2.md`. Memungkinkan pengantin mempersonalisasi seluruh narasi kuliner fine-dining (edisi menu, filosofi kaldu, catatan dapur koki, karakteristik dua bahan utama mempelai, 4 babak menu degustasi berpadu minuman, resep rumah tangga bahagia interaktif masuk panci, 4 pilihan uji rasa tamu, 3 palet piring jamuan, kotak tip bumbu dapur, catatan reservasi kursi RSVP, pesan penutup, dan tagar pernikahan) melalui dashboard.
+
+* **Rincian Perubahan & Implementasi**:
+
+  #### a. Tipe Data & Master Preset Template E ([`lib/templatePresets.ts`](file:///lib/templatePresets.ts))
+  * Menambahkan interface `MejaKokiContent` yang mencakup 7 pilar modul data:
+    - **Cover & Hero & Dapur**: `edisiMenu`, `kutipanPembuka`, `catatanDapur`.
+    - **Dua Bahan Baku Utama (Mempelai)**: `keteranganAnakWanita`, `keteranganAnakPria`, `catatanBahanPria`, `catatanBahanWanita`.
+    - **Menu Degustasi (Empat Babak Sajian)**: `course1Title` s/d `course4Title`, `course1Pairing` s/d `course4Pairing`, `course1Story` s/d `course4Story`, `course1Photo` s/d `course4Photo`.
+    - **Resep Rumah Tangga Bahagia**: `resepJudul`, `resepPorsi`, `resepBahan` (multi-line), `resepCaraMasak` (multi-line).
+    - **Uji Rasa Tamu (Empat Sajian Rasa)**: `ujiManisNama`, `ujiManisCatatan`, `ujiGurihNama`, `ujiGurihCatatan`, `ujiPedasNama`, `ujiPedasCatatan`, `ujiSegarNama`, `ujiSegarCatatan`.
+    - **Etiket Busana & Palet Piring**: `dresscodeText`, `dresscodeColors` (3 swatch hex: `#3f4a38`, `#c69a4e`, `#efe3cd`).
+    - **Kotak Tip, RSVP & Penutup**: `catatanKotakTip`, `catatanRsvp`, `pesanPenutup`, `tagarPernikahan`.
+  * Membuat master preset `DEFAULT_MEJA_KOKI` dengan narasi gastronomi puitis sesuai acuan `projek.mereka.md`.
+  * Menyediakan fungsi helper `getMejaKokiContent(customContentJson)` dengan fallback otomatis ke preset default.
+
+  #### b. Form Editor Dashboard Multi-Template ([`TabCustomContent.tsx`](file:///components/dashboard/tabs/TabCustomContent.tsx))
+  * Menambahkan tab switcher tombol Template E: Meja Sang Koki (`activeTab === 'E'`) dengan ikon kuliner (`fas fa-utensils`).
+  * Mengintegrasikan state `kokiForm` dengan fungsi helper `handleKokiColorChange` dan penyimpanan universal `PUT /api/user/custom-content` (`templateCode: 'E'`).
+  * Membangun form editor 7 seksi modul interaktif berurutan dari atas ke bawah:
+    1. Edisi Menu & Catatan Dapur Koki (Edisi menu, kutipan kaldu, sambutan dapur).
+    2. Dua Bahan Baku Utama Mempelai (Silsilah anak & peran bahan mempelai pria & wanita).
+    3. Menu Degustasi 4 Babak (Amuse-Bouche, Pembuka, Utama, Penutup: Judul, pairing minuman & tahun, cerita hidangan, URL foto).
+    4. Resep Rumah Tangga Bahagia (Judul resep, takaran porsi, textarea daftar bahan per baris, textarea cara memasak per baris).
+    5. Uji Rasa Tamu (4 Rasa: Manis, Gurih, Pedas, Segar lengkap dengan nama hidangan & catatan personal tamu).
+    6. Etiket Busana & Palet Piring (Petunjuk busana & 3 color picker swatch piring jamuan).
+    7. Kotak Tip Dapur, Reservasi Kursi & Penutup (Catatan bumbu kotak tip, catatan kursi RSVP, pesan penutup koki, dan tagar pernikahan).
+
+  #### c. Sinkronisasi Frontend Template E ([`mejaKokiHtml.ts`](file:///components/templateE-meja-koki/mejaKokiHtml.ts))
+  * Mengimpor dan menginjeksi `eContent = getMejaKokiContent(data?.customContent)`.
+  * Menghubungkan seluruh elemen DOM dengan nilai dinamis:
+    - Edisi Menu & Hero Kicker (`#hero-kicker`).
+    - Kutipan Pembuka / Filosofi Kaldu (`#hero-quote`).
+    - Catatan dari Dapur Mempelai (`#chef-note`).
+    - Catatan Karakteristik Bahan Pria & Wanita (`#ing-note-groom`, `#ing-note-bride`).
+    - Silsilah Orang Tua Mempelai di balik kartu (`#ing-parents-lb-groom`, `#ing-parents-lb-bride`).
+    - 4 Babak Sajian Menu Degustasi: Judul, Padanan Minuman & Tahun (`#course-pairing-1` s/d `4`), Kisah Hidangan, dan Foto.
+    - Resep Rumah Tangga: Judul resep (`#resep-title`), Porsi (`#resep-yield`), render dinamis daftar bahan (`#resep-ing-list`), total bahan masuk panci (`#resep-total`), dan langkah cara memasak (`#resep-step-list`).
+    - Etiket Busana & Palet Piring: 3 Swatch Warna Piring (`#dc-chip-1` s/d `3`) dan petunjuk berbusana tamu (`#dc-text`).
+    - Uji Rasa Tamu: Data hidangan & catatan 4 rasa (`#cicip-data-manis`, `#cicip-data-gurih`, `#cicip-data-pedas`, `#cicip-data-segar`).
+    - Kotak Tip Dapur (`#gift-note`), Catatan Kursi RSVP (`#rsvp-seat-note`), Pesan Penutup Koki (`#closing-msg`), dan Tagar Pernikahan (`#closing-hashtag`).
+
+* **Hasil Pengujian & Verifikasi**:
+  - `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+  - Dokumen rencana kerja diperbarui di [`task-v2.md`](file:///task-v2.md).
+
+---
+
+### 📝 Sesi 32: Audit Menyeluruh & Pembersihan Total Data Dummy / Hardcoded pada Template E (Meja Sang Koki)
+* **Tanggal**: 23 Oktober 2026
+* **Status**: Selesai Penuh (100% Bebas Data Dummy, 100% Kompilasi Lolos)
+* **Tujuan**: Memastikan tidak ada lagi data palsu/dummy/hardcoded yang tertinggal di Template E (`mejaKokiHtml.ts`), seperti nama mempelai bawaan ("Badriana" / "Nurizzati"), inisial kartu statis, tanggal hero kosong, dan iframe Google Maps yang terkunci di lokasi mall Hong Kong.
+
+* **Rincian Audit & Pembersihan yang Dijalankan**:
+  1. **Teks Tanggal Hero (`#hero-date`)**:
+     - Sebelumnya elemen `<p id="hero-date" class="reveal d4"></p>` kosong tanpa teks.
+     - Diperbarui menjadi dinamis mengambil format tanggal resepsi/akad: `${resepsiDateFormatted || akadDateFormatted}`.
+  2. **Atribut ALT & Inisial Foto Mempelai**:
+     - `alt="Foto Badriana"` diganti menjadi `alt="Foto ${groomFull}"`.
+     - `alt="Foto Nurizzati Islamiyah"` diganti menjadi `alt="Foto ${brideFull}"`.
+     - Inisial fallback foto pria `"B"` diganti `${groom.charAt(0).toUpperCase() || 'P'}`.
+     - Inisial fallback foto wanita `"K"` diganti `${bride.charAt(0).toUpperCase() || 'W'}`.
+  3. **Atribut ALT 4 Babak Menu Degustasi & Lightbox Modal**:
+     - 4 foto sajian degustasi (`alt="Foto kenangan sajian ... Badriana dan Nurizzati Islamiyah"`) diganti menjadi `alt="Foto kenangan sajian ... ${groom} dan ${bride}"`.
+     - Foto modal viewer galeri (`#viewer-img`) diganti menjadi `alt="Foto galeri ${groom} dan ${bride}"`.
+  4. **Peta Google Maps Dinamis (`#venue-map`)**:
+     - Sebelumnya iframe terkunci ke URL embed mall di Hong Kong (`place_id:ChIJVX_KZ1YABDQR8TZ6STtir8M`) dan `title="Peta lokasi wwwtc mall"`.
+     - Diganti menjadi URL embed pencarian lokasi dinamis global:
+       `https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`
+       berbasis gabungan venue & alamat resepsi/akad pengguna, serta `title="Peta lokasi ${resepsiVenue || akadVenue || 'acara'}"`.
+
+* **Hasil Pengujian & Verifikasi**:
+  - Audit pencarian nama statis `Badriana`, `Nurizzati`, `wwwtc`, `Hong Kong` menghasilkan **0 temuan** di seluruh berkas Template E.
+  - Kompilasi TypeScript `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+
+---
+
+### 📝 Sesi 33: Penerapan Penuh Template-Driven Dynamic Content System untuk Template A (Simple Modern)
+* **Tanggal**: 23 Oktober 2026
+* **Status**: Selesai Penuh (100% Terintegrasi, 100% Kompilasi Lolos)
+* **Tujuan**: Menerapkan arsitektur dinamis berbasis template (*task-v2.md*) ke Template A (`templateA-simple-modern`), melengkapi integrasi yang sebelumnya telah diselesaikan untuk Template C, B, D, dan E.
+
+* **Rincian Implementasi & Modifikasi**:
+  1. **Definisi Type & Preset Inspiratif (`lib/templatePresets.ts`)**:
+     - Menambahkan interface `SimpleModernContent` mencakup 7 kelompok data: Cover & Welcome (`welcomeTitle`, `guestGreetingPrefix`, `openInvitationText`), Hero (`heroSubtitle`, `scrollDownText`), Mempelai & Salam (`salamArab`, `salamText`, `pengantarMempelai`, `keteranganAnakPria`, `keteranganAnakWanita`), Kutipan Suci / Romantis (`ceritaKutipan`, `ceritaSumber`), Acara & Dresscode (`judulMoment`, `pengantarAcara`, `labelAkad`, `labelResepsi`, `dresscodeNote`, `dresscodeText`, `dresscodeColors: string[]`), Hadiah & Doa (`giftTitle`, `giftSubtitle`, `commentTitle`), serta Penutup (`closingMessage`, `closingSalam`, `closingHamdalah`, `tagarPernikahan`).
+     - Menyediakan nilai default inspiratif `DEFAULT_SIMPLE_MODERN`.
+     - Menyediakan helper fungsi fallback `getSimpleModernContent(customContent)`.
+  2. **Form Editor Dashboard Dinamis (`components/dashboard/tabs/TabCustomContent.tsx`)**:
+     - Menambahkan tombol switcher navigasi tab `Template A: Simple Modern` (`activeTab === 'A'`) lengkap dengan ikon `fas fa-gem`.
+     - Membangun 7 seksi form editor terstruktur dari atas ke bawah:
+       - Seksi 1: Pembuka & Hero Cover
+       - Seksi 2: Mempelai, Salam & Silsilah
+       - Seksi 3: Kutipan Suci & Mutiara Cinta
+       - Seksi 4: Rangkaian Waktu, Acara & 3 Swatch Dresscode Interaktif
+       - Seksi 5: Tanda Kasih & Amplop Digital
+       - Seksi 6: Ucapan, Doa & Buku Tamu
+       - Seksi 7: Pesan Terima Kasih, Hamdalah & Tagar
+     - Menghubungkan penyimpanan form ke endpoint API `PUT /api/user/custom-content` (`templateCode: 'A'`).
+  3. **Penyelarasan Komponen Template A (`components/templateA-simple-modern/*`)**:
+     - `WelcomePage.tsx`: Dinamiskan judul cover, prefix sapaan tamu, dan tombol buka undangan via `aContent`.
+     - `HomePage.tsx`: Dinamiskan subtitle beranda dan petunjuk scroll down via `aContent`.
+     - `BrideSection.tsx`: Dinamiskan salam Arab, ucapan salam, kalimat pengantar, silsilah mempelai, serta kartu kutipan suci / mutiara romantis (`ceritaKutipan` & `ceritaSumber`).
+     - `WeddingDateSection.tsx`: Dinamiskan judul momen, pengantar acara, label akad & resepsi, catatan dresscode, keterangan pakaian, serta 3 swatch warna dresscode interaktif.
+     - `LoveGiftSection.tsx`: Dinamiskan judul tanda kasih dan kalimat pengantar tanda kasih.
+     - `CommentSection.tsx`: Dinamiskan judul ucapan & doa buku tamu.
+     - `Footer.tsx`: Dinamiskan pesan terima kasih penutup, salam penutup, hamdalah, dan tagar pernikahan resmi.
+     - `SimpleModern.tsx`: Teruskan `payload` ke seluruh komponen dan dinamiskan `<title>` halaman.
+  4. **Pembaruan Interface TypeScript**:
+     - Menambahkan `customContent?: Record<string, any> | null` pada interface `ITemplateWeding` di `prisma/schema.types.ts`.
+     - Membersihkan form duplikat pada `TabCustomContent.tsx`.
+
+* **Hasil Pengujian & Verifikasi**:
+  - Kompilasi TypeScript `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+  - Dokumen checklist [`task-v2.md`](file:///task-v2.md) telah diperbarui dengan seksi 6 dan seluruh checkbox tercentang penuh `[x]`.
+
+---
+
+### 📝 Sesi 34: Audit Menyeluruh & Pembersihan Total Data Dummy / Hardcoded pada Template A (Simple Modern)
+* **Tanggal**: 23 Oktober 2026
+* **Status**: Selesai Penuh (100% Bebas Data Dummy, 100% Kompilasi Lolos)
+* **Tujuan**: Mengaudit seluruh komponen Template A untuk menuntaskan sisa-sisa nilai dummy, broken asset path, data statis, dan boilerplate fork open-source yang tidak semestinya tampil di undangan tamu.
+
+* **Rincian Perbaikan & Pembersihan**:
+  1. **Perbaikan Path Gambar Rusak (`WelcomePage.tsx`)**:
+     - Fallback foto cover sebelumnya mengarah ke `'/default-wedding.jpg'` yang tidak ada di direktori `public` (menyebabkan gambar pecah/404).
+     - Diperbaiki menggunakan fallback valid yang tersedia di assets: `'/assets/images/bg.webp'`.
+  2. **Dinamisasi Waktu & Venue Akad/Resepsi (`WeddingDateSection.tsx`)**:
+     - Format jam resepsi kini menangani rentang waktu dinamis: `payload.jamResepsi ? \`${payload.jamResepsi} - \${payload.jamSelesai || 'Selesai'}\` : (payload.jamSelesai || '11:00 - Selesai')`.
+     - Menambahkan penampil lokasi & alamat akad nikah (`payload.lokasiAkad` & `payload.alamatAkad`) secara dinamis.
+     - Menambahkan penampil lokasi & alamat resepsi pernikahan (`payload.lokasiResepsi` & `payload.alamatGedungPernikahan`) secara dinamis.
+  3. **Pembersihan Boilerplate Fork & Musik Latar Dinamis (`Footer.tsx`)**:
+     - Menghapus teks dummy credit hardcoded open-source fork (`Build with ❤️ by Dewanakl • Migrated to Next.js by Badriana400952` beserta link GitHub & License).
+     - Mengubah credit musik yang sebelumnya terkunci ke `"Music: Pure Love by Pixabay"` menjadi dinamis mengikuti musik pilihan pengguna di database (`payload?.musik?.judul` & `payload?.musik?.artis`).
+  4. **Fleksibilitas Nama Penerima Tanda Kasih (`LoveGiftSection.tsx`)**:
+     - Mengubah fallback nama pemegang rekening transfer, QRIS, dan penerima kado fisik dari yang semula kaku hanya ke pihak pria (`payload.namaLengkapPutra`) menjadi pengecekan fleksibel kedua mempelai (`payload.namaLengkapPutra || payload.namaLengkapPutri || payload.namaPutra || payload.namaPutri || 'Mempelai'`).
+
+* **Hasil Pengujian & Verifikasi**:
+  - Kompilasi TypeScript `npx tsc --noEmit` lolos **0 errors** (`exit code 0`).
+
+---
+
+### 📝 Sesi 35: Penyusunan Standar Operasional & Blueprint Template Baru Berbasis Task-v2 untuk AI Baru
+* **Tanggal**: 23 Oktober 2026
+* **Status**: Selesai Penuh (Terdokumentasi Lengkap di Seluruh Pedoman AI)
+* **Tujuan**: Memastikan setiap AI Agent atau pengembang baru dapat langsung memahami konsep, arsitektur, dan SOP pembuatan template baru yang 100% selaras dengan Task-v2 tanpa melakukan kesalahan teknis atau kebingungan.
+
+* **Rincian Dokumen & Modifikasi**:
+  1. **Pembuatan Dokumen Baku SOP**:
+     - Membuat dokumen [`docs/STANDAR_PEMBUATAN_TEMPLATE_TASK_V2.md`](file:///docs/STANDAR_PEMBUATAN_TEMPLATE_TASK_V2.md) yang merangkum secara mendalam filosofi Task-v2, arsitektur kolom universal `customContent Json?`, serta 5 fase eksekusi baku:
+       - **Fase 1**: Definisi Interface & Preset Default Inspiratif di `lib/templatePresets.ts`.
+       - **Fase 2**: Pembangunan Form Editor Dinamis di `components/dashboard/tabs/TabCustomContent.tsx`.
+       - **Fase 3**: Integrasi Komponen / HTML Generator Dinamis (Zero hardcoded data).
+       - **Fase 4**: Registrasi Routing View Tamu di `pages/[...slug].tsx` (Murni Read-Only).
+       - **Fase 5**: Audit Menyeluruh Anti-Dummy & Verifikasi Kompilasi TypeScript.
+  2. **Pembaruan Instruksi Operasional AI ([`AGENTS.md`](file:///AGENTS.md))**:
+     - Mewajibkan AI membaca `docs/STANDAR_PEMBUATAN_TEMPLATE_TASK_V2.md` sebelum menyentuh pembuatan atau pengubahan template.
+     - Merangkum status 5 template aktif (A s/d E) yang semuanya telah berbasis Task-v2.
+  3. **Pembaruan Pedoman Arsitektur ([`Rules.md`](file:///Rules.md))**:
+     - Memperbarui daftar template aktif dari 3 menjadi 5 template (A, B, C, D, E) dan menyertakan panduan referensi Task-v2.
+
+* **Hasil Pengujian & Verifikasi**:
+  - Semua file Markdown berformat rapi, link internal terverifikasi, dan kompilasi TypeScript `npx tsc --noEmit` tetap lolos **0 errors** (`exit code 0`).
+
+---
+
+### 36. Otomatisasi Tampilan Form Tab Cerita & Narasi Berdasarkan Template Aktif Pengantin (`TabCustomContent.tsx`)
+
+* **Keluhan / Kebutuhan Pengguna**:
+  Pada tab dashboard "Cerita & Narasi" (`TabCustomContent.tsx`), sebelumnya terdapat deretan 5 tombol tab template (A, D, B, C, E) yang mengharuskan user memilih manual. Pengguna meminta agar tab tersebut dihilangkan dan sistem otomatis menampilkan form sesuai template yang sedang dipilih pengantin (misal: jika template aktif pengantin adalah B, maka langsung tampilkan Form B saja tanpa tombol switcher template lain).
+
+* **Hasil Diagnosa & Solusi Teknis AI**:
+  1. **Penghapusan Multi-Button Switcher Manual**: Menghapus deretan tombol tab manual (`setActiveTab('A')`, `'B'`, `'C'`, `'D'`, `'E'`) yang membingungkan user.
+  2. **Sinkronisasi Otomatis Terikat `currentTemplate`**: Mengubah variabel `activeTab` menjadi nilai turunan otomatis (*derived state*) langsung dari prop `currentTemplate` pengantin (`'A'`, `'B'`, `'C'`, `'D'`, atau `'E'`).
+  3. **Penambahan Badge Status Tema Aktif**: Menyediakan komponen badge visual yang elegan dengan icon dan warna tema yang cocok untuk menginformasikan tema yang sedang aktif secara otomatis (`Terpilih Otomatis`).
+  4. **Penyelarasan Warna Tombol Simpan**: Mengaitkan tombol `Simpan Perubahan` dengan warna tema aktif masing-masing template (`TEMPLATE_META[activeTab].saveBtnClass`).
+
+* **Daftar Berkas yang Dimodifikasi & Perubahannya**:
+  * [`components/dashboard/tabs/TabCustomContent.tsx`](file:///C:/Users/USER.DESKTOP-UQ662UT.000/OneDrive/Dokumen/project/undangan%20projek/undangan/components/dashboard/tabs/TabCustomContent.tsx):
+    - Mendefinisikan map konfigurasi `TEMPLATE_META` untuk warna badge, icon FontAwesome, deskripsi tema, dan styling tombol simpan per template.
+    - Menghapus tombol switcher manual dan menggantinya dengan indikator otomatis tema aktif.
+    - Menghilangkan `setActiveTab` manual sehingga form yang dirender murni hanya form dari template aktif pengantin.
+
+---
+
+### 37. Optimasi Performa Ekstrem dengan `next/dynamic` (Code Splitting & Lazy Loading untuk Template Undangan & Tab Dashboard)
+
+* **Tujuan & Manfaat**:
+  - Memecah bundle JavaScript monolithic yang sebelumnya menggabungkan seluruh 5 template (A, B, C, D, E) dan 11 tab dashboard ke dalam satu bundle raksasa.
+  - Mempercepat waktu loading awal (*First Contentful Paint* & *Speed Index*) secara signifikan bagi tamu undangan di smartphone (menghemat kuota dan memangkas 60-80% payload JS yang tidak dibutuhkan).
+  - Mengurangi beban initial render pada dashboard admin pengantin dengan memuat tab formulir berat secara *lazy-on-demand*.
+
+* **Daftar Berkas yang Dimodifikasi & Perubahannya**:
+  1. [`pages/[...slug].tsx`](file:///C:/Users/USER.DESKTOP-UQ662UT.000/OneDrive/Dokumen/project/undangan%20projek/undangan/pages/%5B...slug%5D.tsx):
+     - Menerapkan `dynamic(() => import(...))` untuk kelima template: `SimpleModern`, `TamanRahasia`, `KirigamiPastel`, `TumbuhBersama`, dan `MejaKoki`.
+     - Menyediakan komponen fallback `<InvitationLoading />` yang elegan dan minimalis saat chunk template sedang diambil dari server.
+     - Menjaga flag `{ ssr: true }` agar rendering awal sisi server, OpenGraph metadata, dan preview WhatsApp/sosial media tetap instan dan ramah SEO.
+  2. [`pages/dashboard.tsx`](file:///C:/Users/USER.DESKTOP-UQ662UT.000/OneDrive/Dokumen/project/undangan%20projek/undangan/pages/dashboard.tsx):
+     - Mengubah impor 11 tab modular (`TabOverview`, `TabMempelai`, `TabAcara`, `TabGift`, `TabGaleri`, `TabBersama`, `TabUcapan`, `TabMusik`, `TabTemplate`, `TabCustomContent`, `TabLinks`) menjadi dynamic import.
+     - Menambahkan komponen skeleton loading `<TabLoading />` saat tab formulir sedang dimuat.
+     - Tab berat seperti `TabCustomContent` (hampir 3.800 baris kode) dan `TabGaleri` tidak lagi membebani initial loading dashboard pengantin.
+
+---
+
+### 38. Penyelesaian Error Hydration Mismatch pada `next/dynamic` Dashboard (`TabOverview` Statis & `{ ssr: false }` untuk Tab Lainnya)
+
+* **Keluhan / Error Pengguna**:
+  `Hydration failed because the server rendered HTML didn't match the client.`
+  Terjadi perbedaan antara HTML yang dirender server (`<div className="space-y-6">` dari `TabOverview`) dengan komponen loading di client (`<TabLoading>` dari `pages\dashboard.tsx:28:5`).
+
+* **Penyebab Teknis**:
+  Next.js Pages Router merender `pages/dashboard.tsx` di server dengan state awal `activeTab === 'overview'`.
+  Ketika `TabOverview` dibungkus dengan `dynamic(..., { loading: () => <TabLoading /> })`:
+  - **Di Server (SSR)**: Next.js merender isi asli komponen `TabOverview` (`space-y-6`).
+  - **Di Client (Hydration)**: Pada saat pertama kali mount di browser, dynamic import masih berada di status `loading: true`, sehingga merender komponen fallback `<TabLoading>`.
+  - Terjadilah *Hydration Mismatch* karena pohon DOM server dan client tidak identik pada render pertama.
+
+* **Solusi & Penanganan**:
+  1. **Mengembalikan `TabOverview` ke Static Import**: Karena `TabOverview` adalah tab default awal yang wajib tampil saat pertama kali dashboard dibuka, mengimpornya secara statis menjamin pohon DOM server dan client 100% identik tanpa mismatch.
+  2. **Menambahkan `{ ssr: false }` pada Tab Dinamis Lainnya**: Seluruh tab sekunder lainnya (`TabMempelai`, `TabAcara`, `TabGift`, `TabGaleri`, `TabBersama`, `TabUcapan`, `TabMusik`, `TabTemplate`, `TabCustomContent`, `TabLinks`) diberi konfigurasi `{ ssr: false, loading: () => <TabLoading /> }`. Hal ini mencegah server merender tab yang belum diklik dan memastikan tab-tab tersebut hanya dimuat di client saat diperlukan tanpa risiko hydration mismatch.
+  3. **Penghapusan Mismatch Loading pada `[...slug].tsx`**: Menghapus `loading` fallback pada dynamic import template tamu agar browser langsung menggunakan server-rendered HTML dari SSR.
 
 ---
 

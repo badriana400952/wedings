@@ -10,4 +10,5 @@ export { default as TabBersama } from './tabs/TabBersama';
 export { default as TabUcapan } from './tabs/TabUcapan';
 export { default as TabMusik } from './tabs/TabMusik';
 export { default as TabTemplate } from './tabs/TabTemplate';
+export { default as TabCustomContent } from './tabs/TabCustomContent';
 export { default as TabLinks } from './tabs/TabLinks';

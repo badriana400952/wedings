@@ -1,4 +1,5 @@
 // Auto-generated Taman Rahasia HTML template
+import { getTamanRahasiaContent } from '@/lib/templatePresets';
 export const RAW_TAMAN_RAHASIA_HTML = `
     <svg
       id="svg-defs"
@@ -4359,6 +4360,8 @@ const toYmd = (value: unknown): string => {
 export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): string {
   let html = RAW_TAMAN_RAHASIA_HTML;
 
+  const bContent = getTamanRahasiaContent(data.customContent);
+
   const groomName = String(data.namaPutra || '').trim();
   const brideName = String(data.namaPutri || '').trim();
   const groomFullName = String(data.namaLengkapPutra || groomName).trim();
@@ -4483,12 +4486,11 @@ export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): 
   html = html.replace(/<span id="closing-bride"[^>]*>[\s\S]*?<\/span\s*>/, `<span id="closing-bride">${esc(groomName)}</span>`);
   html = html.replace(/<span id="closing-groom"[^>]*>[\s\S]*?<\/span\s*>/, `<span id="closing-groom">${esc(brideName)}</span>`);
 
-  if (groomShort && brideShort) {
-    html = html.replace(
-      /<p id="closing-hashtag"[^>]*>[\s\S]*?<\/p\s*>/,
-      `<p id="closing-hashtag" class="reveal">#Taman${esc(`${groomShort}${brideShort}`.replace(/[^A-Za-z0-9]/g, ''))}</p>`
-    );
-  }
+  const tagarToUse = bContent.tagarPernikahan || (groomShort && brideShort ? `#Taman${`${groomShort}${brideShort}`.replace(/[^A-Za-z0-9]/g, '')}` : '#TamanRahasia');
+  html = html.replace(
+    /<p id="closing-hashtag"[^>]*>[\s\S]*?<\/p\s*>/,
+    `<p id="closing-hashtag" class="reveal">${esc(tagarToUse)}</p>`
+  );
 
   if (!hasNames) {
     // Tanpa nama, blok nama disembunyikan agar "&" yatim tidak tampil.
@@ -4497,7 +4499,7 @@ export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): 
     html = html.replace('id="closing-names"', 'id="closing-names" style="display:none!important"');
   }
 
-  // 6. Karturicken: nama,Ã¦â€¢Â°Ã¦ÂÂ®Ã§Â±Â»Ã¥Å¾â€¹, dan keterangan kelahiran
+  // 6. Kartu Benih Mempelai: nama, panggilan, dan keterangan silsilah anak
   html = html.replace(
     /<h3 id="packet-bride-name"[^>]*>[\s\S]*?<\/h3\s*>/,
     `<h3 id="packet-bride-name" class="packet-name">${esc(brideShort)}</h3>`
@@ -4517,11 +4519,11 @@ export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): 
 
   const renderPacketLine = (gender: 'bride' | 'groom', father: string, mother: string, birth: string) => {
     const parents = [father, mother].filter(Boolean).join(' & ');
-    const childText = birth
-      ? `Lahir ${esc(birth)}`
-      : gender === 'bride'
-        ? 'Putri dari'
-        : 'Putra dari';
+    const defaultLabel = gender === 'bride'
+      ? (bContent.keteranganAnakWanita || 'Putri kedua dari')
+      : (bContent.keteranganAnakPria || 'Putra pertama dari');
+    const childText = birth ? `Lahir ${esc(birth)}` : esc(defaultLabel);
+
     if (!parents && !birth) {
       html = html.replace(
         new RegExp(`<p id="packet-${gender}-parents"[^>]*>[\\s\\S]*?</p\\s*>`),
@@ -4551,6 +4553,179 @@ export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): 
     String(data.namaIbuPutra || '').trim(),
     groomBirth
   );
+
+  // Petunjuk Perawatan Mempelai di Balik Bungkus Benih
+  if (bContent.petunjukPerawatanWanita) {
+    html = html.replace(
+      /<p id="bride-care-src"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="bride-care-src" class="care-src">${esc(bContent.petunjukPerawatanWanita)}</p>`
+    );
+  }
+  if (bContent.petunjukPerawatanPria) {
+    html = html.replace(
+      /<p id="groom-care-src"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="groom-care-src" class="care-src">${esc(bContent.petunjukPerawatanPria)}</p>`
+    );
+  }
+
+  // Gerbang Taman & Prasasti Batu
+  if (bContent.kalimatPembuka) {
+    html = html.replace(
+      /<p id="quote-opening"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="quote-opening" class="reveal">${esc(bContent.kalimatPembuka)}</p>`
+    );
+  }
+  if (bContent.kutipanPrasasti) {
+    html = html.replace(
+      /<blockquote id="quote-text"[^>]*>[\s\S]*?<\/blockquote\s*>/,
+      `<blockquote id="quote-text">${esc(bContent.kutipanPrasasti)}</blockquote>`
+    );
+  }
+  if (bContent.sumberKutipan) {
+    html = html.replace(
+      /<figcaption id="quote-source"[^>]*>[\s\S]*?<\/figcaption\s*>/,
+      `<figcaption id="quote-source">${esc(bContent.sumberKutipan)}</figcaption>`
+    );
+  }
+
+  // 4 Babak Kisah Musim Kami
+  const storiesConfig = [
+    { title: bContent.story1Title, time: bContent.story1Time, text: bContent.story1Story },
+    { title: bContent.story2Title, time: bContent.story2Time, text: bContent.story2Story },
+    { title: bContent.story3Title, time: bContent.story3Time, text: bContent.story3Story },
+    { title: bContent.story4Title, time: bContent.story4Time, text: bContent.story4Story },
+  ];
+  storiesConfig.forEach((st, idx) => {
+    const num = idx + 1;
+    if (st.time) {
+      html = html.replace(
+        new RegExp(`<span id="story-${num}-date"[^>]*>[\\s\\S]*?<\\/span\\s*>`),
+        `<span id="story-${num}-date" class="story-date">${esc(st.time)}</span>`
+      );
+    }
+    if (st.title) {
+      html = html.replace(
+        new RegExp(`<h3 id="story-${num}-title"[^>]*>[\\s\\S]*?<\\/h3\\s*>`),
+        `<h3 id="story-${num}-title" class="story-title">${esc(st.title)}</h3>`
+      );
+    }
+    if (st.text) {
+      html = html.replace(
+        new RegExp(`<p id="story-${num}-text"[^>]*>[\\s\\S]*?<\\/p\\s*>`),
+        `<p id="story-${num}-text" class="story-text">${esc(st.text)}</p>`
+      );
+    }
+  });
+
+  // 3 Bunga Pilihan & Artinya
+  if (bContent.bungaWanitaNama) {
+    html = html.replace(
+      /<h3 id="flower-card-1-name"[^>]*>[\s\S]*?<\/h3\s*>/,
+      `<h3 id="flower-card-1-name" class="fc-name">${esc(bContent.bungaWanitaNama)}</h3>`
+    );
+  }
+  if (bContent.bungaWanitaArti) {
+    html = html.replace(
+      /<p id="flower-card-1-meaning"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="flower-card-1-meaning" class="fc-meaning">${esc(bContent.bungaWanitaArti)}</p>`
+    );
+  }
+  if (bContent.bungaWanitaWarna) {
+    html = html.replace(
+      /(<button\s+id="flower-1"[^>]*data-color=")[^"]*"/,
+      `$1${escAttr(bContent.bungaWanitaWarna)}"`
+    );
+  }
+
+  if (bContent.bungaPriaNama) {
+    html = html.replace(
+      /<h3 id="flower-card-2-name"[^>]*>[\s\S]*?<\/h3\s*>/,
+      `<h3 id="flower-card-2-name" class="fc-name">${esc(bContent.bungaPriaNama)}</h3>`
+    );
+  }
+  if (bContent.bungaPriaArti) {
+    html = html.replace(
+      /<p id="flower-card-2-meaning"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="flower-card-2-meaning" class="fc-meaning">${esc(bContent.bungaPriaArti)}</p>`
+    );
+  }
+  if (bContent.bungaPriaWarna) {
+    html = html.replace(
+      /(<button\s+id="flower-2"[^>]*data-color=")[^"]*"/,
+      `$1${escAttr(bContent.bungaPriaWarna)}"`
+    );
+  }
+
+  if (bContent.bungaBerduaNama) {
+    html = html.replace(
+      /<h3 id="flower-card-3-name"[^>]*>[\s\S]*?<\/h3\s*>/,
+      `<h3 id="flower-card-3-name" class="fc-name">${esc(bContent.bungaBerduaNama)}</h3>`
+    );
+  }
+  if (bContent.bungaBerduaArti) {
+    html = html.replace(
+      /<p id="flower-card-3-meaning"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="flower-card-3-meaning" class="fc-meaning">${esc(bContent.bungaBerduaArti)}</p>`
+    );
+  }
+  if (bContent.bungaBerduaWarna) {
+    html = html.replace(
+      /(<button\s+id="flower-3"[^>]*data-color=")[^"]*"/,
+      `$1${escAttr(bContent.bungaBerduaWarna)}"`
+    );
+  }
+
+  // Panduan Busana (Dresscode & 5 Warna Swatch)
+  if (bContent.dresscodeText) {
+    html = html.replace(
+      /<p id="dress-text"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="dress-text" class="reveal">${esc(bContent.dresscodeText)}</p>`
+    );
+  }
+  if (Array.isArray(bContent.dresscodeColors) && bContent.dresscodeColors.length > 0) {
+    bContent.dresscodeColors.slice(0, 5).forEach((color, cIdx) => {
+      const swNum = cIdx + 1;
+      html = html.replace(
+        new RegExp(`(<button\\s+id="swatch-${swNum}"[^>]*data-color=")[^"]*"`),
+        `$1${escAttr(color)}"`
+      );
+    });
+  }
+
+  // Surat Rahasia di Bawah Batu
+  if (bContent.suratRahasiaIsi) {
+    const formattedLetter = esc(bContent.suratRahasiaIsi).replace(/\n/g, '<br />');
+    html = html.replace(
+      /<p id="secret-letter-text"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="secret-letter-text">${formattedLetter}</p>`
+    );
+  }
+  if (bContent.suratRahasiaPenutup) {
+    html = html.replace(
+      /<p id="secret-letter-sign"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="secret-letter-sign">${esc(bContent.suratRahasiaPenutup)}</p>`
+    );
+  }
+
+  // Keranjang Hadiah, RSVP Note, Pesan Penutup
+  if (bContent.catatanHadiah) {
+    html = html.replace(
+      /<p id="gifts-lead"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="gifts-lead" class="bab-lead reveal">${esc(bContent.catatanHadiah)}</p>`
+    );
+  }
+  if (bContent.catatanRsvp) {
+    html = html.replace(
+      /<p id="rsvp-note"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="rsvp-note" class="reveal">${esc(bContent.catatanRsvp)}</p>`
+    );
+  }
+  if (bContent.pesanPenutup) {
+    html = html.replace(
+      /<p id="closing-msg"[^>]*>[\s\S]*?<\/p\s*>/,
+      `<p id="closing-msg" class="reveal">${esc(bContent.pesanPenutup)}</p>`
+    );
+  }
 
   // 7. Acara: akad & resepsi
   if (lokasiAkad || alamatAkad) {
@@ -4726,10 +4901,15 @@ export function getTamanRahasiaHtml(data: any = {}, guestName?: string | null): 
     rundownData
   )}</script>`;
 
-  // 12. Kartu "Musim-Musim Kami": isi foto dari Gambar Bersama, dan hapus
-  // <figure> sepenuhnya bila slotnya kosong supaya tidak ada gambar hantu.
+  // 12. Kartu "Musim-Musim Kami": isi foto dari kustom kisah pengantin atau Gambar Bersama
   for (let i = 1; i <= 4; i++) {
-    const photo = storyFotos[i - 1] || '';
+    const customStoryPhotos = [
+      bContent.story1Photo,
+      bContent.story2Photo,
+      bContent.story3Photo,
+      bContent.story4Photo,
+    ];
+    const photo = customStoryPhotos[i - 1] || storyFotos[i - 1] || '';
     const figureRe = new RegExp(`<figure id="story-${i}-figure"[\\s\\S]*?</figure>`);
     if (!figureRe.test(html)) continue;
     if (photo) {

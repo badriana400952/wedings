@@ -1,6 +1,8 @@
 import { escapeHtml } from './mejaKokiApi';
+import { getMejaKokiContent } from '@/lib/templatePresets';
 
 export function getMejaKokiHtml(data: any, guestName: string | null = null): string {
+  const eContent = getMejaKokiContent(data?.customContent);
   const groom = escapeHtml(data?.namaPutra || 'Mempelai Pria');
   const groomFull = escapeHtml(data?.namaLengkapPutra || data?.namaPutra || 'Mempelai Pria');
   const groomFather = escapeHtml(data?.namaAyahPutra || data?.ayahPutra || '');
@@ -12,9 +14,10 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
       : 'Keluarga Besar';
   const groomPhoto = data?.photoPutra || data?.fotoPutra || '/assets/templates/meja-koki/1790088230_e84ebc64.jpg';
   const groomNote = escapeHtml(
-    data?.kelahiranPutra
+    eContent.catatanBahanPria ||
+    (data?.kelahiranPutra
       ? `${data.kelahiranPutra} — bertugas menjaga api tetap menyala`
-      : 'Bertugas menjaga api tetap menyala'
+      : 'Bertugas menjaga api tetap menyala')
   );
 
   const bride = escapeHtml(data?.namaPutri || 'Mempelai Wanita');
@@ -28,9 +31,10 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
       : 'Keluarga Besar';
   const bridePhoto = data?.photoPutri || data?.fotoPutri || '/assets/templates/meja-koki/1790088230_6e30a49c.jpg';
   const brideNote = escapeHtml(
-    data?.kelahiranPutri
+    eContent.catatanBahanWanita ||
+    (data?.kelahiranPutri
       ? `${data.kelahiranPutri} — bertugas menyeimbangkan setiap rasa`
-      : 'Bertugas menyeimbangkan setiap rasa'
+      : 'Bertugas menyeimbangkan setiap rasa')
   );
 
   const couplePhoto =
@@ -44,6 +48,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
     '/assets/templates/meja-koki/1790088231_df639d98.jpg';
 
   const quote = escapeHtml(
+    eContent.kutipanPembuka ||
     data?.ceritaCinta?.quote ||
     data?.quote ||
     'Cinta yang baik seperti kaldu yang ditunggu semalaman: ia tidak bisa diburu, hanya bisa dijaga apinya.'
@@ -97,26 +102,84 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
   const resepsiAddress = escapeHtml(data?.alamatResepsi || '');
 
   const mapUrl = data?.linkMaps || data?.linkGoogleMaps || 'https://maps.google.com';
+  const mapQuery = encodeURIComponent(`${resepsiVenue} ${resepsiAddress}`.trim() || `${akadVenue} ${akadAddress}`.trim() || 'Indonesia');
+  const embedMapUrl = `https://maps.google.com/maps?q=${mapQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
   // Story / Courses
   const p = data?.pertemuan || {};
   const bersamaFotos = Array.isArray(data?.bersamaFotos) ? data.bersamaFotos : [];
 
-  const course1Title = escapeHtml(p.judulPertemuanSatu || 'Amuse-Bouche: Kopi Tumpah');
-  const course1Story = escapeHtml(p.pertemuanPertama || 'Pertemuan pertama di kedai kecil dekat kantor. Satu gelas tumpah, satu permintaan maaf yang kepanjangan, dan nomor telepon yang ditulis di selembar tisu.');
-  const course1Photo = bersamaFotos[0] || '/assets/templates/meja-koki/1790088230_e84ebc64.jpg';
+  const course1Title = escapeHtml(eContent.course1Title || p.judulPertemuanSatu || 'Amuse-Bouche: Kopi Tumpah');
+  const course1Pairing = escapeHtml(eContent.course1Pairing || 'Dipadukan dengan kopi susu gula aren, 2019');
+  const course1Story = escapeHtml(eContent.course1Story || p.pertemuanPertama || 'Pertemuan pertama di kedai kecil dekat kantor. Satu gelas tumpah, satu permintaan maaf yang kepanjangan, dan nomor telepon yang ditulis di selembar tisu.');
+  const course1Photo = eContent.course1Photo || bersamaFotos[0] || '/assets/templates/meja-koki/1790088230_e84ebc64.jpg';
 
-  const course2Title = escapeHtml(p.judulPertemuanDua || 'Pembuka: Salad Musim Hujan');
-  const course2Story = escapeHtml(p.pertemuanKedua || 'Dua tahun saling mengenal rasa. Kami belajar bahwa pahit pun perlu, asal selalu ada yang menyeimbangkan dengan manis.');
-  const course2Photo = bersamaFotos[1] || '/assets/templates/meja-koki/1790088230_6e30a49c.jpg';
+  const course2Title = escapeHtml(eContent.course2Title || p.judulPertemuanDua || 'Pembuka: Salad Musim Hujan');
+  const course2Pairing = escapeHtml(eContent.course2Pairing || 'Dipadukan dengan teh melati hangat, 2021');
+  const course2Story = escapeHtml(eContent.course2Story || p.pertemuanKedua || 'Dua tahun saling mengenal rasa. Kami belajar bahwa pahit pun perlu, asal selalu ada yang menyeimbangkan dengan manis.');
+  const course2Photo = eContent.course2Photo || bersamaFotos[1] || '/assets/templates/meja-koki/1790088230_6e30a49c.jpg';
 
-  const course3Title = escapeHtml(p.judulPertemuanTiga || 'Utama: Rendang Sabar');
-  const course3Story = escapeHtml(p.pertemuanKetiga || 'Dimasak delapan jam di atas api kecil. Kami bertemu keluarga, bertukar restu, dan menyadari bahwa rasa terbaik memang selalu butuh waktu.');
-  const course3Photo = bersamaFotos[2] || '/assets/templates/meja-koki/1790088231_df639d98.jpg';
+  const course3Title = escapeHtml(eContent.course3Title || p.judulPertemuanTiga || 'Utama: Rendang Sabar');
+  const course3Pairing = escapeHtml(eContent.course3Pairing || 'Dipadukan dengan beras solok & air kelapa, 2024');
+  const course3Story = escapeHtml(eContent.course3Story || p.pertemuanKetiga || 'Dimasak delapan jam di atas api kecil. Kami bertemu keluarga, bertukar restu, dan menyadari bahwa rasa terbaik memang selalu butuh waktu.');
+  const course3Photo = eContent.course3Photo || bersamaFotos[2] || '/assets/templates/meja-koki/1790088231_df639d98.jpg';
 
-  const course4Title = escapeHtml(p.judulPertemuanEmpat || 'Penutup: Puding Janji');
-  const course4Story = escapeHtml(p.pertemuanKeempat || 'Manis yang paling ditunggu. Ia berlutut di dapur, di antara wangi vanila, dan bertanya apakah kami boleh memasak bersama seumur hidup.');
-  const course4Photo = bersamaFotos[3] || '/assets/templates/meja-koki/1790088230_e84ebc64.jpg';
+  const course4Title = escapeHtml(eContent.course4Title || p.judulPertemuanEmpat || 'Penutup: Puding Janji');
+  const course4Pairing = escapeHtml(eContent.course4Pairing || 'Dipadukan dengan satu kata: iya, 2026');
+  const course4Story = escapeHtml(eContent.course4Story || p.pertemuanKeempat || 'Manis yang paling ditunggu. Ia berlutut di dapur, di antara wangi vanila, dan bertanya apakah kami boleh memasak bersama seumur hidup.');
+  const course4Photo = eContent.course4Photo || bersamaFotos[3] || '/assets/templates/meja-koki/1790088230_e84ebc64.jpg';
+
+  // Resep Lists & Swatches
+  const rawBahanLines = (eContent.resepBahan || '')
+    .split('\n')
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+  const resepBahanList = rawBahanLines.length > 0 ? rawBahanLines : [
+    '200 gram kesabaran, disaring halus',
+    '3 sendok makan tawa sebelum tidur',
+    '1 genggam maaf yang tidak ditunda',
+    '1 batang kejujuran, memarkan',
+    'Secukupnya doa dari kedua keluarga',
+    'Sejumput rindu untuk hari-hari sibuk',
+  ];
+
+  const resepBahanHtml = resepBahanList
+    .map((item: string, idx: number) => {
+      const num = idx + 1;
+      return `
+                <li id="resep-ing-item-${num}">
+                  <button type="button" class="ing-chip" id="resep-ing-chip-${num}" aria-pressed="false">
+                    <span class="ing-box" id="resep-ing-box-${num}">
+                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span class="ing-txt" id="resep-ing-txt-${num}">${escapeHtml(item)}</span>
+                  </button>
+                </li>`;
+    })
+    .join('');
+
+  const rawCaraLines = (eContent.resepCaraMasak || '')
+    .split('\n')
+    .map((s: string) => s.trim())
+    .filter(Boolean);
+  const resepCaraList = rawCaraLines.length > 0 ? rawCaraLines : [
+    'Panaskan niat di atas api kecil, jangan terburu-buru.',
+    'Masukkan kesabaran, aduk searah sampai harum.',
+    'Tuang tawa sedikit demi sedikit agar tidak pecah.',
+    'Bumbui dengan maaf setiap kali terasa gosong.',
+    'Sajikan hangat setiap hari, untuk berdua.',
+  ];
+
+  const resepCaraHtml = resepCaraList
+    .map((item: string, idx: number) => {
+      const num = idx + 1;
+      return `<li class="resep-step" id="resep-step-item-${num}">${escapeHtml(item)}</li>`;
+    })
+    .join('\n                ');
+
+  const dc1 = (eContent.dresscodeColors && eContent.dresscodeColors[0]) || '#3f4a38';
+  const dc2 = (eContent.dresscodeColors && eContent.dresscodeColors[1]) || '#c69a4e';
+  const dc3 = (eContent.dresscodeColors && eContent.dresscodeColors[2]) || '#efe3cd';
 
   // Bank & Gifts
   const isGiftActive = (data as any)?.isGiftActive !== false;
@@ -396,7 +459,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
     <header id="sec-hero" data-section="hero">
       <div id="hero-glow"></div>
       <div id="hero-inner" class="wrap">
-        <p id="hero-kicker" class="reveal drop">Edisi Panen Juni — Meja No. 01</p>
+        <p id="hero-kicker" class="reveal drop">${escapeHtml(eContent.edisiMenu || 'Edisi Panen Juni — Meja No. 01')}</p>
 
         <div id="hero-plate" class="reveal pop d1">
           <div id="hero-photo-mask">
@@ -531,7 +594,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
         <p id="hero-sub" class="reveal d3">
           Chef&rsquo;s Table &middot; Satu Malam, Satu Kisah
         </p>
-        <p id="hero-date" class="reveal d4"></p>
+        <p id="hero-date" class="reveal d4">${resepsiDateFormatted || akadDateFormatted}</p>
         <div id="hero-quote" class="reveal lift d5">${quote}</div>
         <p id="hero-scroll" class="reveal d6">
           Gulir untuk mencicipi
@@ -627,7 +690,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                     class="ing-photo"
                     id="ing-photo-groom"
                     src="${groomPhoto}"
-                    alt="Foto Badriana"
+                    alt="Foto ${groomFull}"
                     data-optional="1"
                   />
                   <div
@@ -635,7 +698,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                     id="ing-photo-fb-groom"
                     hidden
                   >
-                    B
+                    ${groom.charAt(0).toUpperCase() || 'P'}
                   </div>
                 </div>
                 <div class="ing-shade" id="ing-shade-groom"></div>
@@ -743,7 +806,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                 <p class="ing-full" id="ing-full-groom">${groomFull}</p>
                 <span class="ing-sep" id="ing-sep-groom"></span>
                 <p class="ing-parents-lb" id="ing-parents-lb-groom">
-                  Dibesarkan oleh
+                  ${escapeHtml(eContent.keteranganAnakPria || 'Dibesarkan oleh')}
                 </p>
                 <p class="ing-parents" id="ing-parents-groom">${groomParents}</p>
                 <p class="ing-back-hint" id="ing-back-hint-groom">
@@ -799,7 +862,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                     class="ing-photo"
                     id="ing-photo-bride"
                     src="${bridePhoto}"
-                    alt="Foto Nurizzati Islamiyah"
+                    alt="Foto ${brideFull}"
                     data-optional="1"
                   />
                   <div
@@ -807,7 +870,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                     id="ing-photo-fb-bride"
                     hidden
                   >
-                    K
+                    ${bride.charAt(0).toUpperCase() || 'W'}
                   </div>
                 </div>
                 <div class="ing-shade" id="ing-shade-bride"></div>
@@ -915,7 +978,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                 <p class="ing-full" id="ing-full-bride">${brideFull}</p>
                 <span class="ing-sep" id="ing-sep-bride"></span>
                 <p class="ing-parents-lb" id="ing-parents-lb-bride">
-                  Dibesarkan oleh
+                  ${escapeHtml(eContent.keteranganAnakWanita || 'Dibesarkan oleh')}
                 </p>
                 <p class="ing-parents" id="ing-parents-bride">${brideParents}</p>
                 <p class="ing-back-hint" id="ing-back-hint-bride">
@@ -938,7 +1001,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
         </div>
         <div id="chef-note" class="reveal lift d2">
           <span id="chef-note-lb">Catatan dari Dapur</span>
-          Selamat datang di meja kami. Malam ini dapur tidak menyajikan apa-apa yang mewah, hanya satu kisah yang dimasak perlahan sejak 2019 — dan Anda adalah tamu yang kami tunggu untuk mencicipinya.
+          ${escapeHtml(eContent.catatanDapur || 'Selamat datang di meja kami. Malam ini dapur tidak menyajikan apa-apa yang mewah, hanya satu kisah yang dimasak perlahan sejak 2019 — dan Anda adalah tamu yang kami tunggu untuk mencicipinya.')}
           <span id="chef-sign">Sang Koki</span>
         </div>
 
@@ -980,7 +1043,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                   class="course-photo"
                   id="course-photo-1"
                   src="${course1Photo}"
-                  alt="Foto kenangan sajian pertama Badriana dan Nurizzati Islamiyah"
+                  alt="Foto kenangan sajian pertama ${groom} dan ${bride}"
                   data-optional="1"
                 />
                 <div class="course-photo-fallback" id="course-fb-1" hidden>
@@ -1039,9 +1102,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
               <p class="course-step" id="course-step-1">Sajian Pertama</p>
               <h3 class="course-name" id="course-name-1">${course1Title}</h3>
               <span class="course-dots" id="course-dots-1"></span>
-              <p class="course-pairing" id="course-pairing-1">
-                Dipadukan dengan kopi susu gula aren, 2019
-              </p>
+              <p class="course-pairing" id="course-pairing-1">${course1Pairing}</p>
               <p class="course-story" id="course-story-1">${course1Story}</p>
             </div>
           </article>
@@ -1083,7 +1144,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                   class="course-photo"
                   id="course-photo-2"
                   src="${course2Photo}"
-                  alt="Foto kenangan sajian kedua Badriana dan Nurizzati Islamiyah"
+                  alt="Foto kenangan sajian kedua ${groom} dan ${bride}"
                   data-optional="1"
                 />
                 <div class="course-photo-fallback" id="course-fb-2" hidden>
@@ -1140,9 +1201,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
               <p class="course-step" id="course-step-2">Sajian Kedua</p>
               <h3 class="course-name" id="course-name-2">${course2Title}</h3>
               <span class="course-dots" id="course-dots-2"></span>
-              <p class="course-pairing" id="course-pairing-2">
-                Dipadukan dengan teh melati hangat, 2021
-              </p>
+              <p class="course-pairing" id="course-pairing-2">${course2Pairing}</p>
               <p class="course-story" id="course-story-2">${course2Story}</p>
             </div>
           </article>
@@ -1184,7 +1243,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                   class="course-photo"
                   id="course-photo-3"
                   src="${course3Photo}"
-                  alt="Foto kenangan sajian ketiga Badriana dan Nurizzati Islamiyah"
+                  alt="Foto kenangan sajian ketiga ${groom} dan ${bride}"
                   data-optional="1"
                 />
                 <div class="course-photo-fallback" id="course-fb-3" hidden>
@@ -1286,7 +1345,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                   class="course-photo"
                   id="course-photo-4"
                   src="${course4Photo}"
-                  alt="Foto kenangan sajian keempat Badriana dan Nurizzati Islamiyah"
+                  alt="Foto kenangan sajian keempat ${groom} dan ${bride}"
                   data-optional="1"
                 />
                 <div class="course-photo-fallback" id="course-fb-4" hidden>
@@ -1338,9 +1397,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
               <p class="course-step" id="course-step-4">Sajian Penutup</p>
               <h3 class="course-name" id="course-name-4">${course4Title}</h3>
               <span class="course-dots" id="course-dots-4"></span>
-              <p class="course-pairing" id="course-pairing-4">
-                Dipadukan dengan satu kata: iya, 2026
-              </p>
+              <p class="course-pairing" id="course-pairing-4">${course4Pairing}</p>
               <p class="course-story" id="course-story-4">${course4Story}</p>
             </div>
           </article>
@@ -1389,7 +1446,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
               stroke-linecap="round"
             />
           </svg>
-          <h3 id="resep-title">Resep Rumah Tangga Bahagia</h3>
+          <h3 id="resep-title">${escapeHtml(eContent.resepJudul || 'Resep Rumah Tangga Bahagia')}</h3>
           <p id="resep-yield">Untuk 2 porsi — disajikan seumur hidup</p>
 
           <div id="resep-grid">
@@ -1412,54 +1469,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                 Bahan-bahan
               </p>
               <ul id="resep-ing-list">
-                <li id="resep-ing-item-1">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-1" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-1">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-1">200 gram kesabaran, disaring halus</span>
-                  </button>
-                </li>
-                <li id="resep-ing-item-2">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-2" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-2">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-2">3 sendok makan tawa sebelum tidur</span>
-                  </button>
-                </li>
-                <li id="resep-ing-item-3">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-3" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-3">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-3">1 genggam maaf yang tidak ditunda</span>
-                  </button>
-                </li>
-                <li id="resep-ing-item-4">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-4" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-4">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-4">1 batang kejujuran, memarkan</span>
-                  </button>
-                </li>
-                <li id="resep-ing-item-5">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-5" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-5">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-5">Secukupnya doa dari kedua keluarga</span>
-                  </button>
-                </li>
-                <li id="resep-ing-item-6">
-                  <button type="button" class="ing-chip" id="resep-ing-chip-6" aria-pressed="false">
-                    <span class="ing-box" id="resep-ing-box-6">
-                      <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 8.6l4 4L14 3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </span>
-                    <span class="ing-txt" id="resep-ing-txt-6">Sejumput rindu untuk hari-hari sibuk</span>
-                  </button>
-                </li>
+                ${resepBahanHtml}
               </ul>
               <div id="resep-gauge">
                 <div id="resep-pot">
@@ -1513,7 +1523,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                   </svg>
                 </div>
                 <p id="resep-progress">
-                  <b id="resep-count">0</b> dari <b id="resep-total">6</b> bahan
+                  <b id="resep-count">0</b> dari <b id="resep-total">${resepBahanList.length}</b> bahan
                   sudah masuk panci
                 </p>
               </div>
@@ -1537,11 +1547,7 @@ export function getMejaKokiHtml(data: any, guestName: string | null = null): str
                 Cara Memasak
               </p>
               <ol id="resep-step-list">
-                <li class="resep-step" id="resep-step-item-1">Panaskan niat di atas api kecil, jangan terburu-buru.</li>
-                <li class="resep-step" id="resep-step-item-2">Masukkan kesabaran, aduk searah sampai harum.</li>
-                <li class="resep-step" id="resep-step-item-3">Tuang tawa sedikit demi sedikit agar tidak pecah.</li>
-                <li class="resep-step" id="resep-step-item-4">Bumbui dengan maaf setiap kali terasa gosong.</li>
-                <li class="resep-step" id="resep-step-item-5">Sajikan hangat setiap hari, untuk berdua.</li>
+                ${resepCaraHtml}
               </ol>
             </div>
           </div>
@@ -2007,23 +2013,23 @@ Sajikan hangat setiap hari, untuk berdua.</div>
           <span
             class="dc-chip"
             id="dc-chip-1"
-            data-color="#3f4a38"
-            style="background:#3f4a38"
+            data-color="${dc1}"
+            style="background:${dc1}"
           ></span>
           <span
             class="dc-chip"
             id="dc-chip-2"
-            data-color="#c69a4e"
-            style="background:#c69a4e"
+            data-color="${dc2}"
+            style="background:${dc2}"
           ></span>
           <span
             class="dc-chip"
             id="dc-chip-3"
-            data-color="#efe3cd"
-            style="background:#efe3cd"
+            data-color="${dc3}"
+            style="background:${dc3}"
           ></span>
         </div>
-        <p id="dc-text" class="lede reveal d4">Kami menata meja dengan nuansa hangat. Mohon hadir dengan busana rapi bernuansa hijau zaitun, kuningan, dan krem — agar setiap foto terasa seperti satu piring yang selaras.</p>
+        <p id="dc-text" class="lede reveal d4">${escapeHtml(eContent.dresscodeText || 'Kami menata meja dengan nuansa hangat. Mohon hadir dengan busana rapi bernuansa hijau zaitun, kuningan, dan krem — agar setiap foto terasa seperti satu piring yang selaras.')}</p>
       </div>
     </section>
 
@@ -2396,10 +2402,10 @@ Sajikan hangat setiap hari, untuk berdua.</div>
           <div id="venue-map-frame">
             <iframe
               id="venue-map"
-              src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCP0LjsvmACU9PshCUvqPg0U0AvWBw1TNo&amp;q=place_id:ChIJVX_KZ1YABDQR8TZ6STtir8M"
+              src="${embedMapUrl}"
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade"
-              title="Peta lokasi wwwtc mall"
+              title="Peta lokasi ${resepsiVenue || akadVenue || 'acara'}"
             ></iframe>
             <div id="venue-map-glare"></div>
           </div>
@@ -2457,7 +2463,7 @@ Sajikan hangat setiap hari, untuk berdua.</div>
         <h2 id="gifts-title" class="htitle reveal d1">
           Untuk <em>dapur kami</em> nanti
         </h2>
-        <p id="gift-note" class="lede reveal d2">Kehadiran Anda sudah menjadi bumbu utamanya. Namun bila ingin menambah sedikit garam untuk dapur kami kelak, kotak tip ini kami sediakan dengan senang hati.</p>
+        <p id="gift-note" class="lede reveal d2">${escapeHtml(eContent.catatanKotakTip || 'Kehadiran Anda sudah menjadi bumbu utamanya. Namun bila ingin menambah sedikit garam untuk dapur kami kelak, kotak tip ini kami sediakan dengan senang hati.')}</p>
         ${bankCardHtml}
         <div id="gift-jar" class="reveal pop d3">
           <svg
@@ -2516,8 +2522,7 @@ Sajikan hangat setiap hari, untuk berdua.</div>
         </h2>
         <div id="rsvp-card" class="form-card reveal lift d2">
           <p id="rsvp-seat-note">
-            Satu kursi kosong membuat satu sajian kembali ke dapur. Beri tahu
-            kami, ya.
+            ${escapeHtml(eContent.catatanRsvp || 'Satu kursi kosong membuat satu sajian kembali ke dapur. Beri tahu kami, ya.')}
           </p>
           <form data-wedivo="rsvp" class="w-form" id="rsvp-form" onsubmit="return false;">
             <p class="f-lb" id="rsvp-lb-name">Nama Tamu</p>
@@ -2834,7 +2839,7 @@ Sajikan hangat setiap hari, untuk berdua.</div>
             fill="currentColor"
           />
         </svg>
-        <p id="closing-msg" class="reveal d1">Terima kasih telah mencicipi kisah kami dari sajian pertama sampai habis. Pintu dapur kami akan selalu terbuka untuk Anda.</p>
+        <p id="closing-msg" class="reveal d1">${escapeHtml(eContent.pesanPenutup || 'Terima kasih telah mencicipi kisah kami dari sajian pertama sampai habis. Pintu dapur kami akan selalu terbuka untuk Anda.')}</p>
         <p id="closing-thanks" class="reveal d2">
           Dengan hangat dari dapur kami
         </p>
@@ -2889,6 +2894,7 @@ Sajikan hangat setiap hari, untuk berdua.</div>
         </svg>
         <div id="closing-flame" class="reveal d5"></div>
         <div id="closing-candle" class="reveal d5"></div>
+        ${eContent.tagarPernikahan ? `<p id="closing-hashtag" style="font-size: 13px; letter-spacing: 2px; color: #c69a4e; margin-top: 20px; font-weight: 600; text-align: center;">${escapeHtml(eContent.tagarPernikahan)}</p>` : ''}
       </div>
     </footer>
 
@@ -3252,7 +3258,7 @@ Sajikan hangat setiap hari, untuk berdua.</div>
       </button>
       <img
         id="viewer-img"
-        alt="Foto galeri Badriana dan Nurizzati Islamiyah"
+        alt="Foto galeri ${groom} dan ${bride}"
       />
       <div id="viewer-bar">
         <button
@@ -3304,3 +3310,4 @@ Sajikan hangat setiap hari, untuk berdua.</div>
     
 `;
 }
+

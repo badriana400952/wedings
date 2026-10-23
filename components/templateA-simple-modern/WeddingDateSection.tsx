@@ -1,6 +1,7 @@
 'use client';
 
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 import { useState, useEffect } from 'react';
 
@@ -13,6 +14,7 @@ interface IPropss {
 }
 
 export default function WeddingDateSection({ payload }: IPropss) {
+  const aContent = getSimpleModernContent(payload?.customContent);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function WeddingDateSection({ payload }: IPropss) {
     <section id="wedding-date" className={clsx('!bg-white', 'dark:!bg-gray-800', 'py-16', 'px-4')}>
       <div className={clsx('max-w-4xl', 'mx-auto', 'text-center')}>
         <h2 className={clsx('font-esthetic', 'text-5xl', 'py-6', 'text-gray-900', 'dark:text-white')}>
-          Moment Bahagia
+          {aContent.judulMoment}
         </h2>
         
         <div className={clsx('border-2', 'border-gray-300', 'dark:border-gray-600', 'rounded-full', 'shadow-lg', 'py-4', 'px-8', 'mt-4', 'mb-8', 'inline-block', '!bg-white', 'dark:!bg-gray-800')}>
@@ -70,37 +72,64 @@ export default function WeddingDateSection({ payload }: IPropss) {
         </div>
         
         <p className={clsx('py-4', 'text-gray-700', 'dark:text-gray-300')}>
-          Dengan memohon rahmat dan ridho Allah Subhanahu Wa Ta'ala, insyaAllah kami akan menyelenggarakan acara:
+          {aContent.pengantarAcara}
         </p>
         
         <div className={clsx('space-y-8', 'mt-8')}>
           <div data-aos="fade-right">
-            <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Akad</h2>
+            <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>{aContent.labelAkad}</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
               Pukul <span>{payload.jamMulai || payload.jamAkad || '08:00'}</span> WIB
             </div>
+            {payload.lokasiAkad && (
+              <p className={clsx('mt-2', 'font-semibold', 'text-gray-900', 'dark:text-white')}>
+                <i className="fas fa-location-dot mr-1 text-gray-500"></i> {payload.lokasiAkad}
+              </p>
+            )}
+            {payload.alamatAkad && (
+              <p className={clsx('text-xs', 'text-gray-600', 'dark:text-gray-400', 'max-w-md', 'mx-auto', 'mt-1')}>
+                {payload.alamatAkad}
+              </p>
+            )}
           </div>
           
           <div data-aos="fade-left">
-            <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>Resepsi</h2>
+            <h2 className={clsx('font-esthetic', 'text-4xl', 'py-4', 'text-gray-900', 'dark:text-white')}>{aContent.labelResepsi}</h2>
             <div className={clsx('text-gray-700', 'dark:text-gray-300')}>
-              Pukul <span>{payload.jamSelesai || '13:00 - Selesai'}</span> WIB
+              Pukul <span>{payload.jamResepsi ? `${payload.jamResepsi} - ${payload.jamSelesai || 'Selesai'}` : (payload.jamSelesai || '11:00 - Selesai')}</span> WIB
             </div>
+            {payload.lokasiResepsi && (
+              <p className={clsx('mt-2', 'font-semibold', 'text-gray-900', 'dark:text-white')}>
+                <i className="fas fa-location-dot mr-1 text-gray-500"></i> {payload.lokasiResepsi}
+              </p>
+            )}
+            {payload.alamatGedungPernikahan && (
+              <p className={clsx('text-xs', 'text-gray-600', 'dark:text-gray-400', 'max-w-md', 'mx-auto', 'mt-1')}>
+                {payload.alamatGedungPernikahan}
+              </p>
+            )}
           </div>
         </div>
         
         <div className="mt-8">
           <p className={clsx('py-4', 'text-gray-700', 'dark:text-gray-300')}>
-            Demi kehangatan bersama, kami memohon kesediaan Anda untuk mengenakan dress code berikut:
+            {aContent.dresscodeNote}
           </p>
           
-          <div className={clsx('flex', 'justify-center', 'items-center', 'mb-4')}>
-            <div className={clsx('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-white', 'dark:!bg-gray-700', 'shadow-lg')}></div>
-            <div className={clsx('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-cyan-300', 'dark:!bg-cyan-600', 'shadow-lg', '-ml-4')}></div>
-            <div className={clsx('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', '!bg-green-500', 'dark:!bg-green-600', 'shadow-lg', '-ml-4')}></div>
+          <div className={clsx('flex', 'justify-center', 'items-center', 'gap-2', 'mb-4')}>
+            {aContent.dresscodeColors.map((color, idx) => (
+              <div
+                key={idx}
+                className={clsx('w-12', 'h-12', 'rounded-full', 'border-2', 'border-gray-300', 'dark:border-gray-600', 'shadow-lg')}
+                style={{ backgroundColor: color }}
+                title={`Warna ${idx + 1}: ${color}`}
+              ></div>
+            ))}
+
+
           </div>
           
-          <p className={clsx('text-gray-700', 'dark:text-gray-300')}>Busana batik dan bersepatu.</p>
+          <p className={clsx('text-gray-700', 'dark:text-gray-300')}>{aContent.dresscodeText}</p>
         </div>
         
         <div className="mt-8">

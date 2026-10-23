@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import confetti from 'canvas-confetti';
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
@@ -21,6 +22,7 @@ interface WelcomePageProps {
 export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageProps) {
   const router = useRouter();
   const { data } = useSession();
+  const aContent = getSimpleModernContent(payload?.customContent);
 
   const handleOpen = () => {
     // Trigger confetti effect
@@ -63,7 +65,7 @@ export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageP
   return (
     <div className={clsx('loading-page', 'bg-white-black', 'd-flex', 'justify-content-center', 'align-items-center')} style={{ opacity: 1 }}>
       <div className={clsx('d-flex', 'flex-column', 'text-center', 'overflow-y-auto', 'vh-100', 'justify-content-center', 'align-items-center')}>
-        <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>The Wedding Of</h2>
+        <h2 className={clsx('font-esthetic', 'mb-4')} style={{ fontSize: '2.25rem' }}>{aContent.welcomeTitle}</h2>
 
         {/* Foto Pasangan */}
         <div className={clsx('relative', 'inline-block')}>
@@ -72,8 +74,8 @@ export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageP
               payload?.fotoHeader 
                 ? (typeof payload?.fotoHeader === 'string' 
                     ? payload?.fotoHeader 
-                    : '/default-wedding.jpg')
-                : '/default-wedding.jpg'
+                    : '/assets/images/bg.webp')
+                : '/assets/images/bg.webp'
             }
             alt="Foto Mempelai"
             width={220}
@@ -104,7 +106,7 @@ export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageP
 
         {guestName && (
           <div id="guest-name" className="mb-2">
-            <small className={clsx('d-block', 'mt-0', 'mb-1', 'mx-0', 'p-0')}>Kepada Yth Bapak/Ibu/Saudara/i</small>
+            <small className={clsx('d-block', 'mt-0', 'mb-1', 'mx-0', 'p-0')}>{aContent.guestGreetingPrefix}</small>
             <p className={clsx('m-0', 'p-0')} style={{ fontSize: '1.25rem' }}>{guestName}</p>
           </div>
         )}
@@ -115,7 +117,7 @@ export default function WelcomePage({ onOpen, guestName, payload }: WelcomePageP
           className={clsx('btn', 'btn-light', 'shadow', 'rounded-4', 'mt-3', 'mx-auto')}
         >
           <i className={clsx('fa-solid', 'fa-envelope-open', 'fa-bounce', 'me-2')}></i>
-          Open Invitation
+          {aContent.openInvitationText}
         </button>
 
         {data?.user?.id && (

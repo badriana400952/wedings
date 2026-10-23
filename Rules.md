@@ -50,12 +50,17 @@ Semua data mempelai tersimpan di tabel **`template_wedings`** (Model: `TemplateW
 
 ---
 
-## 🎨 3. PANDUAN PEMETAAN DATABASE KE KOMPONEN TEMPLATE (100% DINAMIS)
+## 🎨 3. PANDUAN PEMETAAN DATABASE KE KOMPONEN TEMPLATE (100% DINAMIS - TASK-V2)
 
-Aplikasi memiliki 3 template aktif:
-* **Template A**: `components/templates/SimpleModern.tsx` (Modern Layout)
-* **Template B**: `components/templates/TemplateB.tsx` $\rightarrow$ `components/template3/TamanRahasia.tsx` (Editorial Taman Rahasia)
-* **Template C**: `components/templates/SimpleSederhana.tsx` $\rightarrow$ `components/templateC/KirigamiPastel.tsx` (Wedivo Kirigami Pastel)
+Aplikasi memiliki 5 template aktif yang terintegrasi 100% dinamis melalui kolom `customContent Json?` pada `template_wedings`:
+* **Template A**: `components/templateA-simple-modern/SimpleModern.tsx` (Simple Modern Layout)
+* **Template B**: `components/template3/TamanRahasia.tsx` (Editorial Taman Rahasia)
+* **Template C**: `components/templateC/KirigamiPastel.tsx` (Wedivo Kirigami Pastel)
+* **Template D**: `components/templateD/TumbuhBersama.tsx` & `lib/tumbuhBersamaHtml.ts` (Botanical Interactive)
+* **Template E**: `components/templateE/MejaSangKoki.tsx` & `lib/mejaKokiHtml.ts` (Fine Dining Degustation)
+
+> [!TIP]
+> Untuk membuat atau menambahkan template baru (Template F, G, dst.), ikuti SOP 5 Fase di **`docs/STANDAR_PEMBUATAN_TEMPLATE_TASK_V2.md`** dan **`task-v2.md`**.
 
 Berikut panduan tempat meletakkan data database ke masing-masing bagian template:
 

@@ -122,6 +122,7 @@ export interface ITemplateWeding {
 
   // Tabel khusus Pohon Harapan (Template B) — terpisah dari comments
   ucapanHarapan: IUcapanHarapan[]
+  customContent?: Record<string, any> | null
 
   createdAt: Date
   updatedAt: Date

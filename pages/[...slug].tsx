@@ -1,18 +1,28 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
+import dynamic from 'next/dynamic';
 import { prisma } from '@/lib/prisma';
 import { ITemplateWeding } from '@/prisma/schema.types';
-
-// Import templates dari sentral modular
-import {
-  SimpleModern,
-  TamanRahasia,
-  KirigamiPastel,
-  TumbuhBersama,
-  MejaKoki,
-} from '@/components/templates';
 import { useSession } from 'next-auth/react';
+
+// Dynamic imports untuk memisahkan chunk JavaScript tiap template (Code Splitting & Lazy Loading)
+// Catatan: Omit loading fallback untuk mempertahankan SSR HTML dan mencegah Hydration Mismatch
+const SimpleModern = dynamic(
+  () => import('@/components/templateA-simple-modern/SimpleModern')
+);
+const TamanRahasia = dynamic(
+  () => import('@/components/templateB-taman-rahasia/TamanRahasia')
+);
+const KirigamiPastel = dynamic(
+  () => import('@/components/templateC-kirigami-pastel/KirigamiPastel')
+);
+const TumbuhBersama = dynamic(
+  () => import('@/components/templateD-tumbuh-bersama/TumbuhBersama')
+);
+const MejaKoki = dynamic(
+  () => import('@/components/templateE-meja-koki/MejaKoki')
+);
 
 interface SlugPageProps {
   guestName: string | null;
@@ -226,4 +236,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
-

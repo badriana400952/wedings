@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 
 interface IPropss {
@@ -14,6 +15,8 @@ interface IPropss {
 }
 
 export default function LoveGiftSection({ payload }: IPropss) {
+  const recipientName = payload.namaLengkapPutra || payload.namaLengkapPutri || payload.namaPutra || payload.namaPutri || 'Mempelai';
+  const aContent = getSimpleModernContent(payload?.customContent);
   const [openSection, setOpenSection] = useState<string | null>(null);
 
   if (payload.isGiftActive === false) {
@@ -38,11 +41,11 @@ export default function LoveGiftSection({ payload }: IPropss) {
     <section className={clsx('!bg-gray-50', 'dark:!bg-gray-900', 'py-16', 'px-4')}>
       <div className={clsx('max-w-4xl', 'mx-auto', 'text-center')}>
         <h2 className={clsx('font-esthetic', 'text-5xl', 'pt-6', 'mb-8', 'text-gray-900', 'dark:text-white')}>
-          Love Gift
+          {aContent.giftTitle}
         </h2>
         
         <p className={clsx('mb-8', 'text-gray-700', 'dark:text-gray-300')}>
-          Dengan hormat, bagi Anda yang ingin memberikan tanda kasih kepada kami, dapat melalui:
+          {aContent.giftSubtitle}
         </p>
 
         <div className={clsx('space-y-4', 'max-w-2xl', 'mx-auto')}>
@@ -63,7 +66,7 @@ export default function LoveGiftSection({ payload }: IPropss) {
               </div>
               
               <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra || 'Mempelai'}
+                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{recipientName}
               </p>
               
               {openSection === 'transfer' && (
@@ -111,7 +114,7 @@ export default function LoveGiftSection({ payload }: IPropss) {
               </div>
               
               <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra || 'Mempelai'}
+                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{recipientName}
               </p>
               
               {openSection === 'qris' && (
@@ -147,7 +150,7 @@ export default function LoveGiftSection({ payload }: IPropss) {
               </div>
               
               <p className={clsx('mt-4', 'text-gray-700', 'dark:text-gray-300')}>
-                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{payload.namaLengkapPutra || 'Mempelai'}
+                <i className={clsx('fas', 'fa-user', 'mr-2')}></i>{recipientName}
               </p>
               
               {openSection === 'gift' && (

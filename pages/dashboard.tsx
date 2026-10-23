@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSession, signOut } from 'next-auth/react';
@@ -19,17 +20,60 @@ import {
   WeddingFormData,
   DashboardHeader,
   DashboardSidebar,
-  TabOverview,
-  TabMempelai,
-  TabAcara,
-  TabGift,
-  TabGaleri,
-  TabBersama,
-  TabUcapan,
-  TabMusik,
-  TabTemplate,
-  TabLinks,
 } from '@/components/dashboard';
+
+// Komponen Skeleton/Loading saat tab formulir dimuat (Code Splitting)
+const TabLoading = () => (
+  <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center min-h-[320px] animate-pulse">
+    <div className="w-8 h-8 border-3 border-gray-200 dark:border-gray-700 border-t-amber-600 rounded-full animate-spin mb-3" />
+    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Memuat modul formulir...</span>
+  </div>
+);
+
+// TabOverview diimpor statis karena merupakan tampilan default awal dashboard (mencegah hydration mismatch)
+import TabOverview from '@/components/dashboard/tabs/TabOverview';
+
+// Dynamic imports untuk modular tab dashboard lainnya (Lazy Loaded di Client)
+const TabMempelai = dynamic(() => import('@/components/dashboard/tabs/TabMempelai'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabAcara = dynamic(() => import('@/components/dashboard/tabs/TabAcara'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabGift = dynamic(() => import('@/components/dashboard/tabs/TabGift'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabGaleri = dynamic(() => import('@/components/dashboard/tabs/TabGaleri'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabBersama = dynamic(() => import('@/components/dashboard/tabs/TabBersama'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabUcapan = dynamic(() => import('@/components/dashboard/tabs/TabUcapan'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabMusik = dynamic(() => import('@/components/dashboard/tabs/TabMusik'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabTemplate = dynamic(() => import('@/components/dashboard/tabs/TabTemplate'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabCustomContent = dynamic(() => import('@/components/dashboard/tabs/TabCustomContent'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
+const TabLinks = dynamic(() => import('@/components/dashboard/tabs/TabLinks'), {
+  ssr: false,
+  loading: () => <TabLoading />,
+});
 
 interface DashboardProps {
   initialWeding?: any;
@@ -109,6 +153,9 @@ export default function Dashboard({
     initialWeding?.user?.template || initialWeding?.template || 'A'
   );
   const [loadingTemplate, setLoadingTemplate] = useState<boolean>(false);
+  const [customContent, setCustomContent] = useState<any>(
+    initialWeding?.customContent || {}
+  );
 
   // Form Wedding Data State
   const [formData, setFormData] = useState<WeddingFormData>({
@@ -291,6 +338,10 @@ export default function Dashboard({
 
         if (weding.user?.template) {
           setCurrentTemplate(weding.user.template);
+        }
+
+        if (weding.customContent) {
+          setCustomContent(weding.customContent);
         }
 
         if (weding.galery) {
@@ -823,6 +874,24 @@ Terima kasih.`;
                   loadingMusik={loadingMusik}
                   onTogglePreviewMusik={togglePreviewMusik}
                   onSelectMusik={handleSelectMusik}
+                />
+              )}
+
+              {activeTab === 'cerita' && (
+                <TabCustomContent
+                  currentTemplate={currentTemplate}
+                  initialCustomContent={customContent}
+                  showNotification={showNotification}
+                  onRefresh={() => {
+                    fetch('/api/user/custom-content')
+                      .then((r) => r.json())
+                      .then((d) => {
+                        if (d.success && d.customContent) {
+                          setCustomContent(d.customContent);
+                        }
+                      })
+                      .catch(console.error);
+                  }}
                 />
               )}
 

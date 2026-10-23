@@ -1,6 +1,7 @@
 'use client';
 
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 import Image from 'next/image';
 
@@ -14,6 +15,7 @@ interface IPropss {
 }
 
 export default function BrideSection({ payload }: IPropss) {
+  const aContent = getSimpleModernContent(payload?.customContent);
   return (
     <>
       {/* Wave Separator */}
@@ -25,13 +27,13 @@ export default function BrideSection({ payload }: IPropss) {
 
       <section className={clsx('bg-white-black', 'text-center', 'text-gray-900', 'dark:text-white')} id="bride">
         <h2 className={clsx('font-arabic', 'py-4', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2rem' }}>
-          بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
+          {aContent.salamArab}
         </h2>
         <h2 className={clsx('font-esthetic', 'py-4', 'm-0', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2rem' }}>
-          Assalamualaikum Warahmatullahi Wabarakatuh
+          {aContent.salamText}
         </h2>
         <p className={clsx('pb-4', 'px-2', 'm-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>
-          Tanpa mengurangi rasa hormat, kami mengundang Anda untuk berkenan menghadiri acara pernikahan kami:
+          {aContent.pengantarMempelai}
         </p>
 
         <div className={clsx('overflow-x-hidden', 'pb-4')}>
@@ -64,7 +66,7 @@ export default function BrideSection({ payload }: IPropss) {
                 <span>{payload.namaLengkapPutra || 'Mempelai Pria'}</span>
               </h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>
-                {payload.kelahiranPutra || 'Putra tercinta'}
+                {aContent.keteranganAnakPria || payload.kelahiranPutra || 'Putra tercinta'}
               </p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>
                 Bapak <span>{payload.namaAyahPutra || '-'}</span>
@@ -114,7 +116,7 @@ export default function BrideSection({ payload }: IPropss) {
                 <span>{payload.namaLengkapPutri || 'Mempelai Wanita'}</span>
               </h2>
               <p className={clsx('mt-3', 'mb-1', 'text-gray-800', 'dark:text-gray-200')} style={{ fontSize: '1.25rem' }}>
-                {payload.kelahiranPutri || 'Putri tercinta'}
+                {aContent.keteranganAnakWanita || payload.kelahiranPutri || 'Putri tercinta'}
               </p>
               <p className={clsx('mb-0', 'text-gray-700', 'dark:text-gray-300')} style={{ fontSize: '0.95rem' }}>
                 Bapak <span>{payload.namaAyahPutri || '-'}</span>
@@ -133,6 +135,21 @@ export default function BrideSection({ payload }: IPropss) {
             </div>
           </div>
         </div>
+        {aContent.ceritaKutipan && (
+          <div className="max-w-xl mx-auto px-6 pb-8 pt-2">
+            <div className="p-6 rounded-3xl bg-gray-50/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-sm text-center">
+              <i className="fas fa-quote-left text-2xl text-gray-400 dark:text-gray-500 mb-3 block"></i>
+              <p className="text-gray-700 dark:text-gray-300 italic text-sm md:text-base leading-relaxed">
+                &ldquo;{aContent.ceritaKutipan}&rdquo;
+              </p>
+              {aContent.ceritaSumber && (
+                <p className="mt-3 font-semibold text-xs tracking-wider uppercase text-gray-900 dark:text-gray-200">
+                  — {aContent.ceritaSumber}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </section>
     </>
   );

@@ -15,6 +15,7 @@ const TABS: { id: DashboardTab; label: string; icon: string }[] = [
   { id: 'galeri', label: 'Galeri Foto', icon: 'fa-images' },
   { id: 'bersama', label: 'Gambar Bersama', icon: 'fa-heart' },
   { id: 'ucapan', label: 'Pohon Harapan', icon: 'fa-tree' },
+  { id: 'cerita', label: 'Cerita & Tema Khusus', icon: 'fa-book-open' },
   { id: 'template', label: 'Pilih Template', icon: 'fa-palette' },
   { id: 'links', label: 'Generator Link Undangan', icon: 'fa-paper-plane' },
 ];

@@ -9,6 +9,7 @@ export type DashboardTab =
   | 'bersama'
   | 'musik'
   | 'ucapan'
+  | 'cerita'
   | 'template'
   | 'links';
 

@@ -1,4 +1,5 @@
 // @ts-nocheck
+import { getTumbuhBersamaContent } from '@/lib/templatePresets';
 /**
  * Tumbuh Bersama â€” Botanical Interactive Template HTML Generator
  * Faithful replica of wedivo.id/paqkkqe1mjcttlp7bhaqmiy7tsk2
@@ -7542,23 +7543,52 @@ export function getTumbuhBersamaHtml(data: any, guestName?: string | null): stri
   const story3Photo = bersamaList[2] || '/assets/templates/tumbuh-bersama/gallery_3.jpg';
   const story4Photo = bersamaList[3] || '/assets/templates/tumbuh-bersama/1790250424_e33e7208.jpg';
 
+  const dContent = getTumbuhBersamaContent(data?.customContent);
+
   const pertemuan = data?.pertemuan;
-  const story1Title = pertemuan?.judulPertemuanSatu || 'Musim tunas pertama';
+  const story1Title = dContent.story1Title || pertemuan?.judulPertemuanSatu || 'Musim tunas pertama';
+  const story1Time = dContent.story1Time || 'April 2019';
   const story1Text =
+    dContent.story1Story ||
     pertemuan?.pertemuanPertama ||
     'Kami pertama kali bertemu dan saling menyapa, mengawali kisah perjalanan indah yang mulai berakar perlahan.';
-  const story2Title = pertemuan?.judulPertemuanDua || 'Musim yang rimbun';
+  const story2Title = dContent.story2Title || pertemuan?.judulPertemuanDua || 'Musim yang rimbun';
+  const story2Time = dContent.story2Time || '2020 – 2022';
   const story2Text =
+    dContent.story2Story ||
     pertemuan?.pertemuanKedua ||
     'Tahun-tahun hangat saat kami saling belajar, bertumbuh dewasa bersama, dan saling menguatkan dalam setiap langkah.';
-  const story3Title = pertemuan?.judulPertemuanTiga || 'Musim daun berbisik';
+  const story3Title = dContent.story3Title || pertemuan?.judulPertemuanTiga || 'Musim melepas';
+  const story3Time = dContent.story3Time || '2023';
   const story3Text =
+    dContent.story3Story ||
     pertemuan?.pertemuanKetiga ||
-    'Waktu di mana komitmen dan keyakinan saling terucap untuk melangkah menuju jenjang ikatan suci pernikahan.';
-  const story4Title = pertemuan?.judulPertemuanEmpat || 'Musim berbuah';
+    'Bumi pindah kerja ke Balikpapan. Ada yang harus kami lepas: temu setiap akhir pekan, rencana-rencana kecil, dan gengsi. Yang tertinggal justru yang paling penting.';
+  const story4Title = dContent.story4Title || pertemuan?.judulPertemuanEmpat || 'Musim mengakar';
+  const story4Time = dContent.story4Time || 'Desember 2025';
   const story4Text =
+    dContent.story4Story ||
     pertemuan?.pertemuanKeempat ||
-    'Dengan penuh rasa syukur dan doa restu keluarga, kami menanam janji suci untuk menua bersama sepanjang usia.';
+    'Di musim yang paling sunyi, akar tumbuh paling dalam. Di bawah hujan Desember, Bumi bertanya, dan Asri menjawab ya—sambil menahan tawa karena cincinnya kebesaran.';
+
+  const finalStory1Photo = dContent.story1Photo || story1Photo;
+  const finalStory2Photo = dContent.story2Photo || story2Photo;
+  const finalStory3Photo = dContent.story3Photo || story3Photo;
+  const finalStory4Photo = dContent.story4Photo || story4Photo;
+
+  // Tanggal pertama bertemu (Inoskulasi & Lingkaran Tahun)
+  let metYmd = '2019-04-13';
+  if (dContent.tglPertamaBertemu) {
+    const rawMet = dContent.tglPertamaBertemu.trim();
+    if (rawMet.includes('/')) {
+      const parts = rawMet.split('/');
+      if (parts.length === 3) {
+        metYmd = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+      }
+    } else if (rawMet.includes('-')) {
+      metYmd = rawMet;
+    }
+  }
 
   let output = BASE_TUMBUH_BERSAMA_HTML;
 
@@ -7606,31 +7636,272 @@ export function getTumbuhBersamaHtml(data: any, guestName?: string | null): stri
       `<span id="cp-groom-ig-t" class="cp-ig-t">${escapeHtml(groomIgHandle)}</span></a>`
   );
 
-  // 6. Orang Tua & Kelahiran Mempelai
+  // 6. Silsilah, Orang Tua & Tanah Asal (Bride & Groom)
+  // Bride
+  output = output.replace(
+    new RegExp('<span id="cp-bride-no-b"[^>]*>[^<]*<\\/span>'),
+    `<span id="cp-bride-no-b" class="cp-no-town">${escapeHtml(dContent.kotaAsalWanita)}</span>`
+  );
   output = output.replace(
     new RegExp('<p id="cp-bride-grow"[^>]*>[\\s\\S]*?<\\/p>'),
-    `<p id="cp-bride-grow" class="cp-grow"><span id="cp-bride-grow-k" class="cp-grow-k">${escapeHtml(brideKelahiran)}</span><span id="cp-bride-grow-v" class="cp-grow-v">Putri dari ${escapeHtml(brideParents)}</span></p>`
+    `<p id="cp-bride-grow" class="cp-grow"><span id="cp-bride-grow-k" class="cp-grow-k">Tumbuh paling subur saat</span><span id="cp-bride-grow-v" class="cp-grow-v">${escapeHtml(dContent.suburSaatWanita)}</span></p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cp-bride-order"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cp-bride-order" class="cp-order">${escapeHtml(dContent.keteranganAnakWanita)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cp-bride-parents"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cp-bride-parents" class="cp-parents">${escapeHtml(brideParents)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<span id="cp-bride-town"[^>]*>[^<]*<\\/span>'),
+    `<span id="cp-bride-town" class="cp-town">${escapeHtml(dContent.kotaAsalWanita)}</span>`
+  );
+  output = output.replace(
+    new RegExp('<em id="cp-bride-soil-v"[^>]*>[^<]*<\\/em>'),
+    `<em id="cp-bride-soil-v">${escapeHtml(dContent.sifatTanahWanita)}</em>`
   );
 
+  // Groom
+  output = output.replace(
+    new RegExp('<span id="cp-groom-no-b"[^>]*>[^<]*<\\/span>'),
+    `<span id="cp-groom-no-b" class="cp-no-town">${escapeHtml(dContent.kotaAsalPria)}</span>`
+  );
   output = output.replace(
     new RegExp('<p id="cp-groom-grow"[^>]*>[\\s\\S]*?<\\/p>'),
-    `<p id="cp-groom-grow" class="cp-grow"><span id="cp-groom-grow-k" class="cp-grow-k">${escapeHtml(groomKelahiran)}</span><span id="cp-groom-grow-v" class="cp-grow-v">Putra dari ${escapeHtml(groomParents)}</span></p>`
+    `<p id="cp-groom-grow" class="cp-grow"><span id="cp-groom-grow-k" class="cp-grow-k">Tumbuh paling subur saat</span><span id="cp-groom-grow-v" class="cp-grow-v">${escapeHtml(dContent.suburSaatPria)}</span></p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cp-groom-order"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cp-groom-order" class="cp-order">${escapeHtml(dContent.keteranganAnakPria)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cp-groom-parents"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cp-groom-parents" class="cp-parents">${escapeHtml(groomParents)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<span id="cp-groom-town"[^>]*>[^<]*<\\/span>'),
+    `<span id="cp-groom-town" class="cp-town">${escapeHtml(dContent.kotaAsalPria)}</span>`
+  );
+  output = output.replace(
+    new RegExp('<em id="cp-groom-soil-v"[^>]*>[^<]*<\\/em>'),
+    `<em id="cp-groom-soil-v">${escapeHtml(dContent.sifatTanahPria)}</em>`
   );
 
-  // 7. Love Story Photos & Texts (4 Musim / Pertemuan)
-  output = output.split('{{love_story_1_photo}}').join(escapeHtml(story1Photo));
-  output = output.split('{{love_story_2_photo}}').join(escapeHtml(story2Photo));
-  output = output.split('{{love_story_3_photo}}').join(escapeHtml(story3Photo));
-  output = output.split('{{love_story_4_photo}}').join(escapeHtml(story4Photo));
+  // 7. Cover & Hero Headline
+  output = output.replace(
+    new RegExp('<p id="packet-note"[^>]*>[^<]*<\\/p>'),
+    `<p id="packet-note" class="packet-note">${escapeHtml(dContent.tulisanPaketBenih)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="hero-tagline"[^>]*>[^<]*<\\/p>'),
+    `<p id="hero-tagline" class="hero-tagline rv" style="--d: 0.46s">${escapeHtml(dContent.heroHeadline)}</p>`
+  );
+
+  // 8. Salam, Pengantar, Ayat & Sumber
+  output = output.replace(
+    new RegExp('<p id="salam-opening"[^>]*>[^<]*<\\/p>'),
+    `<p id="salam-opening" class="lontar-opening">${escapeHtml(dContent.salamPembuka)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="salam-intro"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="salam-intro" class="lontar-leaf lontar-leaf-src rich rv">${escapeHtml(dContent.kataPengantar)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="salam-quote-text"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="salam-quote-text" class="lontar-quote-text rich">${escapeHtml(dContent.kutipanAyat)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<cite id="salam-quote-src"[^>]*>[^<]*<\\/cite>'),
+    `<cite id="salam-quote-src" class="lontar-quote-src">${escapeHtml(dContent.sumberKutipan)}</cite>`
+  );
+
+  // 9. Inoskulasi (Sentuhan Pertama & Dua Pohon Menyatu)
+  output = output.replace(
+    new RegExp('<span id="inos-met-date"[^>]*>[\\s\\S]*?<\\/span>'),
+    `<span id="inos-met-date" class="js-date" data-date="${escapeHtml(metYmd)}" data-format="long">${escapeHtml(dContent.tglPertamaBertemu || '2019-04-13')}</span>`
+  );
+  output = output.replace(
+    new RegExp('<strong id="inos-since-n"[^>]*>[\\s\\S]*?<\\/strong>'),
+    `<strong id="inos-since-n" class="js-since" data-date="${escapeHtml(metYmd)}">0</strong>`
+  );
+  output = output.replace(
+    new RegExp('<p id="inos-cap-1-place"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="inos-cap-1-place" class="inos-cap-place">${escapeHtml(dContent.tempatPertamaBertemu)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="inos-cap-1-p"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="inos-cap-1-p" class="inos-cap-p rich">${escapeHtml(dContent.ceritaSentuhanPertama)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="inos-cap-3-p"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="inos-cap-3-p" class="inos-cap-p rich">${escapeHtml(dContent.kalimatDuaPohonMenyatu)}</p>`
+  );
+
+  // 10. Love Story Photos, Texts & Waktu
+  output = output.split('{{love_story_1_photo}}').join(escapeHtml(finalStory1Photo));
+  output = output.split('{{love_story_2_photo}}').join(escapeHtml(finalStory2Photo));
+  output = output.split('{{love_story_3_photo}}').join(escapeHtml(finalStory3Photo));
+  output = output.split('{{love_story_4_photo}}').join(escapeHtml(finalStory4Photo));
 
   output = output.replace(new RegExp('<h3 id="st-1-title"[^>]*>[^<]*<\\/h3>'), `<h3 id="st-1-title" class="st-title">${escapeHtml(story1Title)}</h3>`);
+  output = output.replace(new RegExp('<span id="st-1-date"[^>]*>[^<]*<\\/span>'), `<span id="st-1-date" class="st-date">${escapeHtml(story1Time)}</span>`);
   output = output.replace(new RegExp('<p id="st-1-text"[^>]*>[^<]*<\\/p>'), `<p id="st-1-text" class="st-text rich">${escapeHtml(story1Text)}</p>`);
+
   output = output.replace(new RegExp('<h3 id="st-2-title"[^>]*>[^<]*<\\/h3>'), `<h3 id="st-2-title" class="st-title">${escapeHtml(story2Title)}</h3>`);
+  output = output.replace(new RegExp('<span id="st-2-date"[^>]*>[^<]*<\\/span>'), `<span id="st-2-date" class="st-date">${escapeHtml(story2Time)}</span>`);
   output = output.replace(new RegExp('<p id="st-2-text"[^>]*>[^<]*<\\/p>'), `<p id="st-2-text" class="st-text rich">${escapeHtml(story2Text)}</p>`);
+
   output = output.replace(new RegExp('<h3 id="st-3-title"[^>]*>[^<]*<\\/h3>'), `<h3 id="st-3-title" class="st-title">${escapeHtml(story3Title)}</h3>`);
+  output = output.replace(new RegExp('<span id="st-3-date"[^>]*>[^<]*<\\/span>'), `<span id="st-3-date" class="st-date">${escapeHtml(story3Time)}</span>`);
   output = output.replace(new RegExp('<p id="st-3-text"[^>]*>[^<]*<\\/p>'), `<p id="st-3-text" class="st-text rich">${escapeHtml(story3Text)}</p>`);
+
   output = output.replace(new RegExp('<h3 id="st-4-title"[^>]*>[^<]*<\\/h3>'), `<h3 id="st-4-title" class="st-title">${escapeHtml(story4Title)}</h3>`);
+  output = output.replace(new RegExp('<span id="st-4-date"[^>]*>[^<]*<\\/span>'), `<span id="st-4-date" class="st-date">${escapeHtml(story4Time)}</span>`);
   output = output.replace(new RegExp('<p id="st-4-text"[^>]*>[^<]*<\\/p>'), `<p id="st-4-text" class="st-text rich">${escapeHtml(story4Text)}</p>`);
+
+  // Keterangan Galeri
+  output = output.replace(
+    new RegExp('<p class="sh-sub rv" id="gallery-sh-s"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p class="sh-sub rv" id="gallery-sh-s" style="--d: 0.16s">${escapeHtml(dContent.keteranganGaleri)}</p>`
+  );
+
+  // 11. Daun Gugur (6 Pasang)
+  if (Array.isArray(dContent.daunGugur)) {
+    dContent.daunGugur.forEach((dg, i) => {
+      const idx = i + 1;
+      if (idx > 6) return;
+      if (dg.dilepaskan) {
+        output = output.replace(
+          new RegExp(`<span id="gg-row-${idx}-at"[^>]*>[\\s\\S]*?<\\/span>`),
+          `<span id="gg-row-${idx}-at" class="gg-lepas-t">${escapeHtml(dg.dilepaskan)}</span>`
+        );
+      }
+      if (dg.tumbuh) {
+        output = output.replace(
+          new RegExp(`<p id="gg-row-${idx}-c"[^>]*>[\\s\\S]*?<\\/p>`),
+          `<p id="gg-row-${idx}-c" class="gg-tumbuh">${escapeHtml(dg.tumbuh)}</p>`
+        );
+      }
+    });
+  }
+
+  // 12. Lingkaran Tahun (5 Fase)
+  output = output.replace(
+    new RegExp('<span id="lk-met"[^>]*><\\/span>'),
+    `<span id="lk-met" data-date="${escapeHtml(metYmd)}"></span>`
+  );
+  output = output.replace(
+    new RegExp('<span id="lk-wed"[^>]*><\\/span>'),
+    `<span id="lk-wed" data-date="${escapeHtml(weddingDateYmd)}"></span>`
+  );
+  if (Array.isArray(dContent.lingkaranTahun)) {
+    dContent.lingkaranTahun.forEach((lk, i) => {
+      const idx = i + 1;
+      if (idx > 5) return;
+      output = output.replace(
+        new RegExp(`<span id="lk-note-${idx}"[^>]*>[\\s\\S]*?<\\/span>`),
+        `<span id="lk-note-${idx}" data-year="${escapeHtml(lk.tahun || '')}">${escapeHtml(lk.catatan || '')}</span>`
+      );
+    });
+  }
+
+  // 13. Dresscode (Teks & 5 Swatch Warna)
+  output = output.replace(
+    new RegExp('<p id="dc-text"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="dc-text" class="dc-text rich rv">${escapeHtml(dContent.dresscodeText)}</p>`
+  );
+  if (Array.isArray(dContent.dresscodeColors)) {
+    dContent.dresscodeColors.forEach((color, i) => {
+      const idx = i + 1;
+      if (idx > 5) return;
+      const cleanCol = color || '#7a9a60';
+      output = output.replace(
+        new RegExp(`<button[^>]*id="dc-leaf-${idx}"[^>]*>[\\s\\S]*?<\\/button>`),
+        (matched) => {
+          return matched
+            .replace(/data-color="[^"]*"/, `data-color="${escapeHtml(cleanCol)}"`)
+            .replace(/style="--c:[^"]*"/, `style="--c:${escapeHtml(cleanCol)}"`);
+        }
+      );
+    });
+  }
+
+  // 14. Petunjuk Kebun (6 Aturan)
+  if (Array.isArray(dContent.petunjukKebun)) {
+    dContent.petunjukKebun.forEach((pt, i) => {
+      const idx = i + 1;
+      if (idx > 6) return;
+      if (pt.judul) {
+        output = output.replace(
+          new RegExp(`<h3 id="pj-label-${idx}"[^>]*>[\\s\\S]*?<\\/h3>`),
+          `<h3 id="pj-label-${idx}" class="pj-label">${escapeHtml(pt.judul)}</h3>`
+        );
+      }
+      if (pt.keterangan) {
+        output = output.replace(
+          new RegExp(`<p id="pj-text-${idx}"[^>]*>[\\s\\S]*?<\\/p>`),
+          `<p id="pj-text-${idx}" class="pj-text">${escapeHtml(pt.keterangan)}</p>`
+        );
+      }
+    });
+  }
+
+  // 15. Pohon Harapan Nanti (4 Harapan)
+  if (Array.isArray(dContent.harapanNanti)) {
+    dContent.harapanNanti.forEach((hr, i) => {
+      const idx = i + 1;
+      if (idx > 4) return;
+      const yearVal = hr.tahunKe || String(idx);
+      output = output.replace(
+        new RegExp(`<li id="nt-hope-${idx}"[^>]*data-year="[^"]*"`),
+        `<li id="nt-hope-${idx}" class="nt-hope rv" data-year="${escapeHtml(yearVal)}"`
+      );
+      output = output.replace(
+        new RegExp(`<span id="nt-hope-${idx}-yv"[^>]*>[\\s\\S]*?<\\/span>`),
+        `<span id="nt-hope-${idx}-yv">${escapeHtml(yearVal)}</span>`
+      );
+      output = output.replace(
+        new RegExp(`<span id="nt-hope-${idx}-t"[^>]*>[\\s\\S]*?<\\/span>`),
+        `<span id="nt-hope-${idx}-t">${escapeHtml(hr.isiHarapan || '')}</span>`
+      );
+    });
+  }
+
+  // 16. Catatan Hadiah, RSVP, Kebun Doa & Penutup
+  output = output.replace(
+    new RegExp('<p id="gf-text"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="gf-text" class="gf-text rich rv">${escapeHtml(dContent.catatanHadiah)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p class="sh-sub rv" id="rs-sh-s"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p class="sh-sub rv" id="rs-sh-s" style="--d: 0.16s">${escapeHtml(dContent.catatanRsvp)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p class="sh-sub rv" id="ws-sh-s"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p class="sh-sub rv" id="ws-sh-s" style="--d: 0.16s">${escapeHtml(dContent.keteranganUcapan)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cl-text"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cl-text" class="cl-text rich">${escapeHtml(dContent.kalimatPenutup)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cl-salam"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cl-salam" class="cl-salam">${escapeHtml(dContent.salamPenutup)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cl-family"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cl-family" class="cl-family">${escapeHtml(dContent.namaKeluarga)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cl-turut-v"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cl-turut-v" class="cl-turut-v rich">${escapeHtml(dContent.turutMengundang)}</p>`
+  );
+  output = output.replace(
+    new RegExp('<p id="cl-hashtag"[^>]*>[\\s\\S]*?<\\/p>'),
+    `<p id="cl-hashtag" class="cl-hashtag">${escapeHtml(dContent.tagarPernikahan)}</p>`
+  );
 
   // 8. Countdown (Target Date & Google Calendar)
   output = output.replace(

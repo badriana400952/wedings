@@ -513,3 +513,26 @@ Setiap kali menyelesaikan tugas di repositori ini, AI wajib memverifikasi poin-p
 - [ ] **Dual Sync**: Selaraskan perubahan ke repositori lokal dan ke direktori OneDrive:
   `C:\Users\USER.DESKTOP-UQ662UT.000\OneDrive\Dokumen\project\undangan projek\undangan\`
 - [ ] **Update CHANGELOG.md**: Catat seluruh rincian pekerjaan di `docs/CHANGELOG.md`.
+
+---
+
+## ISU 13: HYDRATION MISMATCH PADA `next/dynamic` DENGAN LOADING FALLBACK
+
+### 1. Gejala Error
+```text
+Hydration failed because the server rendered HTML didn't match the client.
+...
+- <div className="space-y-6"> (Server HTML TabOverview)
++ <div className="bg-white ... TabLoading"> (Client Fallback)
+```
+
+### 2. Akar Penyebab Teknis
+Ketika komponen default awal (seperti `TabOverview` di dashboard) dibungkus `dynamic(..., { loading: () => <TabLoading /> })`:
+- Di **Server (SSR)**: Next.js merender HTML asli komponen (`space-y-6`).
+- Di **Client**: Saat proses hydration pertama di browser, dynamic import masih berada pada state `loading: true`, sehingga browser merender `<TabLoading>`.
+- Terjadilah perbedaan pohon DOM (*Hydration Mismatch*).
+
+### 3. Solusi Teruji
+1. **Komponen Default Awal Wajib Static Import**: Tab atau komponen yang langsung tampil pada first-render (seperti `TabOverview`) diimpor statis `import TabOverview from '@/components/dashboard/tabs/TabOverview'`.
+2. **Tab Sekunder Menggunakan `{ ssr: false }`**: Tab-tab lain yang hanya diakses setelah user berinteraksi (`TabMempelai`, `TabAcara`, `TabCustomContent`, dll.) dibungkus `dynamic(..., { ssr: false, loading: () => <TabLoading /> })`.
+3. **Template Undangan Tamu**: Pada `[...slug].tsx`, gunakan `dynamic(() => import(...))` tanpa loading fallback yang berbeda dari HTML server agar SSR langsung menghidrasi markup yang sama.

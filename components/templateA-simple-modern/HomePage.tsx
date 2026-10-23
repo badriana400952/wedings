@@ -2,6 +2,7 @@
 
 import { formatTanggalIndo } from '@/date';
 import { ITemplateWeding } from '@/prisma/schema.types';
+import { getSimpleModernContent } from '@/lib/templatePresets';
 import clsx from 'clsx';
 import Image from 'next/image';
 
@@ -15,6 +16,7 @@ interface Pr {
 }
 
 const HomePage: React.FC<Pr> = ({ payload }) => {
+  const aContent = getSimpleModernContent(payload?.customContent);
   return (
     <section id="home" className={clsx('bg-light-dark', 'position-relative', 'overflow-hidden', 'p-0', 'm-0')}>
       <div className={clsx('position-absolute', 'opacity-25', 'top-50', 'start-50', 'translate-middle')} style={{ width: '100%', height: '100%' }}>
@@ -34,7 +36,7 @@ const HomePage: React.FC<Pr> = ({ payload }) => {
 
       <div className={clsx('position-relative', 'text-center', 'bg-overlay-auto')} style={{ backgroundColor: 'unset' }}>
         <h1 className={clsx('font-esthetic', 'pt-5', 'pb-4', 'fw-medium', 'text-gray-900', 'dark:text-white')} style={{ fontSize: '2.25rem' }}>
-          Undangan Pernikahan
+          {aContent.heroSubtitle}
         </h1>
 
         {/* Foto Pasangan */}
@@ -100,7 +102,7 @@ const HomePage: React.FC<Pr> = ({ payload }) => {
           </div>
         </div>
 
-        <p className={clsx('pb-4', 'm-0', 'text-secondary')} style={{ fontSize: '0.825rem' }}>Scroll Down</p>
+        <p className={clsx('pb-4', 'm-0', 'text-secondary')} style={{ fontSize: '0.825rem' }}>{aContent.scrollDownText}</p>
       </div>
     </section>
   );

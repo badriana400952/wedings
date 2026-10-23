@@ -1,81 +1,51 @@
 'use client';
 
-export default function Footer() {
+import { getSimpleModernContent } from '@/lib/templatePresets';
+
+interface FooterProps {
+  payload?: any;
+}
+
+export default function Footer({ payload }: FooterProps) {
+  const aContent = getSimpleModernContent(payload?.customContent);
+  const musikJudul = payload?.musik?.judul;
+  const musikArtis = payload?.musik?.artis;
+
   return (
     <footer className="!bg-white dark:!bg-gray-900 py-12 px-4 text-center">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Thank You Message */}
         <p className="text-gray-700 dark:text-gray-300 text-lg">
-          Terima kasih atas perhatian dan doa restu Anda, yang menjadi kebahagiaan serta kehormatan besar bagi kami.
+          {aContent.closingMessage}
         </p>
         
         {/* Arabic Greeting */}
         <div className="space-y-2">
           <p className="font-esthetic text-2xl text-gray-900 dark:text-white">
-            Wassalamualaikum Warahmatullahi Wabarakatuh
+            {aContent.closingSalam}
           </p>
           <p className="font-arabic text-2xl text-gray-900 dark:text-white">
-            اَلْحَمْدُ لِلّٰهِ رَبِّ الْعٰلَمِيْنَۙ
+            {aContent.closingHamdalah}
           </p>
         </div>
-        
+
+        {aContent.tagarPernikahan && (
+          <p className="text-sm font-semibold tracking-wider text-gray-600 dark:text-gray-400 mt-2">
+            {aContent.tagarPernikahan}
+          </p>
+        )}
+
         {/* Divider */}
-        <div className="border-t border-gray-300 dark:border-gray-700 my-6"></div>
+        <div className="border-t border-gray-200 dark:border-gray-800 my-6"></div>
         
-        {/* Credits */}
-        <div className="space-y-2">
-          <p className="text-gray-600 dark:text-gray-400 text-xs">
-            Build with <i className="fas fa-heart text-red-500 mx-1"></i> by{' '}
-            <a
-              href="https://github.com/dewanakl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition-colors font-semibold"
-            >
-              Dewanakl
-            </a>
-            {' '}•{' '}
-            Migrated to Next.js by{' '}
-            <a
-              href="https://github.com/badriana400952"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-900 dark:text-white hover:text-green-500 dark:hover:text-green-400 transition-colors font-semibold"
-            >
-              Badriana400952
-            </a>
-          </p>
-          
-          {/* Links */}
-          <div className="flex items-center justify-center gap-4 text-sm">
-            <a
-              href="https://github.com/dewanakl/undangan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <i className="fab fa-github mr-1"></i>
-              GitHub
-            </a>
-            
-            <span className="text-gray-400">•</span>
-            <a
-              href="https://github.com/dewanakl/undangan/blob/master/LICENSE"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <i className="fas fa-file-contract mr-1"></i>
-              License
-            </a>
-          </div>
-          
-          {/* Music Credit */}
-          <p className="text-xs text-gray-500 dark:text-gray-500 mt-4">
+        {/* Music Credit (hanya jika ada musik dari user) */}
+        {(musikJudul || musikArtis) && (
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             <i className="fas fa-music mr-1"></i>
-            Music: Pure Love by <span className="italic">Pixabay</span>
+            Musik: {musikJudul || 'Lagu Pernikahan'}
+            {musikArtis ? ` — ${musikArtis}` : ''}
           </p>
-        </div>
+        )}
       </div>
     </footer>
   );
