@@ -9,6 +9,41 @@ const DEFAULT_MUSIK = [
     penyanyi: "Oleksii Kaplunskyi",
     file: "/assets/music/music.mp3",
   },
+  {
+    judul: "Wedding",
+    penyanyi: "MegaJackie",
+    file: "/assets/music/wedding.mp3",
+  },
+  {
+    judul: "Ceremony Wedding Invitation",
+    penyanyi: "Alex Morgan",
+    file: "/assets/music/alex-morgan-ceremony-wedding-invitation-music-583281.mp3",
+  },
+  {
+    judul: "Garden Ceremony Glow",
+    penyanyi: "Alex Morgan",
+    file: "/assets/music/alex-morgan-wedding-garden-ceremony-glow-578500.mp3",
+  },
+  {
+    judul: "Love",
+    penyanyi: "Atlas Audio",
+    file: "/assets/music/atlasaudio-love-594867.mp3",
+  },
+  {
+    judul: "Love BGM",
+    penyanyi: "Kira Vale",
+    file: "/assets/music/kiravale-love-bgm-598115.mp3",
+  },
+  {
+    judul: "Sweet Wedding",
+    penyanyi: "Leberch",
+    file: "/assets/music/leberch-wedding-584482.mp3",
+  },
+  {
+    judul: "Romantic Inspiring Piano",
+    penyanyi: "Paul Yudin",
+    file: "/assets/music/paulyudin-romantic-wedding-inspiring-piano-376014.mp3",
+  },
 ];
 
 export default async function handler(

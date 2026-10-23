@@ -47,6 +47,7 @@
 37. **Optimasi Performa Ekstrem dengan `next/dynamic` (Code Splitting & Lazy Loading untuk Template Undangan & Tab Dashboard)**.
 38. **Penyelesaian Error Hydration Mismatch pada `next/dynamic` Dashboard (`TabOverview` Statis & `{ ssr: false }` untuk Tab Lainnya)**.
 39. **Penyelesaian Error Build Vercel (`customContent` does not exist in type `TemplateWedingSelect`)** (`package.json` build/postinstall & casting fleksibel API).
+40. **Penambahan 6 Musik Latar Wedding dari Direktori Downloads ke Aset Projek & Database Katalog Musik (`seed-musik.ts`)**.
 
 ---
 
@@ -1197,6 +1198,23 @@
      - Memperbarui script build menjadi `"build": "prisma generate && next build"`.
   2. **Penyelarasan Tipe di `pages/api/user/custom-content.ts`**:
      - Menggunakan casting aman `(prisma as any).templateWeding` pada pemanggilan `findUnique` dan `update` agar kompilasi TypeScript `next build` selalu lolos tanpa terhambat oleh cache lama node_modules di Vercel.
+
+---
+
+### 40. Penambahan 6 Musik Latar Wedding dari Direktori Downloads ke Aset Projek & Database Katalog Musik (`seed-musik.ts`)
+
+* **Tindakan**:
+  Menyalin 6 file musik MP3 pernikahan dari folder pengguna `C:\Users\USER.DESKTOP-UQ662UT.000\Downloads\musik weding` ke aset statis publik projek `public/assets/music/`:
+  1. `alex-morgan-ceremony-wedding-invitation-music-583281.mp3` -> Judul: "Ceremony Wedding Invitation", Penyanyi: "Alex Morgan"
+  2. `alex-morgan-wedding-garden-ceremony-glow-578500.mp3` -> Judul: "Garden Ceremony Glow", Penyanyi: "Alex Morgan"
+  3. `atlasaudio-love-594867.mp3` -> Judul: "Love", Penyanyi: "Atlas Audio"
+  4. `kiravale-love-bgm-598115.mp3` -> Judul: "Love BGM", Penyanyi: "Kira Vale"
+  5. `leberch-wedding-584482.mp3` -> Judul: "Sweet Wedding", Penyanyi: "Leberch"
+  6. `paulyudin-romantic-wedding-inspiring-piano-376014.mp3` -> Judul: "Romantic Inspiring Piano", Penyanyi: "Paul Yudin"
+
+* **Berkas yang Dimodifikasi**:
+  1. [`prisma/seed-musik.ts`](file:///C:/Users/USER.DESKTOP-UQ662UT.000/OneDrive/Dokumen/project/undangan%20projek/undangan/prisma/seed-musik.ts): Mendaftarkan 6 lagu baru sehingga total katalog kini berjumlah 8 lagu.
+  2. [`pages/api/musik/index.ts`](file:///C:/Users/USER.DESKTOP-UQ662UT.000/OneDrive/Dokumen/project/undangan%20projek/undangan/pages/api/musik/index.ts): Menambahkan 6 lagu baru ke array fallback `DEFAULT_MUSIK`.
 
 ---
 
