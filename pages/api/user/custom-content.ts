@@ -30,7 +30,7 @@ export default async function handler(
     }
 
     if (req.method === 'GET') {
-      const templateWeding = await prisma.templateWeding.findUnique({
+      const templateWeding = await (prisma as any).templateWeding.findUnique({
         where: { userId: targetUserId },
         select: { customContent: true },
       });
@@ -52,7 +52,7 @@ export default async function handler(
       }
 
       // Ambil data customContent saat ini untuk dilakukan deep merge per template
-      const current = await prisma.templateWeding.findUnique({
+      const current = await (prisma as any).templateWeding.findUnique({
         where: { userId: targetUserId },
         select: { customContent: true },
       });
@@ -70,7 +70,7 @@ export default async function handler(
         },
       };
 
-      const updated = await prisma.templateWeding.update({
+      const updated = await (prisma as any).templateWeding.update({
         where: { userId: targetUserId },
         data: {
           customContent: updatedContent,

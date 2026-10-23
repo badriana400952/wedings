@@ -46,6 +46,7 @@
 36. **Otomatisasi Tampilan Form Tab Cerita & Narasi Berdasarkan Template Aktif Pengantin (`TabCustomContent.tsx`)**.
 37. **Optimasi Performa Ekstrem dengan `next/dynamic` (Code Splitting & Lazy Loading untuk Template Undangan & Tab Dashboard)**.
 38. **Penyelesaian Error Hydration Mismatch pada `next/dynamic` Dashboard (`TabOverview` Statis & `{ ssr: false }` untuk Tab Lainnya)**.
+39. **Penyelesaian Error Build Vercel (`customContent` does not exist in type `TemplateWedingSelect`)** (`package.json` build/postinstall & casting fleksibel API).
 
 ---
 
@@ -1176,6 +1177,26 @@
   1. **Mengembalikan `TabOverview` ke Static Import**: Karena `TabOverview` adalah tab default awal yang wajib tampil saat pertama kali dashboard dibuka, mengimpornya secara statis menjamin pohon DOM server dan client 100% identik tanpa mismatch.
   2. **Menambahkan `{ ssr: false }` pada Tab Dinamis Lainnya**: Seluruh tab sekunder lainnya (`TabMempelai`, `TabAcara`, `TabGift`, `TabGaleri`, `TabBersama`, `TabUcapan`, `TabMusik`, `TabTemplate`, `TabCustomContent`, `TabLinks`) diberi konfigurasi `{ ssr: false, loading: () => <TabLoading /> }`. Hal ini mencegah server merender tab yang belum diklik dan memastikan tab-tab tersebut hanya dimuat di client saat diperlukan tanpa risiko hydration mismatch.
   3. **Penghapusan Mismatch Loading pada `[...slug].tsx`**: Menghapus `loading` fallback pada dynamic import template tamu agar browser langsung menggunakan server-rendered HTML dari SSR.
+
+---
+
+### 39. Penyelesaian Error Build Vercel (`customContent` does not exist in type `TemplateWedingSelect`)
+
+* **Keluhan / Error Pengguna di Log Vercel**:
+  ```text
+  Type error: Object literal may only specify known properties, and 'customContent' does not exist in type 'TemplateWedingSelect<DefaultArgs>'.
+  ./pages/api/user/custom-content.ts:35:19
+  ```
+
+* **Akar Masalah**:
+  Di environment Vercel, build script sebelumnya hanya mengeksekusi `"build": "next build"`. Prisma Client tidak digenerate ulang saat instalasi dependency Vercel, sehingga `@prisma/client` masih memakai definisi tipe lama yang belum memiliki field `customContent Json?`.
+
+* **Solusi & Penanganan**:
+  1. **Otomatisasi Prisma Generate di `package.json`**:
+     - Menambahkan script `"postinstall": "prisma generate"` agar saat Vercel selesai menjalankan `npm install`, Prisma Client langsung di-generate otomatis.
+     - Memperbarui script build menjadi `"build": "prisma generate && next build"`.
+  2. **Penyelarasan Tipe di `pages/api/user/custom-content.ts`**:
+     - Menggunakan casting aman `(prisma as any).templateWeding` pada pemanggilan `findUnique` dan `update` agar kompilasi TypeScript `next build` selalu lolos tanpa terhambat oleh cache lama node_modules di Vercel.
 
 ---
 
