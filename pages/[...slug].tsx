@@ -131,7 +131,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           include: {
             galery: true,
             pertemuan: true,
-            comments: true,
+            comments: {
+              orderBy: { createdAt: 'desc' },
+            },
+            ucapanHarapan: {
+              orderBy: { createdAt: 'desc' },
+            },
           }
         }
       }
@@ -193,6 +198,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         ...comment,
         createdAt: comment.createdAt ? comment.createdAt.toISOString() : null,
         updatedAt: comment.updatedAt ? comment.updatedAt.toISOString() : null,
+      })) : [],
+      ucapanHarapan: (user.templateWeding as any).ucapanHarapan ? (user.templateWeding as any).ucapanHarapan.map((u: any) => ({
+        ...u,
+        createdAt: u.createdAt ? u.createdAt.toISOString() : null,
+        updatedAt: u.updatedAt ? u.updatedAt.toISOString() : null,
       })) : [],
     } : null;
 
